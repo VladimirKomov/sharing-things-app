@@ -2,6 +2,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {AppDispatch, RootState} from "../../store.ts";
 import {useState} from "react";
 import {login} from "../redux/authSlice.ts";
+import styles from './Login.module.css';
 
 const Login: React.FC = () => {
     const dispatch = useDispatch<AppDispatch>();
@@ -15,18 +16,20 @@ const Login: React.FC = () => {
     }
 
     return (
-        <form onSubmit={handleLogin}>
+        <form className={styles.form} onSubmit={handleLogin}>
             <div>
                 <input
+                    className={styles.input}
                     type="text"
                     value={usernameOrEmail}
-                    placeholder="username or email"
+                    placeholder="username or Email"
                     onChange={(e) => setUsernameOrEmail(e.target.value)}
                     required
                 />
             </div>
             <div>
                 <input
+                    className={styles.input}
                     type="password"
                     value={password}
                     placeholder="password"
@@ -34,10 +37,10 @@ const Login: React.FC = () => {
                     required
                 />
             </div>
-            <button type="submit" disabled={loading}>
+            <button className={styles.button} type="submit" disabled={loading}>
                 {loading ? 'Loading...' : 'Login'}
             </button>
-            {error && <p>{error}</p>}
+            {error && <p className={styles.error}>{error}</p>}
         </form>
     );
 }

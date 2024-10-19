@@ -1,0 +1,42 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+
+:root {
+    /*colors*/
+    --primary-color: #017af2;
+    --secondary-color: #3794f0;
+    --tertiary: #6daeee;
+    --quaternary: #a3c8ec;
+    --background-color: #d8e1e9;
+    --error-color: #ff0000;
+    /*    founts*/
+    --font-family-primary: 'Roboto', sans-serif;
+    --font-size-base: 16px;
+    --font-size-large: 20px;
+    --font-size-small: 12px;
+    --line-height: 1.5;
+    /* Отступы */
+    --spacing-small: 8px;
+    --spacing-medium: 16px;
+    --spacing-large: 32px;
+    /* Границы */
+    --border-radius: 5px;
+    --border-color: #ccc;
+    --border-width: 1px;
+
+    /* Тени */
+    --box-shadow-small: 0 1px 3px rgba(0, 0, 0, 0.1);
+    --box-shadow-large: 0 4px 6px rgba(0, 0, 0, 0.2);
+
+    /* Переходы */
+    --transition-duration: 0.3s;
+    --transition-timing: ease-in-out;
+
+    /* Размеры контейнеров */
+    --max-width: 1200px;
+    --min-height: 100vh;
+
+/*    Высота полей ввода и кнопок полей ввода*/
+    --input-height: 35px;
+}
+
+
