@@ -162,7 +162,8 @@ LOGGING = {
     },
     'root': {
         'handlers': ['console'],
-        'level': 'WARNING',  # Уровень логов по умолчанию
+        # 'level': 'WARNING',  # Уровень логов по умолчанию
+        'level': 'DEBUG',
     },
     'loggers': {
         'django': {

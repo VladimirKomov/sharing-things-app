@@ -1,9 +1,8 @@
 from django.contrib.auth import get_user_model
 from django.contrib.auth.backends import ModelBackend
 from django.db.models import Q
-import logging
+from ..config.logger import logger
 
-logger = logging.getLogger(__name__)
 
 User = get_user_model()
 
