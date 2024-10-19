@@ -5,6 +5,7 @@ from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 
 from .user_serializers import UserSerializer, LoginSerializer
+from config.logger import logger
 
 
 class UserRegistrationView(APIView):
@@ -30,10 +31,12 @@ class LoginView(APIView):
             if user is not None:
                 login(request, user)
                 refresh = RefreshToken.for_user(user)
+                logger.info(f"User {usernameOrEmail} logged in successfully")
                 return Response({
                     'refresh': str(refresh),
                     'access': str(refresh.access_token),
                 }, status=status.HTTP_200_OK)
+            logger.info(f"User {usernameOrEmail} failed to login")
             return Response({'error': 'Invalid credentials'}, status=status.HTTP_400_BAD_REQUEST)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
