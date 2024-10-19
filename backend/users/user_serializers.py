@@ -30,3 +30,8 @@ class UserSerializer(serializers.ModelSerializer):
             last_name=last_name
         )
         return user
+
+
+class LoginSerializer(serializers.Serializer):
+    usernameOrEmail = serializers.CharField(required=True)
+    password = serializers.CharField(required=True, write_only=True)

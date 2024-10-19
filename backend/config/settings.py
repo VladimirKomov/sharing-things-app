@@ -127,7 +127,7 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 AUTHENTICATION_BACKENDS = [
-    'your_app_name.authentication.EmailOrUsernameModelBackend',  # Custom backend
+    'users.user_authentication.EmailOrUsernameModelBackend',  # Custom backend
     'django.contrib.auth.backends.ModelBackend',  # Standard back
 ]
 # Internationalization
@@ -150,3 +150,31 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+#logging for app
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': 'WARNING',  # Уровень логов по умолчанию
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'level': 'INFO',  # Уровень логов для приложений Django
+            'propagate': True,
+        },
+        'myapp': {  # Настройка для твоего приложения
+            'handlers': ['console'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
+    },
+}
+
