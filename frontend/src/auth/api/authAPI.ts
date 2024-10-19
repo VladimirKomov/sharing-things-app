@@ -2,7 +2,7 @@ import axios from 'axios';
 import {API_BASE_URL} from '../../config.ts'
 
 interface Credentials {
-    username: string;
+    usernameOrEmail: string;
     password: string;
 }
 

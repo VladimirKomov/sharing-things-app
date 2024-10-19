@@ -6,30 +6,30 @@ import {login} from "../redux/authSlice.ts";
 const Login: React.FC = () => {
     const dispatch = useDispatch<AppDispatch>();
     const {loading, error} = useSelector((state: RootState) => state.auth);
-    const [username, setUsername] = useState("");
+    const [usernameOrEmail, setUsernameOrEmail] = useState("");
     const [password, setPassword] = useState("");
 
     const handleLogin = (e: React.FormEvent) => {
         e.preventDefault();
-       dispatch(login({username, password}));
+       dispatch(login({usernameOrEmail, password}));
     }
 
     return (
         <form onSubmit={handleLogin}>
             <div>
-                <label>Username:</label>
                 <input
                     type="text"
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
+                    value={usernameOrEmail}
+                    placeholder="username or email"
+                    onChange={(e) => setUsernameOrEmail(e.target.value)}
                     required
                 />
             </div>
             <div>
-                <label>Password:</label>
                 <input
                     type="password"
                     value={password}
+                    placeholder="password"
                     onChange={(e) => setPassword(e.target.value)}
                     required
                 />

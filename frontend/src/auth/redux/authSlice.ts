@@ -21,7 +21,7 @@ const initialState: AuthSlice = {
 
 export const login = createAsyncThunk(
     'auth/login',
-    async (credentials: {username: string; password: string}) => {
+    async (credentials: {usernameOrEmail: string; password: string}) => {
         return await loginAPI(credentials);
     }
 )
