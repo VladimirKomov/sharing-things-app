@@ -1,10 +1,10 @@
 import axios, {AxiosResponse} from "axios";
-import {IRequestConfig} from "./requestModel.ts";
+import {RequestConfig} from "./requestModel.ts";
 import {BaseError} from "./errorModel.ts";
 
 
 export class BaseAPI {
-    async request<T>(config: IRequestConfig): Promise<AxiosResponse<T>> {
+    async request<T>(config: RequestConfig): Promise<AxiosResponse<T>> {
         try {
             const response: AxiosResponse<T> = await axios({
                 method: config.method,

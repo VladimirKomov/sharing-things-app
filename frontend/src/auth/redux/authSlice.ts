@@ -1,12 +1,9 @@
 import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
-import {loginAPI} from "../api/authAPI.ts";
+import {Token, loginAPI} from "../api/authAPI.ts";
 import {BaseError} from "../../models/errorModel.ts";
 
 interface AuthSlice {
-    token: {
-        refresh: string | null,
-        access: string | null,
-    }
+    token: Token
     loading: boolean;
     error: {
         message: string | null,
@@ -48,8 +45,8 @@ const authSlice = createSlice({
                 const { access, refresh } = action.payload;
                 state.token.access = access;
                 state.token.refresh = refresh;
-                localStorage.setItem('access_token', access);
-                localStorage.setItem('refresh_token', refresh);
+                localStorage.setItem('access_token', access as string);
+                localStorage.setItem('refresh_token', refresh as string);
                 state.loading = false;
                 state.error.message = null;
             });

@@ -1,9 +1,9 @@
-export interface IError {
+export interface Error {
     message: string;
     code: number;
 }
 
-export class BaseError implements IError {
+export class BaseError implements Error {
     private _message: string;
     private _code: number;
 

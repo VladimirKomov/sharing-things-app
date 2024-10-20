@@ -1,14 +1,14 @@
 import { Method } from 'axios';
 import {API_BASE_URL} from "../config.ts";
 
-export interface IRequestConfig {
+export interface RequestConfig {
     method: Method;
     url: string;
     data?: any;
     headers?: Record<string, string>;
 }
 
-export class BaseRequest implements IRequestConfig {
+export class BaseRequest implements RequestConfig {
     private _method: Method;
     private _url: string;
     private _data?: any;

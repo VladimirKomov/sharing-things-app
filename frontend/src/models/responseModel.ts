@@ -1,10 +1,10 @@
-export interface IResponse<T> {
+export interface Response<T> {
     data: T;
     message: string;
     code: number;
 }
 
-export class BaseResponse<T> implements IResponse<T> {
+export class BaseResponse<T> implements Response<T> {
     private _data: T;
     private _message: string;
     private _code: number;
