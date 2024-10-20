@@ -1,5 +1,6 @@
 import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
 import {loginAPI} from "../api/authAPI.ts";
+import {BaseError} from "../../models/errorModel.ts";
 
 interface AuthSlice {
     token: {
@@ -7,7 +8,9 @@ interface AuthSlice {
         access: string | null,
     }
     loading: boolean;
-    error: string | null;
+    error: {
+        message: string | null,
+    };
 }
 
 const initialState: AuthSlice = {
@@ -16,13 +19,23 @@ const initialState: AuthSlice = {
         access: null,
     },
     loading: false,
-    error: null,
+    error: {
+        message: null,
+    },
 }
 
 export const login = createAsyncThunk(
     'auth/login',
-    async (credentials: {usernameOrEmail: string; password: string}) => {
-        return await loginAPI(credentials);
+    async (credentials: {usernameOrEmail: string; password: string}, {rejectWithValue}) => {
+        try {
+            return await loginAPI(credentials);
+        } catch (error: any) {
+            if (error instanceof BaseError) {
+                return rejectWithValue(error.message);
+            } else {
+                return rejectWithValue('Unexpected error occurred');
+            }
+        }
     }
 )
 
@@ -38,15 +51,17 @@ const authSlice = createSlice({
                 localStorage.setItem('access_token', access);
                 localStorage.setItem('refresh_token', refresh);
                 state.loading = false;
-                state.error = null;
+                state.error.message = null;
             });
             builder.addCase(login.pending, (state) => {
                 state.loading = true;
-                state.error = null;
+                state.error.message = null;
             });
             builder.addCase(login.rejected, (state, action) => {
                 state.loading = false;
-                state.error = action.error.message || 'An error occurred.';
+                state.error.message = typeof action.payload === 'string'
+                    ? action.payload
+                    : 'An error occurred.'
             });
         }
 })

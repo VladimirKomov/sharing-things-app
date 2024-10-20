@@ -1,11 +1,12 @@
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate
 from rest_framework import status
 from rest_framework.views import APIView
-from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 
 from .user_serializers import UserSerializer, LoginSerializer
-from config.logger import logger
+from common.logger import logger
+from common.responses import APIResponse
+from common.errors import APIError
 
 
 class UserRegistrationView(APIView):
@@ -15,9 +16,10 @@ class UserRegistrationView(APIView):
         if serializer.is_valid():
             serializer.save()
             # if OK
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return APIResponse(serializer.data, message="User created successfully", code=status.HTTP_201_CREATED).as_response()
+
         # if errors
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return APIError('Validation error', status.HTTP_400_BAD_REQUEST, serializer.errors).as_response()
 
 
 class LoginView(APIView):
@@ -29,17 +31,17 @@ class LoginView(APIView):
             user = authenticate(request, usernameOrEmail=usernameOrEmail, password=password)
 
             if user is not None:
-                login(request, user)
                 refresh = RefreshToken.for_user(user)
                 logger.info(f"User {usernameOrEmail} logged in successfully")
-                return Response({
+                return APIResponse({
                     'refresh': str(refresh),
                     'access': str(refresh.access_token),
-                }, status=status.HTTP_200_OK)
-            logger.info(f"User {usernameOrEmail} failed to login")
-            return Response({'error': 'Invalid credentials'}, status=status.HTTP_400_BAD_REQUEST)
+                }, message="Login successful", code=status.HTTP_200_OK).as_response()
 
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            logger.info(f"User {usernameOrEmail} failed to login")
+            return APIError('Invalid credentials', status.HTTP_400_BAD_REQUEST).as_response()
+
+        return APIError('Validation error', status.HTTP_400_BAD_REQUEST, serializer.errors).as_response()
 
 
 class UserLogoutView(APIView):
@@ -48,6 +50,6 @@ class UserLogoutView(APIView):
             request_token = request.data['refresh_token']
             token = RefreshToken(request_token)
             token.blacklist()
-            return Response(status=status.HTTP_205_RESET_CONTENT)
+            return APIResponse(message="Logout successful", code=status.HTTP_205_RESET_CONTENT).as_response()
         except Exception as e:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
+            return APIError('Logout failed', status.HTTP_400_BAD_REQUEST).as_response()
