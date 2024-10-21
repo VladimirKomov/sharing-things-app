@@ -30,6 +30,7 @@ export const login = createAsyncThunk(
             if (error instanceof BaseError) {
                 return rejectWithValue(error.message);
             } else {
+                console.log(error);
                 return rejectWithValue('Unexpected error occurred');
             }
         }
