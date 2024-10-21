@@ -1,3 +1,5 @@
+import {Logger} from "./Logger.ts";
+
 export interface Error {
     message: string;
     code: number;
@@ -31,14 +33,7 @@ export class BaseError implements Error {
     }
 
     private logError(): void {
-        console.error(`Error ${this._code}: ${this._message}`);
-        if (this._details) {
-            console.error("Details:", this._details);
-        }
-    }
-
-    toString(): string {
-        return `Error ${this._code}: ${this._message}`;
+        Logger.logError(JSON.stringify(this));
     }
 
 }

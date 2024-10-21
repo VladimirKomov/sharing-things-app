@@ -27,7 +27,8 @@ class APIError(BaseAPIError):
         self.message = message
         self.code = code
         self.details = details
-        self.log_error()
+
+        self.log()
 
     def as_response(self):
         error_response = {

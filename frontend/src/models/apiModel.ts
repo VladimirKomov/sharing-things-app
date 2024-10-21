@@ -15,10 +15,10 @@ export class BaseAPI {
             return response;
         } catch (error: any) {
             if (error.response) {
-                const errorMessage = error.response.data.error.message || 'An error occurred';
                 throw new BaseError(
-                    errorMessage,
-                    error.response.status,
+                    error.response.data.error.message,
+                    error.response.data.error.code,
+                    ...(error.response.data.error.details && {details: error.response.data.error.details})
                 );
             } else {
                 throw new BaseError('Network error or request failed', 500);

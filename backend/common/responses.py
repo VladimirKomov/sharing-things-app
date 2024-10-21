@@ -26,7 +26,8 @@ class APIResponse(BaseAPIResponse):
         self.message = message
         self.code = code
         self.metadata = metadata
-        self.log_response()
+
+        self.log()
 
     def as_response(self):
         response_data = {
