@@ -3,8 +3,7 @@ from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from .user_serializers import UserSerializer, LoginSerializer
-from common.logger import logger
+from .user_serializers import RegistrationSerializer, LoginSerializer
 from common.responses import APIResponse
 from common.errors import APIError
 
@@ -12,11 +11,14 @@ from common.errors import APIError
 class UserRegistrationView(APIView):
     def post(self, request):
         # user into serializer
-        serializer = UserSerializer(data=request.data)
+        serializer = RegistrationSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             # if OK
-            return APIResponse(serializer.data, message="User created successfully", code=status.HTTP_201_CREATED).as_response()
+            return (APIResponse(
+                serializer.data,
+                message="User created successfully",
+                code=status.HTTP_201_CREATED).as_response())
 
         # if errors
         return APIError('Validation error', status.HTTP_400_BAD_REQUEST, serializer.errors).as_response()
@@ -32,13 +34,14 @@ class LoginView(APIView):
 
             if user is not None:
                 refresh = RefreshToken.for_user(user)
-                logger.info(f"User {usernameOrEmail} logged in successfully")
-                return APIResponse({
-                    'refresh': str(refresh),
-                    'access': str(refresh.access_token),
-                }, message="Login successful", code=status.HTTP_200_OK).as_response()
+                return APIResponse(
+                    {
+                        'refresh': str(refresh),
+                        'access': str(refresh.access_token),
+                    },
+                    message="Login successful",
+                    code=status.HTTP_200_OK).as_response()
 
-            logger.info(f"User {usernameOrEmail} failed to login")
             return APIError('Invalid credentials', status.HTTP_400_BAD_REQUEST).as_response()
 
         return APIError('Validation error', status.HTTP_400_BAD_REQUEST, serializer.errors).as_response()
