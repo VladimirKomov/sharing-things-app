@@ -1,15 +1,20 @@
-import {useState} from "react";
+import React, {useState} from "react";
 import styles from "./RegistrationForm.module.css";
+import {useDispatch, useSelector} from "react-redux";
+import {AppDispatch, RootState} from "../../store.ts";
+import {register} from "../redux/authSlice.ts";
 
 const RegistrationForm: React.FC = () => {
-    const [name, setName] = useState('');
+    const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
     const [password, setPassword] = useState('');
     const [password2, setPassword2] = useState('');
-    const [error, setError] = useState('');
     const [passwordMismatch, setPasswordMismatch] = useState(false);
+    const [passworError, setPasswordError] = useState('');
+    const {loading, error} = useSelector((state: RootState) => state.auth);
+    const dispatch = useDispatch<AppDispatch>();
 
     //checking the password match
     const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -26,11 +31,11 @@ const RegistrationForm: React.FC = () => {
         e.preventDefault();
         //check password before the sending
         if (passwordMismatch) {
-            setError('Passwords do not match');
+            setPasswordError('Passwords do not match');
             return;
-        } else {
-            setError('');
         }
+        dispatch(register({ username, email, firstName, lastName, password, password2 }));
+        setPasswordError('');
     }
 
 
@@ -42,8 +47,8 @@ const RegistrationForm: React.FC = () => {
                     className={styles.input}
                     type="text"
                     id="name"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
                     required
                 />
             </div>
@@ -105,8 +110,11 @@ const RegistrationForm: React.FC = () => {
             {/* Password mismatch message */}
             {passwordMismatch && <p className={styles.error}>Passwords do not match</p>}
             {/* Error message */}
-            {error && <p className={styles.error}>{error}</p>}
-            <button className={styles.button} type="submit">Register</button>
+            {error && <p className={styles.error}>{passworError}</p>}
+            {error && <p className={styles.error}>{error.message}</p>}
+            <button className={styles.button} type="submit" disabled={loading}>
+                {loading ? 'Loading...' : 'Register'}
+            </button>
         </form>
     );
 }

@@ -3,6 +3,7 @@ from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
 
+from common.Mapper import map_request_to_user_registration
 from .user_serializers import RegistrationSerializer, LoginSerializer
 from common.responses import APIResponse
 from common.errors import APIError
@@ -11,7 +12,9 @@ from common.errors import APIError
 class UserRegistrationView(APIView):
     def post(self, request):
         # user into serializer
-        serializer = RegistrationSerializer(data=request.data)
+        serializer = RegistrationSerializer(
+            data=map_request_to_user_registration(request.data)
+        )
         if serializer.is_valid():
             serializer.save()
             # if OK

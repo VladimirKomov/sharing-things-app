@@ -1,28 +1,39 @@
 import {BaseRequest} from "../../models/requestModel.ts";
-import BaseAPI from "../../models/apiModel.ts";
+import createAPIRequest from "../../models/apiModel.ts";
 
-export interface Credentials {
+
+export interface LoginCredentials {
     usernameOrEmail: string;
     password: string;
 }
 
 export interface Token {
-    refresh: string | null,
-    access: string | null,
+    refresh: string | null;
+    access: string | null;
 }
 
-const api = new BaseAPI();
+export interface ReqCredentials {
+    username: string;
+    email: string;
+    firstName: string;
+    lastName: string;
+    password: string;
+    password2: string;
+}
 
-//get token
-export const loginAPI = async (credentials: Credentials): Promise<Token> => {
-    const requestLogin = new BaseRequest('POST', `/login/`, credentials);
-    try {
-        const response = await api.request<Token>(requestLogin);
-        return response.data;
-    } catch (error: any) {
-        throw error;
-    }
+//get user
+export const loginAPI = async (credentials: LoginCredentials): Promise<any> => {
+    const requestConfig = new BaseRequest('POST', '/login/', credentials);
+    const response = await createAPIRequest<Token>(requestConfig);
+    return response.data;
 };
+// register user
+export const registerAPI = async (credentials: ReqCredentials): Promise<any> => {
+    const requestConfig = new BaseRequest('POST', '/register/', credentials);
+    const response = await createAPIRequest<any>(requestConfig);
+    return response.message;
+};
+
 
 
 
