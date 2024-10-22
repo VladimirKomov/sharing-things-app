@@ -1,8 +1,9 @@
 import {useDispatch, useSelector} from "react-redux";
 import {AppDispatch, RootState} from "../../store.ts";
-import {useState} from "react";
+import React, {useState} from "react";
 import {login} from "../redux/authSlice.ts";
-import styles from './Login.module.css';
+import styles from './LoginForm.module.css';
+import {Link} from "react-router-dom";
 
 const Login: React.FC = () => {
     const dispatch = useDispatch<AppDispatch>();
@@ -12,7 +13,7 @@ const Login: React.FC = () => {
 
     const handleLogin = (e: React.FormEvent) => {
         e.preventDefault();
-       dispatch(login({usernameOrEmail, password}));
+        dispatch(login({usernameOrEmail, password}));
     }
 
     return (
@@ -41,6 +42,12 @@ const Login: React.FC = () => {
                 {loading ? 'Loading...' : 'Login'}
             </button>
             {error && <p className={styles.error}>{error.message}</p>}
+            <div className={styles['register-link']}>
+                <p>
+                    Don't have an account? <br/>
+                    <Link to="/register">Register here</Link>
+                </p>
+            </div>
         </form>
     );
 }

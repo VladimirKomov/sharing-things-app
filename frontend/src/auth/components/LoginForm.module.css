@@ -8,6 +8,7 @@
     border: var(--border-width) solid var(--border-color);
     border-radius: var(--border-radius);
     background-color: var(--background-color);
+    text-align: center; /* Центрируем содержимое формы */
 }
 
 /* Стили для инпутов */
@@ -43,4 +44,13 @@
 .error {
     color: var(--error-color);
     font-size: var(--font-size-small);
+    margin-bottom: var(--spacing-medium); /* Отступ снизу */
+    text-align: center; /* Центрируем ошибку */
+}
+
+/* Стили для ссылки регистрации */
+.register-link {
+    font-size: var(--font-size-base);
+    margin-top: var(--spacing-medium); /* Отступ сверху */
+    text-align: center; /* Центрируем ссылку */
 }

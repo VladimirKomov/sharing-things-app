@@ -1,0 +1,95 @@
+@import '../../../styles/variables.css';
+
+/* Стили для формы */
+.form {
+    max-width: 400px;
+    margin: 0 auto;
+    padding: var(--spacing-medium);
+    border: var(--border-width) solid var(--border-color);
+    border-radius: var(--border-radius);
+    background-color: var(--background-color);
+    text-align: center;
+}
+
+/* Стили для инпутов */
+.input {
+    width: 100%;
+    height: var(--input-height);
+    padding: var(--spacing-small);
+    margin-bottom: var(--spacing-small);
+    border: var(--border-width) solid var(--border-color);
+    border-radius: var(--border-radius);
+    box-sizing: border-box; /* Учет границ и отступов */
+}
+
+/* Стили для кнопки */
+.button {
+    width: 100%;
+    height: var(--input-height);
+    background-color: var(--secondary-color);
+    color: white;
+    border: none;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    transition: background-color var(--transition-duration) var(--transition-timing);
+}
+
+/* Стили для заблокированной кнопки */
+.button:disabled {
+    background-color: var(--quaternary);
+}
+
+/* Стили для ошибок */
+.error {
+    color: var(--error-color);
+    font-size: var(--font-size-small);
+    margin-bottom: var(--spacing-medium); /* Отступ снизу */
+    text-align: center;
+}
+
+/* Стили для меток */
+label {
+    display: block;
+    text-align: left;
+    margin-bottom: var(--spacing-small);
+    font-weight: bold;
+}
+
+/* Общие стили для контейнеров инпутов */
+.form div {
+    margin-bottom: var(--spacing-medium);
+}
+
+/* Стили для регистрации */
+.register-form {
+    max-width: 400px;
+    margin: 0 auto;
+    padding: var(--spacing-medium);
+    border: var(--border-width) solid var(--border-color);
+    border-radius: var(--border-radius);
+    background-color: var(--background-color);
+    text-align: center;
+}
+
+/* Стили для инпутов регистрации */
+.register-input {
+    width: 100%;
+    height: var(--input-height);
+    padding: var(--spacing-small);
+    margin-bottom: var(--spacing-small);
+    border: var(--border-width) solid var(--border-color);
+    border-radius: var(--border-radius);
+    box-sizing: border-box;
+}
+
+/* Стили для кнопки регистрации */
+.register-button {
+    width: 100%;
+    height: var(--input-height);
+    background-color: var(--secondary-color);
+    color: white;
+    border: none;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    transition: background-color var(--transition-duration) var(--transition-timing);
+}
