@@ -1,7 +1,7 @@
 import {BaseRequest} from "../../models/requestModel.ts";
 import BaseAPI from "../../models/apiModel.ts";
 
-interface Credentials {
+export interface Credentials {
     usernameOrEmail: string;
     password: string;
 }
@@ -23,6 +23,8 @@ export const loginAPI = async (credentials: Credentials): Promise<Token> => {
         throw error;
     }
 };
+
+
 
 
 

@@ -1,5 +1,5 @@
 import './App.css'
-import Login from "./auth/components/LogginForm";
+import Login from "./auth/components/LoginForm.tsx";
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import RegistrationForm from "./auth/components/RegistrationForm";
 

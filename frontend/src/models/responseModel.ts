@@ -1,3 +1,5 @@
+import {Logger} from "./Logger";
+
 export interface Response<T> {
     data: T;
     message: string;
@@ -13,6 +15,8 @@ export class BaseResponse<T> implements Response<T> {
         this._data = data;
         this._message = message;
         this._code = code;
+
+        this.logResponse();
     }
 
     get data(): T {
@@ -25,5 +29,9 @@ export class BaseResponse<T> implements Response<T> {
 
     get code(): number {
         return this._code;
+    }
+
+    private logResponse(): void {
+        Logger.logResponse(JSON.stringify(this));
     }
 }

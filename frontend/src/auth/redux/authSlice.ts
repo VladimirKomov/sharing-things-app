@@ -1,6 +1,5 @@
 import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
-import {Token, loginAPI} from "../api/authAPI.ts";
-import {BaseError} from "../../models/errorModel.ts";
+import {Token, loginAPI, Credentials} from "../api/authAPI.ts";
 
 interface AuthSlice {
     token: Token
@@ -23,16 +22,11 @@ const initialState: AuthSlice = {
 
 export const login = createAsyncThunk(
     'auth/login',
-    async (credentials: {usernameOrEmail: string; password: string}, {rejectWithValue}) => {
+    async (credentials: Credentials, {rejectWithValue}) => {
         try {
             return await loginAPI(credentials);
         } catch (error: any) {
-            if (error instanceof BaseError) {
-                return rejectWithValue(error.message);
-            } else {
-                console.log(error);
-                return rejectWithValue('Unexpected error occurred');
-            }
+            return rejectWithValue(error.message || 'Unexpected error occurred');
         }
     }
 )
