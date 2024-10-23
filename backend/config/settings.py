@@ -12,6 +12,10 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 from datetime import timedelta
 from pathlib import Path
 import environ
+import logging
+
+env = environ.Env()
+environ.Env.read_env('.env')
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -83,8 +87,6 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
-env = environ.Env()
-environ.Env.read_env('.env')
 
 DATABASES = {
     'default': {
@@ -190,4 +192,28 @@ LOGGING = {
         },
     },
 }
+
+# Amazon S3 Settings
+STORAGES = {
+    "default": {
+        "BACKEND": "storages.backends.s3boto3.S3Boto3Storage",
+        "OPTIONS": {
+            "access_key": env('AWS_ACCESS_KEY_ID'),
+            "secret_key": env('AWS_SECRET_ACCESS_KEY'),
+            "bucket_name": env('AWS_STORAGE_BUCKET_NAME'),
+            "region_name": env('AWS_S3_REGION_NAME'),
+        },
+    },
+    "staticfiles": {
+        "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
+    },
+}
+
+AWS_LOCATION = 'public'
+# The URL where the downloaded files will be available
+MEDIA_URL = f'https://{env("AWS_STORAGE_BUCKET_NAME")}.s3.amazonaws.com/{AWS_LOCATION}/'
+
+
+
+
 
