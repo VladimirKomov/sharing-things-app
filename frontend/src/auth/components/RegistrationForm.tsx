@@ -41,7 +41,7 @@ const RegistrationForm: React.FC = () => {
             .unwrap()
             .then(() => {
                 setErrorForm('');
-                setIsRegistered(true); // Устанавливаем, что регистрация успешна
+                setIsRegistered(true); // the registration is successful
             })
     }
 
@@ -127,10 +127,10 @@ const RegistrationForm: React.FC = () => {
                 </form>
             ) : (
                 <div className={styles.successContainer}>
-                    <h2 className={styles.successMessage}>Регистрация успешна!</h2>
+                    <h2 className={styles.successMessage}>Registration is successful!</h2>
                     <button className={styles.successButton}
                             onClick={() => navigate('/')}>
-                        Вернуться на главную
+                        Go back to the main page
                     </button>
                 </div>
             )}

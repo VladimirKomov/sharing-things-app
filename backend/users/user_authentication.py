@@ -18,7 +18,6 @@ class EmailOrUsernameModelBackend(ModelBackend):
             return None
 
         if user.check_password(password) and self.user_can_authenticate(user):
-            logger.info(f"User {usernameOrEmail} authenticated successfully")
             return user
 
         logger.warning(f"Authentication failed for {usernameOrEmail}")
