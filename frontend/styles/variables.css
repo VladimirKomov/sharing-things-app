@@ -8,6 +8,7 @@
     --quaternary: #a3c8ec;
     --background-color: #d8e1e9;
     --error-color: #ff0000;
+    --success-color: #00796b;
     /*    founts*/
     --font-family-primary: 'Roboto', sans-serif;
     --font-size-base: 16px;
@@ -33,6 +34,7 @@
 
     /* Размеры контейнеров */
     --max-width: 1200px;
+    --max-form-width: 400px;
     --min-height: 100vh;
 
 /*    Высота полей ввода и кнопок полей ввода*/
