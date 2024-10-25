@@ -3,17 +3,17 @@ from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from users.user_mapper import map_request_to_user_registration, map_api_error_as_resp, map_to_api_response_as_resp, \
-    map_request_to_request
+from common.mapper import map_to_api_response_as_resp, map_api_error_as_resp, map_request_to_request
+from users.user_mapper import map_request_to_user_registration
 from .user_serializers import RegistrationSerializer, LoginSerializer
 
 
 class UserRegistrationView(APIView):
     def post(self, request):
-        request_api = map_request_to_user_registration(request)
+        request_api = map_request_to_request(request)
         # user into serializer
         serializer = RegistrationSerializer(
-            data=request_api['data']
+            data=map_request_to_user_registration(request_api)
         )
         if serializer.is_valid():
             serializer.save()
