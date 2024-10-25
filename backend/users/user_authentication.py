@@ -1,10 +1,7 @@
-from django.contrib.auth import get_user_model
+from django.contrib.auth.models import User
 from django.contrib.auth.backends import ModelBackend
 from django.db.models import Q
 from common.logger import logger
-
-
-User = get_user_model()
 
 
 # get user by email or username

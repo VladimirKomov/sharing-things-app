@@ -1,10 +1,9 @@
-from django.shortcuts import render
 from rest_framework import viewsets, status
 from rest_framework.permissions import IsAdminUser, IsAuthenticatedOrReadOnly
 
 from common.responses import APIResponse
 from items.item_serializers import CategorySerializer, ItemSerializer
-from items.models import Category, Item
+from items.items_models import Category, Item
 
 
 class CategoryViewSet(viewsets.ModelViewSet):

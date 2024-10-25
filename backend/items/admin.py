@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Category, Item
+from .items_models import Category, Item
 
 
 @admin.register(Category)
@@ -10,3 +10,6 @@ class CategoryAdmin(admin.ModelAdmin):
 @admin.register(Item)
 class ItemAdmin(admin.ModelAdmin):
     list_display = ('name', 'category', 'description')
+
+
+
