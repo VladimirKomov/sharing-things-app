@@ -15,5 +15,9 @@ class Logger:
         logger.error(f'ERROR: {Logger.get_current_data_time()}: {error_str}')
 
     @staticmethod
+    def log_request(request_str: str = ""):
+        logger.info(f'INFO: {Logger.get_current_data_time()}: {request_str}')
+
+    @staticmethod
     def get_current_data_time() -> str:
         return datetime.now().strftime("%Y-%m-%d %H:%M:%S")

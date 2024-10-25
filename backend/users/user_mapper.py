@@ -1,9 +1,32 @@
-def map_request_to_user_registration(data: dict) -> dict:
-    return {
-        "username": data.get("username"),
-        "email": data.get("email"),
-        "first_name": data.get("firstName"),
-        "last_name": data.get("lastName"),
-        "password": data.get("password"),
-        "password2": data.get("password2")
+from typing import Optional, Any, Dict
+
+from rest_framework import status
+
+from common.errors import APIError
+from common.request import APIRequest
+from common.responses import APIResponse
+
+
+def map_request_to_request(request: Dict[str, Any]) -> Dict[str, Any]:
+    return APIRequest(data=request.data, headers=request.headers).as_request()
+
+
+def map_request_to_user_registration(request: Dict[str, Any]) -> Dict[str, Any]:
+    data = {
+        "username": request.data.get("username"),
+        "email": request.data.get("email"),
+        "first_name": request.data.get("firstName"),
+        "last_name": request.data.get("lastName"),
+        "password": request.data.get("password"),
+        "password2": request.data.get("password2")
     }
+    return APIRequest(data=data).as_request()
+
+
+def map_api_error_as_resp(message: str, code: int, data: Optional[dict] = None) -> APIError:
+    return APIError(message, code, data).as_response()
+
+
+def map_to_api_response_as_resp(data: Optional[Any] = None, message: str = "Success",
+                                code: int = status.HTTP_200_OK, metadata: Optional[dict] = None) -> APIResponse:
+    return APIResponse(data=data, message=message, code=code, metadata=metadata).as_response()

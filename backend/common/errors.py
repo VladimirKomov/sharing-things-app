@@ -30,7 +30,7 @@ class APIError(BaseAPIError):
 
         self.log()
 
-    def as_response(self):
+    def as_response(self) -> Response:
         error_response = {
             "error": {
                 "message": self.message,
@@ -41,7 +41,7 @@ class APIError(BaseAPIError):
             error_response["error"]["details"] = self.details
         return Response(error_response, status=self.code)
 
-    def __str__(self):
+    def __str__(self) -> str:
         details_str = f", data: {self.details}" if self.details else ""
         return f"APIResponse(code: {self.code}, message: {self.message}{details_str})"
 

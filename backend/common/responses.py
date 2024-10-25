@@ -1,4 +1,6 @@
 from abc import ABC, abstractmethod
+from typing import Dict, Any
+
 from rest_framework.response import Response
 from rest_framework import status
 
@@ -29,7 +31,7 @@ class APIResponse(BaseAPIResponse):
 
         self.log()
 
-    def as_response(self):
+    def as_response(self) -> Dict[str, Any]:
         response_data = {
             "message": self.message,
             "code": self.code,
@@ -39,7 +41,7 @@ class APIResponse(BaseAPIResponse):
             response_data["metadata"] = self.metadata
         return Response(response_data, status=self.code)
 
-    def __str__(self):
+    def __str__(self) -> str:
         metadata_str = f", metadata: {self.metadata}" if self.metadata else ""
         data_str = f", data: {self.data}" if self.data else ""
         return f"APIResponse(code: {self.code}, message: {self.message}{data_str}{metadata_str})"
