@@ -4,8 +4,8 @@ from .items_views import CategoryViewSet, ItemViewSet
 
 # CRUD routes
 router = DefaultRouter()
-router.register(r'category', CategoryViewSet, basename='category')
-router.register(r'item', ItemViewSet, basename='item')
+router.register(r'categories', CategoryViewSet, basename='category')
+router.register(r'items', ItemViewSet, basename='item')
 
 urlpatterns = [
     # the full path api/items

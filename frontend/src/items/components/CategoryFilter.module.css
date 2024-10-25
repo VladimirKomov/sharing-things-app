@@ -1,0 +1,45 @@
+@import '../../../styles/variables.css';
+
+.categoryFilter {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--spacing-small);
+    margin-bottom: var(--spacing-large);
+    font-family: var(--font-family-primary);
+}
+
+.label {
+    font-size: var(--font-size-large);
+    font-weight: 500;
+    color: var(--primary-color);
+}
+
+.select {
+    width: var(--input-width);
+    padding: var(--spacing-small);
+    height: var(--input-height);
+    border: var(--border-width) solid var(--border-color);
+    border-radius: var(--border-radius);
+    background-color: #fff;
+    font-size: var(--font-size-base);
+    box-shadow: var(--box-shadow-small);
+    transition: border-color var(--transition-duration) var(--transition-timing);
+}
+
+.select:focus {
+    border-color: var(--primary-color);
+    box-shadow: var(--box-shadow-large);
+    outline: none;
+}
+
+.loading,
+.error {
+    font-size: var(--font-size-small);
+    color: var(--secondary-color);
+    padding: var(--spacing-small);
+}
+
+.error {
+    color: var(--error-color);
+}

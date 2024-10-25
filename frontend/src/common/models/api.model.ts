@@ -1,8 +1,8 @@
 import axios, {AxiosResponse} from "axios";
-import {RequestConfig} from "./requestModel.ts";
-import {BaseError} from "./errorModel.ts";
-import {errorResponseToBaseError, responseToBaseResponse} from "./Mapper.ts";
-import {BaseResponse} from "./responseModel.ts";
+import {RequestConfig} from "./request.model.ts";
+import {BaseError} from "./error.model.ts";
+import {errorResponseToBaseError, responseToBaseResponse} from "../mapper.ts";
+import {BaseResponse} from "./response.model.ts";
 
 const createAPIRequest = async <T>(config: RequestConfig): Promise<BaseResponse<any>> => {
     try {

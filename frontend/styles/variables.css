@@ -1,24 +1,28 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
 
+/* Переменные */
 :root {
-    /*colors*/
+    /* Цвета */
     --primary-color: #017af2;
     --secondary-color: #3794f0;
-    --tertiary: #6daeee;
-    --quaternary: #a3c8ec;
+    --tertiary-color: #6daeee;
+    --quaternary-color: #a3c8ec;
     --background-color: #d8e1e9;
     --error-color: #ff0000;
     --success-color: #00796b;
-    /*    founts*/
+
+    /* Шрифты */
     --font-family-primary: 'Roboto', sans-serif;
     --font-size-base: 16px;
     --font-size-large: 20px;
     --font-size-small: 12px;
     --line-height: 1.5;
+
     /* Отступы */
     --spacing-small: 8px;
     --spacing-medium: 16px;
     --spacing-large: 32px;
+
     /* Границы */
     --border-radius: 5px;
     --border-color: #ccc;
@@ -37,8 +41,88 @@
     --max-form-width: 400px;
     --min-height: 100vh;
 
-/*    Высота полей ввода и кнопок полей ввода*/
+    /* Размеры полей ввода и кнопок */
     --input-height: 35px;
+    --input-width: 200px;
 }
 
+/* Основные стили */
+body {
+    font-family: var(--font-family-primary);
+    font-size: var(--font-size-base);
+    /*background-color: var(--background-color);*/
+    color: var(--primary-color);
+    margin: 0;
+    padding: 0;
+    line-height: var(--line-height);
+}
 
+/* Заголовки */
+h1, h2, h3, h4, h5, h6 {
+    color: var(--primary-color);
+    margin-bottom: var(--spacing-medium);
+    font-weight: 500;
+}
+
+/* Контейнер */
+.container {
+    max-width: var(--max-width);
+    margin: 0 auto;
+    padding: var(--spacing-medium);
+}
+
+/* Кнопки */
+button {
+    background-color: var(--primary-color);
+    color: #fff;
+    font-size: var(--font-size-base);
+    padding: var(--spacing-small) var(--spacing-medium);
+    border: none;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    transition: background-color var(--transition-duration) var(--transition-timing);
+}
+
+button:hover {
+    background-color: var(--secondary-color);
+}
+
+/* Поля ввода */
+input, select, textarea {
+    font-family: var(--font-family-primary);
+    font-size: var(--font-size-base);
+    padding: 0 var(--spacing-small);
+    height: var(--input-height);
+    border: var(--border-width) solid var(--border-color);
+    border-radius: var(--border-radius);
+    transition: box-shadow var(--transition-duration) var(--transition-timing);
+    box-shadow: var(--box-shadow-small);
+}
+
+input:focus, select:focus, textarea:focus {
+    outline: none;
+    box-shadow: var(--box-shadow-large);
+    border-color: var(--primary-color);
+}
+
+/* Сообщения об ошибках */
+.error-message {
+    color: var(--error-color);
+    font-size: var(--font-size-small);
+}
+
+/* Успешные сообщения */
+.success-message {
+    color: var(--success-color);
+    font-size: var(--font-size-small);
+}
+
+/* Форма */
+.form-container {
+    max-width: var(--max-form-width);
+    margin: 0 auto;
+    padding: var(--spacing-medium);
+    background-color: #fff;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow-large);
+}

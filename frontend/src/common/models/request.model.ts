@@ -1,5 +1,5 @@
 import { Method } from 'axios';
-import {API_BASE_URL} from "../config.ts";
+import {API_BASE_URL} from "../../config.ts";
 
 export interface RequestConfig {
     method: Method;

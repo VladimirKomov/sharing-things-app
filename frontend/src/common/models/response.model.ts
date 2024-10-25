@@ -1,4 +1,4 @@
-import {Logger} from "./Logger";
+import {Logger} from "../logger.ts";
 
 export interface Response<T> {
     data: T;
