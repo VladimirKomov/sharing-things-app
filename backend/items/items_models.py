@@ -1,3 +1,6 @@
+import os
+import uuid
+
 from django.contrib.auth.models import User
 from django.db import models
 
@@ -22,7 +25,14 @@ class Item(models.Model):
 
 class ItemImage(models.Model):
     item = models.ForeignKey(Item, on_delete=models.CASCADE, related_name='images')
-    image = models.ImageField(upload_to='items/')
+
+    #create unique name fot the file
+    def generate_unique_image_path(self, filename):
+        extension = filename.split('.')[-1]
+        unique_filename = f"{uuid.uuid4()}.{extension}"
+        return os.path.join('items/', unique_filename)
+
+    image = models.ImageField(upload_to=generate_unique_image_path)
 
     def __str__(self):
         return f"Image for {self.item.name}"
