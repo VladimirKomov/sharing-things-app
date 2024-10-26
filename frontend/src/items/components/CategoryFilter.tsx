@@ -1,16 +1,16 @@
 import React, {useEffect, useState} from "react";
-import {Category} from "../../common/models/category.model.ts";
 import {useDispatch, useSelector} from "react-redux";
-import {AppDispatch, RootState} from "../../store.ts";
-import {fetchCategories} from "../redux/categorySlice.ts";
+import {AppDispatch} from "../../store.ts";
+import {fetchCategories, selectCategories, selectError, selectLoading} from "../redux/categorySlice.ts";
 import styles from './CategoryFilter.module.css';
+
 
 
 const CategoryFilter: React.FC = () => {
     const dispatch = useDispatch<AppDispatch>();
-    const categories: Category[] = useSelector((state: RootState) => state.categories.categories);
-    const loading = useSelector((state: RootState) => state.categories.loading);
-    const error = useSelector((state: RootState) => state.categories.error);
+    const categories = useSelector(selectCategories);
+    const loading = useSelector(selectLoading);
+    const error = useSelector(selectError);
     const [selectedCategory, setSelectedCategory] = useState<string>('');
 
     useEffect(() => {
@@ -27,8 +27,8 @@ const CategoryFilter: React.FC = () => {
             <label className={styles.label}>Select category:</label>
             {loading ? (
                 <p className={styles.loading}>Loading...</p>
-            ) : error ? (
-                <p className={styles.error}>Error loading categories: {error}</p>
+            ) : error.message ? (
+                <p className={styles.error}>Error loading categories: {error.message}</p>
             ) : (
                 <select
                     className={styles.select}

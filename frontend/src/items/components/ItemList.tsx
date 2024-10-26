@@ -28,7 +28,6 @@ const ItemList: React.FC = () => {
                         <Item
                             name={item.name}
                             description={item.description}
-                            images={item.images}
                         />
                     </li>
                 ))}
