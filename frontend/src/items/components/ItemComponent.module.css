@@ -1,0 +1,41 @@
+@import '../../../styles/variables.css';
+/* Стили для компонента */
+.itemContainer {
+    max-width: 200px;
+    background-color: #fff;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow-small);
+    padding: var(--spacing-medium);
+    margin-bottom: var(--spacing-large);
+    transition: box-shadow var(--transition-duration) var(--transition-timing);
+}
+
+.itemContainer:hover {
+    box-shadow: var(--box-shadow-large);
+}
+
+.itemTitle {
+    color: var(--primary-color);
+    font-size: var(--font-size-large);
+    margin-bottom: var(--spacing-small);
+}
+
+.itemDescription, .itemOwner, .itemCategory {
+    color: var(--secondary-color);
+    font-size: var(--font-size-base);
+    margin: var(--spacing-small) 0;
+}
+
+.imagesContainer {
+    display: flex;
+    gap: var(--spacing-small);
+    margin-top: var(--spacing-medium);
+}
+
+.image {
+    border-radius: var(--border-radius);
+    width: 200px;
+    height: 200px;
+    object-fit: cover;
+    box-shadow: var(--box-shadow-small);
+}

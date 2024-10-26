@@ -2,5 +2,11 @@ export interface Item {
     id: number;
     name: string;
     description: string;
-    images: string[];
+    categoryName: string;
+    ownerName: string;
+    imagesUrl: [
+        {
+            url: string;
+        }
+    ];
 }

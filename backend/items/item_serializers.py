@@ -29,3 +29,11 @@ class ItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = Item
         fields = ['id', 'name', 'description', 'category_name', 'username', 'images_url']
+
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        # change name`
+        data['categoryName'] = data.pop('category_name')
+        data['ownerName'] = data.pop('username')
+        data['imagesUrl'] = data.pop('images_url')
+        return data

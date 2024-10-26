@@ -20,12 +20,12 @@ const initialState: ItemsState = {
 }
 
 
-const createAuthThunk = (type: string, apiFunction: (credentials: any) => Promise<any>) => {
+const createAuthThunk = (type: string, apiFunction: (credentials?: any) => Promise<any>) => {
     return createAsyncThunk(
         type,
-        async (credentials: any, { rejectWithValue }) => {
+        async (_, { rejectWithValue }) => {
             try {
-                return await apiFunction(credentials);
+                return await apiFunction();
             } catch (error: any) {
                 return rejectWithValue(error.message || 'Unexpected error occurred');
             }

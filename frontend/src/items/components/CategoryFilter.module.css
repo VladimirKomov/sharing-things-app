@@ -3,10 +3,15 @@
 .categoryFilter {
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
+    align-items: center; /* Центрирование элементов по горизонтали */
+    justify-content: center; /* Центрирование элементов по вертикали */
     gap: var(--spacing-small);
     margin-bottom: var(--spacing-large);
-    font-family: var(--font-family-primary);
+    text-align: center; /* Центрирование текста внутри */
+    width: 100%; /* Чтобы контейнер занимал всю ширину */
+    max-width: 300px; /* Ограничим ширину для центрирования */
+    margin-left: auto; /* Центрируем контейнер по горизонтали */
+    margin-right: auto; /* Центрируем контейнер по горизонтали */
 }
 
 .label {
