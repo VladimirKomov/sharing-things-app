@@ -9,3 +9,28 @@ export const getCategories = async (): Promise<any> => {
     const response = await createAPIRequest(requestConfig);
     return response.data;
 };
+
+export const getItems = async (): Promise<any> => {
+    const requestConfig = new BaseRequest('GET', itemsRoot + 'items/');
+    const response = await createAPIRequest(requestConfig);
+    return response.data;
+}
+
+export const postItem = async (): Promise<any> => {
+    const requestConfig = new BaseRequest('POST', itemsRoot + 'items/');
+    const response = await createAPIRequest(requestConfig);
+    return response.data;
+}
+
+export const putItem = async (): Promise<any> => {
+    const requestConfig = new BaseRequest('PUT', itemsRoot + 'items/');
+    const response = await createAPIRequest(requestConfig);
+    return response.data;
+}
+
+
+export const delItem = async (): Promise<any> => {
+    const requestConfig = new BaseRequest('DELETE', itemsRoot + 'items/');
+    const response = await createAPIRequest(requestConfig);
+    return response.data;
+}

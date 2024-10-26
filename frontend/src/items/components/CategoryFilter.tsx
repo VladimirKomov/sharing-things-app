@@ -13,8 +13,6 @@ const CategoryFilter: React.FC = () => {
     const error = useSelector((state: RootState) => state.categories.error);
     const [selectedCategory, setSelectedCategory] = useState<string>('');
 
-    console.log('categories =>', categories);
-
     useEffect(() => {
         dispatch(fetchCategories());
     }, [dispatch]);
@@ -37,7 +35,7 @@ const CategoryFilter: React.FC = () => {
                     value={selectedCategory}
                     onChange={handleCategoryChange}
                 >
-                    <option value="">Все категории</option>
+                    <option value="">All categories</option>
                     {categories.map(category => (
                         <option key={category.id} value={category.id}>
                             {category.name}

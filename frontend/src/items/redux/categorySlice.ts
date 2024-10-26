@@ -5,13 +5,17 @@ import {getCategories} from "../api/itemsApi.ts";
 interface CategoryState {
     categories: Category[];
     loading: boolean;
-    error: string | null;
+    error: {
+        message: string | null,
+    };
 }
 
 const initialState: CategoryState = {
     categories: [],
     loading: false,
-    error: null,
+    error: {
+        message: null,
+    },
 }
 
 export const fetchCategories = createAsyncThunk(
@@ -33,7 +37,7 @@ const categoriesSlice = createSlice({
     extraReducers: (builder) => {
         builder.addCase(fetchCategories.pending, (state) => {
             state.loading = true;
-            state.error = null;
+            state.error.message = null;
         });
         builder.addCase(fetchCategories.fulfilled, (state, action) => {
             state.loading = false;
@@ -41,7 +45,7 @@ const categoriesSlice = createSlice({
         });
         builder.addCase(fetchCategories.rejected, (state, action) => {
             state.loading = false;
-            state.error = action.error.message || 'An error occurred';
+            state.error.message = action.error.message || 'An error occurred';
         });
     }
 })
