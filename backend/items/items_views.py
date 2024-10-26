@@ -1,7 +1,7 @@
 from rest_framework import viewsets, status
 from rest_framework.permissions import IsAdminUser, IsAuthenticatedOrReadOnly
 
-from common.responses import APIResponse
+from common.mapper import map_to_api_response_as_resp
 from items.item_serializers import CategorySerializer, ItemSerializer
 from items.items_models import Category, Item
 
@@ -23,23 +23,21 @@ class CategoryViewSet(viewsets.ModelViewSet):
     def list(self, request, *args, **kwargs):
         categories = Category.objects.all()
         serializer = CategorySerializer(categories, many=True)
-        response = APIResponse(
+        return map_to_api_response_as_resp(
             data=serializer.data,
             message="Categories retrieved successfully",
             code=status.HTTP_200_OK
         )
-        return response.as_response()
 
     # get Category by id
     def retrieve(self, request, *args, **kwargs):
         category = self.get_object()
         serializer = CategorySerializer(category)
-        response = APIResponse(
+        return map_to_api_response_as_resp(
             data=serializer.data,
             message="Category retrieved successfully",
             code=status.HTTP_200_OK
         )
-        return response.as_response()
 
 
 class ItemViewSet(viewsets.ModelViewSet):
