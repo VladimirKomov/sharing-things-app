@@ -1,6 +1,13 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
-import {selectItems, selectLoading, selectError, fetchItems} from '../redux/itemsSlice';
+import {
+    selectItems,
+    selectLoading,
+    selectError,
+    fetchItems,
+    selectHasNextPage,
+    selectHasPreviousPage
+} from '../redux/itemsSlice';
 import ItemComponent from './ItemComponent';
 import {AppDispatch} from "../../store";
 import styles from "./ItemsList.module.css";
@@ -15,12 +22,13 @@ const ItemsList: React.FC = () => {
     // Scroll settings
     const [page, setPage] = useState(1); // Starting page
     const [limit] = useState(5); // Items per page
-    const [hasMore, setHasMore] = useState(true); // End of list indicator
+    const HasPreviousPage = useSelector(selectHasPreviousPage);
+    const hasNextPage = useSelector(selectHasNextPage); // End of list indicator
     const observer = useRef<IntersectionObserver | null>(null);
 
     const lastItemRef = useCallback(
         (node: HTMLDivElement | null) => {
-            if (loading || !hasMore) return; // Stop if loading or reached end of data
+            if (loading || !hasNextPage) return; // Stop if loading or reached end of data
 
             if (observer.current) observer.current.disconnect(); // Clear observer
 
@@ -32,19 +40,35 @@ const ItemsList: React.FC = () => {
 
             if (node) observer.current.observe(node); // Observe last item
         },
-        [loading, hasMore]
+        [loading, hasNextPage]
+    );
+
+    const firstItemRef = useCallback(
+        (node: HTMLDivElement | null) => {
+            if (loading || !HasPreviousPage || page === 1) return;
+
+            if (observer.current) observer.current.disconnect();
+
+            observer.current = new IntersectionObserver((entries) => {
+                if (entries[0].isIntersecting) {
+                    setPage((prevPage) => prevPage - 1);
+                }
+            });
+
+            if (node) observer.current.observe(node);
+        },
+        [loading, HasPreviousPage, page]
     );
 
     useEffect(() => {
         const fetchAndCheckItems = async () => {
-            const result = await dispatch(fetchItems({limit, page})).unwrap();
-            setHasMore(result.hasNextPage);// Set to false if no more data
+            await dispatch(fetchItems({limit, page}));
         };
 
-        if (hasMore) {
+        if (hasNextPage || HasPreviousPage) {
             fetchAndCheckItems();
         }
-    }, [dispatch, page, limit, hasMore]);
+    }, [dispatch, page, limit, hasNextPage, HasPreviousPage]);
 
     return (
         <div className={styles.itemsListContainer}>
@@ -56,7 +80,13 @@ const ItemsList: React.FC = () => {
 
             <div className={styles.itemsContainer}>
                 {items.map((item, index) => {
-                    if (index === items.length - 1) {
+                    if (index === 0) {
+                        return (
+                            <div ref={firstItemRef} key={item.id}>
+                                <ItemComponent item={item}/>
+                            </div>
+                        );
+                    } else if (index === items.length - 1) {
                         return (
                             <div ref={lastItemRef} key={item.id}>
                                 <ItemComponent item={item}/>
@@ -72,7 +102,7 @@ const ItemsList: React.FC = () => {
                 })}
             </div>
 
-            {!hasMore && <p className={styles.loadingText}>No more items</p>}
+            {!hasNextPage && <p className={styles.loadingText}>No more items</p>}
         </div>
     );
 };
