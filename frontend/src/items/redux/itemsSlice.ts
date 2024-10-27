@@ -60,7 +60,7 @@ const itemsSlice = createSlice({
             })
             .addCase(fetchItems.fulfilled, (state, action) => {
                 state.loading = false;
-                state.items = action.payload;
+                state.items = action.payload.items;
             })
             .addCase(fetchItems.rejected, (state, action) => {
                 state.loading = false;

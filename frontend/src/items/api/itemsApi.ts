@@ -15,7 +15,7 @@ export const getItems = async (params?: Record<string, string>): Promise<any> =>
         params,
     );
     const response = await createAPIRequest(requestConfig);
-    return response.data.items;
+    return response.data;
 };
 
 export const postItem = async (): Promise<any> => {

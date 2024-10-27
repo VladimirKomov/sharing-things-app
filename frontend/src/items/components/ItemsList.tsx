@@ -14,7 +14,7 @@ const ItemsList: React.FC = () => {
 
     // Scroll settings
     const [page, setPage] = useState(1); // Starting page
-    const [itemsPerPage] = useState(5); // Items per page
+    const [limit] = useState(5); // Items per page
     const [hasMore, setHasMore] = useState(true); // End of list indicator
     const observer = useRef<IntersectionObserver | null>(null);
 
@@ -37,16 +37,14 @@ const ItemsList: React.FC = () => {
 
     useEffect(() => {
         const fetchAndCheckItems = async () => {
-            const result = await dispatch(fetchItems({itemsPerPage, page})).unwrap();
-            if (result.length < itemsPerPage) {
-                setHasMore(false); // Set to false if no more data
-            }
+            const result = await dispatch(fetchItems({limit, page})).unwrap();
+            setHasMore(result.hasNextPage);// Set to false if no more data
         };
 
         if (hasMore) {
             fetchAndCheckItems();
         }
-    }, [dispatch, page, itemsPerPage, hasMore]);
+    }, [dispatch, page, limit, hasMore]);
 
     return (
         <div className={styles.itemsListContainer}>
