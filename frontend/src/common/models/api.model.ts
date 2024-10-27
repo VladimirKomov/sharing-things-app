@@ -9,6 +9,7 @@ const createAPIRequest = async <T>(config: RequestConfig): Promise<BaseResponse<
         const response: AxiosResponse<T> = await axios({
             method: config.method,
             url: config.url,
+            ...(config.params && { params: config.params }),
             ...(config.data && {data: config.data}),
             ...(config.headers && {headers: config.headers}),
         });

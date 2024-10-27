@@ -4,6 +4,7 @@ from rest_framework.permissions import IsAdminUser, IsAuthenticatedOrReadOnly
 from common.mapper import map_to_api_response_as_resp
 from items.item_serializers import CategorySerializer, ItemSerializer
 from items.items_models import Category, Item
+from items.items_pagination import ItemsPagination
 
 
 class CategoryViewSet(viewsets.ModelViewSet):
@@ -41,5 +42,6 @@ class CategoryViewSet(viewsets.ModelViewSet):
 
 
 class ItemViewSet(viewsets.ModelViewSet):
-    queryset = Item.objects.all()
+    queryset = Item.objects.all().order_by('id') # sort by id
     serializer_class = ItemSerializer
+    pagination_class = ItemsPagination

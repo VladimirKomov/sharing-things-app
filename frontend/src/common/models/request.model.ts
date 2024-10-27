@@ -1,9 +1,11 @@
-import { Method } from 'axios';
+import {Method} from 'axios';
 import {API_BASE_URL} from "../../config.ts";
+import {Logger} from "../logger.ts";
 
 export interface RequestConfig {
     method: Method;
     url: string;
+    params?: Record<string, string>;
     data?: any;
     headers?: Record<string, string>;
 }
@@ -11,14 +13,18 @@ export interface RequestConfig {
 export class BaseRequest implements RequestConfig {
     private _method: Method;
     private _url: string;
+    private _params?: Record<string, string>;
     private _data?: any;
     private _headers?: Record<string, string>;
 
-    constructor(method: Method, url: string, data?: any, headers?: Record<string, string>) {
+    constructor(method: Method, url: string, params?: Record<string, string>, data?: any, headers?: Record<string, string>) {
         this._method = method;
         this._url = API_BASE_URL + url;
+        this._params = params || {};
         this._data = data;
-        this._headers = headers || {};  // Если заголовки не переданы, используем пустой объект
+        this._headers = headers || {};
+
+        this.log();
     }
 
     get method(): Method {
@@ -35,5 +41,13 @@ export class BaseRequest implements RequestConfig {
 
     get headers(): Record<string, string> {
         return this._headers || {};
+    }
+
+    private log(): void {
+        Logger.logRequest(JSON.stringify(this));
+    }
+
+    get params(): Record<string, string> {
+        return this._params || {};
     }
 }

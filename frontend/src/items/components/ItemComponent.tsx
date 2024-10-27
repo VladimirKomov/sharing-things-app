@@ -4,16 +4,12 @@ import styles from "./ItemComponent.module.css"
 
 
 interface ItemProps {
-   item: Item;
+    item: Item;
 }
 
-const ItemComponent: React.FC<ItemProps> = ({ item }) => {
+const ItemComponent: React.FC<ItemProps> = ({item}) => {
     return (
         <div className={styles.itemContainer}>
-            <h3 className={styles.itemTitle}>{item.name}</h3>
-            <p className={styles.itemDescription}>{item.description}</p>
-            <p className={styles.itemOwner}>Owner: {item.ownerName}</p>
-            <p className={styles.itemCategory}>Category: {item.categoryName}</p>
             <div className={styles.imagesContainer}>
                 {item.imagesUrl.slice(0, 1).map((image, index) => (
                     <img
@@ -23,6 +19,12 @@ const ItemComponent: React.FC<ItemProps> = ({ item }) => {
                         className={styles.image}
                     />
                 ))}
+            </div>
+            <div className={styles.textContainer}>
+                <h3 className={styles.itemTitle}><span>Name:</span> {item.name}</h3>
+                <p className={styles.itemDescription}><span>Description:</span> {item.description}</p>
+                <p className={styles.itemOwner}><span>Owner:</span> {item.ownerName}</p>
+                <p className={styles.itemCategory}><span>Category:</span> {item.categoryName}</p>
             </div>
         </div>
     );

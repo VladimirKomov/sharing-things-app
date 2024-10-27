@@ -29,10 +29,37 @@
 }
 
 .itemsContainer {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Минимальная ширина 200px для каждой колонки */
+    display: flex;
+    flex-direction: column; /* Размещает элементы по вертикали */
     gap: var(--spacing-medium); /* Промежуток между элементами */
-    width: 100%; /* Чтобы контейнер занимал всю ширину */
+    width: 100%; /* Контейнер занимает всю ширину */
     max-width: var(--max-width); /* Максимальная ширина для центрирования */
+    max-height: 80vh; /* Ограничиваем высоту для вертикальной прокрутки */
+    overflow-y: auto; /* Добавляем вертикальный скролл, если элементов слишком много */
+    padding: var(--spacing-medium) 0; /* Внутренние отступы сверху и снизу */
 }
 
+/* Стили для вертикального скроллбара */
+.itemsContainer::-webkit-scrollbar {
+    width: 20px; /* Ширина вертикального скроллбара */
+}
+
+.itemsContainer::-webkit-scrollbar-thumb {
+    background-color: var(--primary-color); /* Цвет полосы скролла */
+    border-radius: 4px;
+}
+
+.itemsContainer::-webkit-scrollbar-track {
+    background-color: var(--secondary-color-light); /* Цвет фона полосы скролла */
+}
+
+/* Адаптивные стили для небольших экранов */
+@media (max-width: 768px) {
+    .itemsListTitle {
+        font-size: var(--font-size-medium); /* Уменьшаем размер заголовка */
+    }
+
+    .itemsContainer {
+        gap: var(--spacing-small); /* Уменьшаем промежуток между элементами */
+    }
+}

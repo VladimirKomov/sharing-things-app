@@ -16,7 +16,7 @@ export class BaseResponse<T> implements Response<T> {
         this._message = message;
         this._code = code;
 
-        this.logResponse();
+        this.log();
     }
 
     get data(): T {
@@ -31,7 +31,7 @@ export class BaseResponse<T> implements Response<T> {
         return this._code;
     }
 
-    private logResponse(): void {
+    private log(): void {
         Logger.logResponse(JSON.stringify(this));
     }
 }

@@ -20,12 +20,12 @@ const initialState: ItemsState = {
 }
 
 
-const createAuthThunk = (type: string, apiFunction: (credentials?: any) => Promise<any>) => {
+const createAuthThunk = (type: string, apiFunction: (params?: any) => Promise<any>) => {
     return createAsyncThunk(
         type,
-        async (_, { rejectWithValue }) => {
+        async (params: any = {}, { rejectWithValue }) => {
             try {
-                return await apiFunction();
+                return await apiFunction(params);
             } catch (error: any) {
                 return rejectWithValue(error.message || 'Unexpected error occurred');
             }
@@ -34,6 +34,17 @@ const createAuthThunk = (type: string, apiFunction: (credentials?: any) => Promi
 };
 
 export const fetchItems = createAuthThunk('items/fetchItems', getItems);
+// export const fetchItems = createAsyncThunk(
+//     'items/fetchItems',
+//     async ({ itemsPerPage, page }: { itemsPerPage: number; page: number }, { rejectWithValue }) => {
+//         try {
+//             const response = await getItems(itemsPerPage, page);
+//             return response.data;
+//         } catch (error: any) {
+//             return rejectWithValue(error.message || 'Unexpected error occurred');
+//         }
+//     }
+// );
 export const createItem = createAuthThunk('items/createItem', postItem);
 export const updateItem = createAuthThunk('items/updateItem', putItem);
 export const removeItem = createAuthThunk('items/removeItem', delItem);

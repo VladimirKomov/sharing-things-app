@@ -32,7 +32,7 @@ class ItemSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         data = super().to_representation(instance)
-        # change name`
+        # change name's`fields
         data['categoryName'] = data.pop('category_name')
         data['ownerName'] = data.pop('username')
         data['imagesUrl'] = data.pop('images_url')

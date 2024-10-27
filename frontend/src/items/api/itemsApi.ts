@@ -10,11 +10,13 @@ export const getCategories = async (): Promise<any> => {
     return response.data;
 };
 
-export const getItems = async (): Promise<any> => {
-    const requestConfig = new BaseRequest('GET', itemsRoot + 'items/');
+export const getItems = async (params?: Record<string, string>): Promise<any> => {
+    const requestConfig = new BaseRequest('GET', itemsRoot + 'items/',
+        params,
+    );
     const response = await createAPIRequest(requestConfig);
-    return response.data;
-}
+    return response.data.items;
+};
 
 export const postItem = async (): Promise<any> => {
     const requestConfig = new BaseRequest('POST', itemsRoot + 'items/');

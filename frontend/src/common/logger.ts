@@ -7,7 +7,11 @@ export class Logger {
     }
 
     static logResponse(response_text: string): void {
-        log.info(`INFO: ${this.getCurrentData()}: ${response_text}`)
+        log.info(`RES: ${this.getCurrentData()}: ${response_text}`)
+    }
+
+    static logRequest(request_text: string): void {
+        log.info(`REQ: ${this.getCurrentData()}: ${request_text}`)
     }
 
     static getCurrentData(): string {

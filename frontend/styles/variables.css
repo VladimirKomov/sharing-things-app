@@ -5,6 +5,7 @@
     /* Цвета */
     --primary-color: #017af2;
     --secondary-color: #3794f0;
+    --secondary-color-light: #9dc6ef;
     --tertiary-color: #6daeee;
     --quaternary-color: #a3c8ec;
     --background-color: #d8e1e9;
@@ -15,6 +16,7 @@
     --font-family-primary: 'Roboto', sans-serif;
     --font-size-base: 16px;
     --font-size-large: 20px;
+    --font-size-medium: 18px;
     --font-size-small: 12px;
     --line-height: 1.5;
 
@@ -89,7 +91,6 @@ button:hover {
 
 /* Поля ввода */
 input, select, textarea {
-    font-family: var(--font-family-primary);
     font-size: var(--font-size-base);
     padding: 0 var(--spacing-small);
     height: var(--input-height);
@@ -125,4 +126,9 @@ input:focus, select:focus, textarea:focus {
     background-color: #fff;
     border-radius: var(--border-radius);
     box-shadow: var(--box-shadow-large);
+}
+
+span {
+    font-size: var(--font-size-large);
+    font-weight: 700;
 }

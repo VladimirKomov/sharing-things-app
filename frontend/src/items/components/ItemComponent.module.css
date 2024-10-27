@@ -1,8 +1,48 @@
 @import '../../../styles/variables.css';
-/* Стили для компонента */
+
+.itemsListContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    text-align: center;
+    gap: var(--spacing-large);
+    width: 100%;
+}
+
+.itemsListTitle {
+    font-size: var(--font-size-large);
+    color: var(--primary-color);
+    margin-bottom: var(--spacing-medium);
+}
+
+.loadingText {
+    font-size: var(--font-size-small);
+    color: var(--secondary-color);
+}
+
+.errorText {
+    color: var(--error-color);
+    font-size: var(--font-size-small);
+    margin-bottom: var(--spacing-medium);
+}
+
+.itemsContainer {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-medium);
+    width: 100%;
+    max-width: var(--max-width);
+    max-height: 80vh;
+    overflow-y: auto;
+    padding: var(--spacing-medium) 0;
+}
+
 .itemContainer {
-    max-width: 200px;
-    background-color: #fff;
+    display: flex;
+    align-items: flex-start; /* Выравнивает текст по верхней границе */
+    background-color: var(--background-color);
     border-radius: var(--border-radius);
     box-shadow: var(--box-shadow-small);
     padding: var(--spacing-medium);
@@ -12,6 +52,28 @@
 
 .itemContainer:hover {
     box-shadow: var(--box-shadow-large);
+}
+
+.imageContainer {
+    flex-shrink: 0; /* Избегает изменения размера изображения */
+    margin-right: var(--spacing-medium); /* Промежуток между изображением и текстом */
+}
+
+.image {
+    border-radius: var(--border-radius);
+    width: 300px;
+    height: 200px;
+    object-fit: cover;
+    box-shadow: var(--box-shadow-small);
+}
+
+.textContainer {
+    display: flex;
+    flex-direction: column; /* Выравниваем элементы по вертикали */
+    text-align: left;
+    justify-content: flex-start;
+    margin-left: var(--spacing-large); /* Промежуток между изображением и текстом */
+    width: 100%; /* Занимает оставшееся пространство */
 }
 
 .itemTitle {
@@ -24,18 +86,4 @@
     color: var(--secondary-color);
     font-size: var(--font-size-base);
     margin: var(--spacing-small) 0;
-}
-
-.imagesContainer {
-    display: flex;
-    gap: var(--spacing-small);
-    margin-top: var(--spacing-medium);
-}
-
-.image {
-    border-radius: var(--border-radius);
-    width: 200px;
-    height: 200px;
-    object-fit: cover;
-    box-shadow: var(--box-shadow-small);
 }

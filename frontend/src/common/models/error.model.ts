@@ -18,7 +18,7 @@ export class BaseError implements Error {
         this._details = details;
 
         //error logg
-        this.logError();
+        this.log();
     }
 
     get message(): string {
@@ -33,7 +33,7 @@ export class BaseError implements Error {
         return this._details;
     }
 
-    private logError(): void {
+    private log(): void {
         Logger.logError(JSON.stringify(this));
     }
 

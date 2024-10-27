@@ -12,7 +12,11 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 from datetime import timedelta
 from pathlib import Path
 import environ
+
 import logging
+
+logging.getLogger('boto3').setLevel(logging.WARNING)
+logging.getLogger('botocore').setLevel(logging.WARNING)
 
 env = environ.Env()
 environ.Env.read_env('.env')
@@ -104,15 +108,17 @@ DATABASES = {
 
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=15),  # Access token lives for 15 minutes
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),     # Refresh token lives 7 days
-    'ROTATE_REFRESH_TOKENS': True,                  # Turning on the rotation of refresh tokens
-    'BLACKLIST_AFTER_ROTATION': True,               # We put the old refresh token in the blacklist
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),  # Refresh token lives 7 days
+    'ROTATE_REFRESH_TOKENS': True,  # Turning on the rotation of refresh tokens
+    'BLACKLIST_AFTER_ROTATION': True,  # We put the old refresh token in the blacklist
 }
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 5,
 }
 
 # AUTH_PASSWORD_VALIDATORS = [
@@ -165,7 +171,7 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-#logging for app
+# logging for app
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -176,22 +182,37 @@ LOGGING = {
     },
     'root': {
         'handlers': ['console'],
-        # 'level': 'WARNING',  # Уровень логов по умолчанию
-        'level': 'DEBUG',
+        'level': 'WARNING',  # Меняем на WARNING для уменьшения объемов логов
     },
     'loggers': {
         'django': {
             'handlers': ['console'],
-            'level': 'INFO',  # Уровень логов для приложений Django
+            'level': 'INFO',
             'propagate': True,
         },
-        'myapp': {  # Настройка для твоего приложения
+        'django.db.backends': {
+            'handlers': ['console'],
+            'level': 'ERROR',
+            'propagate': False,
+        },
+        'myapp': {
             'handlers': ['console'],
             'level': 'DEBUG',
             'propagate': False,
         },
+        'boto3': {
+            'handlers': ['console'],
+            'level': 'WARNING',
+            'propagate': False,
+        },
+        'botocore': {
+            'handlers': ['console'],
+            'level': 'WARNING',
+            'propagate': False,
+        },
     },
 }
+
 
 # Amazon S3 Settings
 STORAGES = {
@@ -212,8 +233,3 @@ STORAGES = {
 AWS_LOCATION = 'public'
 # The URL where the downloaded files will be available
 MEDIA_URL = f'https://{env("AWS_STORAGE_BUCKET_NAME")}.s3.amazonaws.com/{AWS_LOCATION}/'
-
-
-
-
-
