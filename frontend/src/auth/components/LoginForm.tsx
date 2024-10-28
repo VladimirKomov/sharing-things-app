@@ -1,20 +1,29 @@
 import {useDispatch, useSelector} from "react-redux";
-import {AppDispatch, RootState} from "../../store.ts";
-import React, {useState} from "react";
-import {login} from "../redux/authSlice.ts";
+import {AppDispatch} from "../../store.ts";
+import React, {useEffect, useState} from "react";
+import {login, selectError, selectLoading, selectToken} from "../redux/authSlice.ts";
 import styles from './LoginForm.module.css';
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom"
 
 const Login: React.FC = () => {
     const dispatch = useDispatch<AppDispatch>();
-    const {loading, error} = useSelector((state: RootState) => state.auth);
+    const loading = useSelector(selectLoading);
+    const error = useSelector(selectError);
+    const token = useSelector(selectToken);
     const [usernameOrEmail, setUsernameOrEmail] = useState("");
     const [password, setPassword] = useState("");
+    const navigate = useNavigate();
 
     const handleLogin = (e: React.FormEvent) => {
         e.preventDefault();
         dispatch(login({usernameOrEmail, password}));
     }
+
+    useEffect(() => {
+        if (token && token.access) {
+            navigate("/");
+        }
+    }, [token, navigate]);
 
     return (
         <form className={styles.form} onSubmit={handleLogin}>

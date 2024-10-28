@@ -1,11 +1,19 @@
 import React from 'react';
-import {Link} from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import styles from './NavigationPanel.module.css';
-import Cookies from "js-cookie";
+import {useDispatch, useSelector} from 'react-redux';
+import {logout, selectToken} from '../../auth/redux/authSlice';
 
 const NavigationPanel: React.FC = () => {
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
 
-    const accessToken = Cookies.get('access_token');
+    const handleLogout = () => {
+        if (token && token.refresh) {
+            dispatch(logout(token.refresh) as any);
+            navigate('/');
+        }
+    };
 
     return (
         <nav className={styles.navigationPanel}>
@@ -13,11 +21,12 @@ const NavigationPanel: React.FC = () => {
                 <li className={styles.navItem}>
                     <Link to="/" className={styles.navLink}>Main page</Link>
                 </li>
-                {accessToken && (
-                    <li className={styles.navItem}>
-                        <Link to="/dashboard" className={styles.navLink}>Personal account</Link>
-                    </li>
-                )}
+                <li className={styles.navItem}>
+                    <Link to="/dashboard" className={styles.navLink}>Personal account</Link>
+                </li>
+                <li className={styles.navItem}>
+                    <button onClick={handleLogout} className={styles.navLink}>Sign out</button>
+                </li>
                 <li className={styles.navItem}>
                     <Link to="/login" className={styles.navLink}>Sign in</Link>
                 </li>

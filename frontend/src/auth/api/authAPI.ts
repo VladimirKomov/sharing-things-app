@@ -50,6 +50,19 @@ export const registerAPI = async (credentials: ReqCredentials): Promise<any> => 
     const response = await createAPIRequest<any>(requestConfig);
     return response.message;
 };
+//log out
+export const logoutAPI = async (refresh_token: string): Promise<any> => {
+    const requestConfig: RequestConfig = {
+        method: 'POST',
+        url: usersRoot + 'logout/',
+        data: {refresh_token},
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    };
+    const response = await createAPIRequest<any>(requestConfig);
+    return response.message;
+}
 
 
 
