@@ -1,5 +1,6 @@
 import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
 import {Token, loginAPI, registerAPI} from "../api/authAPI.ts";
+import Cookies from 'js-cookie';
 
 interface AuthSlice {
     token: Token
@@ -46,8 +47,10 @@ const authSlice = createSlice({
             const {access, refresh} = action.payload;
             state.token.access = access;
             state.token.refresh = refresh;
-            localStorage.setItem('access_token', access as string);
-            localStorage.setItem('refresh_token', refresh as string);
+            //storing keys in cookies
+            Cookies.set('access_token', access, { expires: 7, secure: true, sameSite: 'Strict' });
+            Cookies.set('refresh_token', refresh, { expires: 7, secure: true, sameSite: 'Strict' });
+
             state.loading = false;
             state.error.message = null;
         });

@@ -6,8 +6,8 @@ export interface RequestConfig {
     method: Method;
     url: string;
     params?: Record<string, string>;
-    data?: any;
     headers?: Record<string, string>;
+    data?: any;
 }
 
 export class BaseRequest implements RequestConfig {
@@ -17,12 +17,18 @@ export class BaseRequest implements RequestConfig {
     private _data?: any;
     private _headers?: Record<string, string>;
 
-    constructor(method: Method, url: string, params?: Record<string, string>, data?: any, headers?: Record<string, string>) {
+    constructor({
+                    method,
+                    url,
+                    params = {},
+                    headers = {},
+                    data = null,
+                }: RequestConfig) {
         this._method = method;
         this._url = API_BASE_URL + url;
-        this._params = params || {};
+        this._params = params;
         this._data = data;
-        this._headers = headers || {};
+        this._headers = headers;
 
         this.log();
     }
@@ -39,15 +45,15 @@ export class BaseRequest implements RequestConfig {
         return this._data;
     }
 
-    get headers(): Record<string, string> {
-        return this._headers || {};
+    get headers(): Record<string, string> | undefined {
+        return this._headers;
+    }
+
+    get params(): Record<string, string> | undefined {
+        return this._params;
     }
 
     private log(): void {
-        Logger.logRequest(JSON.stringify(this));
-    }
-
-    get params(): Record<string, string> {
-        return this._params || {};
+        Logger.logResponse(JSON.stringify(this));
     }
 }

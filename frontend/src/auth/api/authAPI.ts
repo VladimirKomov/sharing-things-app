@@ -1,4 +1,4 @@
-import {BaseRequest} from "../../common/models/request.model.ts";
+import {BaseRequest, RequestConfig} from "../../common/models/request.model.ts";
 import createAPIRequest from "../../common/models/api.model.ts";
 
 const usersRoot = 'users/';
@@ -24,13 +24,29 @@ export interface ReqCredentials {
 
 //get user
 export const loginAPI = async (credentials: LoginCredentials): Promise<any> => {
-    const requestConfig = new BaseRequest('POST', usersRoot + 'login/', credentials);
-    const response = await createAPIRequest<Token>(requestConfig);
+    const requestConfig: RequestConfig = {
+        method: 'POST',
+        url: usersRoot + 'login/',
+        data: credentials,
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    };
+
+    const request = new BaseRequest(requestConfig);
+    const response = await createAPIRequest<Token>(request);
     return response.data;
 };
 // register user
 export const registerAPI = async (credentials: ReqCredentials): Promise<any> => {
-    const requestConfig = new BaseRequest('POST', usersRoot + 'register/', credentials);
+    const requestConfig: RequestConfig = {
+        method: 'POST',
+        url: usersRoot + 'login/',
+        data: credentials,
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    };
     const response = await createAPIRequest<any>(requestConfig);
     return response.message;
 };
