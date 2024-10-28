@@ -1,5 +1,5 @@
-import React, {useCallback, useEffect, useRef, useState} from 'react';
-import {useDispatch, useSelector} from 'react-redux';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import {
     selectItems,
     selectLoading,
@@ -9,8 +9,9 @@ import {
     selectHasPreviousPage
 } from '../redux/itemsSlice';
 import ItemComponent from './ItemComponent';
-import {AppDispatch} from "../../store";
+import { AppDispatch } from "../../store";
 import styles from "./ItemsList.module.css";
+import { Item } from "../../common/models/items.model.ts";
 
 const ItemsList: React.FC = () => {
     const dispatch = useDispatch<AppDispatch>();
@@ -21,10 +22,20 @@ const ItemsList: React.FC = () => {
 
     // Scroll settings
     const [page, setPage] = useState(1); // Starting page
-    const [limit] = useState(5); // Items per page
-    const HasPreviousPage = useSelector(selectHasPreviousPage);
+    const [limit] = useState(10); // Items per page
+    const [allItems, setAllItems] = useState<Item[]>([]); // State to store all loaded items
+    const hasPreviousPage = useSelector(selectHasPreviousPage);
     const hasNextPage = useSelector(selectHasNextPage); // End of list indicator
     const observer = useRef<IntersectionObserver | null>(null);
+
+    const updateItems = (newItems: Item[]) => {
+        setAllItems((prevItems) => {
+            const uniqueItems = newItems.filter(
+                (item) => !prevItems.some((prevItem) => prevItem.id === item.id)
+            );
+            return [...prevItems, ...uniqueItems];
+        });
+    };
 
     const lastItemRef = useCallback(
         (node: HTMLDivElement | null) => {
@@ -45,7 +56,7 @@ const ItemsList: React.FC = () => {
 
     const firstItemRef = useCallback(
         (node: HTMLDivElement | null) => {
-            if (loading || !HasPreviousPage || page === 1) return;
+            if (loading || !hasPreviousPage || page === 1) return;
 
             if (observer.current) observer.current.disconnect();
 
@@ -57,18 +68,23 @@ const ItemsList: React.FC = () => {
 
             if (node) observer.current.observe(node);
         },
-        [loading, HasPreviousPage, page]
+        [loading, hasPreviousPage, page]
     );
 
     useEffect(() => {
         const fetchAndCheckItems = async () => {
-            await dispatch(fetchItems({limit, page}));
+            await dispatch(fetchItems({ limit, page }));
         };
 
-        if (hasNextPage || HasPreviousPage) {
+        if (hasNextPage || hasPreviousPage) {
             fetchAndCheckItems();
         }
-    }, [dispatch, page, limit, hasNextPage, HasPreviousPage]);
+    }, [dispatch, page, limit, hasNextPage, hasPreviousPage]);
+
+    // Update allItems with newly loaded items
+    useEffect(() => {
+        updateItems(items);
+    }, [items]);
 
     return (
         <div className={styles.itemsListContainer}>
@@ -76,29 +92,22 @@ const ItemsList: React.FC = () => {
 
             {loading && <p className={styles.loadingText}>Load...</p>}
             {error.message && <p className={styles.errorText}>Error: {error.message}</p>}
-            {!loading && items.length === 0 && <p className={styles.loadingText}>No items found</p>}
+            {!loading && allItems.length === 0 && <p className={styles.loadingText}>No items found</p>}
 
             <div className={styles.itemsContainer}>
-                {items.map((item, index) => {
-                    if (index === 0) {
-                        return (
-                            <div ref={firstItemRef} key={item.id}>
-                                <ItemComponent item={item}/>
-                            </div>
-                        );
-                    } else if (index === items.length - 1) {
-                        return (
-                            <div ref={lastItemRef} key={item.id}>
-                                <ItemComponent item={item}/>
-                            </div>
-                        );
-                    } else {
-                        return (
-                            <div key={item.id}>
-                                <ItemComponent item={item}/>
-                            </div>
-                        );
+                {allItems.map((item, index) => {
+                    let refProps = {};
+                    if (index === 0 && page !== 1) {
+                        refProps = { ref: firstItemRef };
+                    } else if (index === allItems.length - 1) {
+                        refProps = { ref: lastItemRef };
                     }
+
+                    return (
+                        <div key={item.id} {...refProps}>
+                            <ItemComponent item={item} />
+                        </div>
+                    );
                 })}
             </div>
 
