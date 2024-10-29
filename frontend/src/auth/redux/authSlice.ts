@@ -1,10 +1,15 @@
 import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
-import {Token, loginAPI, registerAPI, logoutAPI} from "../api/authAPI.ts";
+import {loginAPI, registerAPI, logoutAPI} from "../api/authAPI.ts";
 import Cookies from 'js-cookie';
 import {RootState} from "../../store.ts";
 
+export interface Token {
+    refresh: string;
+    access: string;
+}
+
 interface AuthSlice {
-    token: Token
+    token: Token | null;
     loading: boolean;
     error: {
         message: string | null,
@@ -12,11 +17,20 @@ interface AuthSlice {
     isRegistered: boolean;
 }
 
+const getToken = (): Token | null => {
+    const refresh = Cookies.get('refresh_token');
+    const access = Cookies.get('access_token');
+    if (refresh && access) {
+        return {
+            refresh,
+            access,
+        };
+    }
+    return null;
+}
+
 const initialState: AuthSlice = {
-    token: {
-        refresh: null,
-        access: null,
-    },
+    token: getToken(),
     loading: false,
     error: {
         message: null,
@@ -24,18 +38,23 @@ const initialState: AuthSlice = {
     isRegistered: false,
 }
 
-const createAuthThunk = (type: string, apiFunction: (credentials: any) => Promise<any>) => {
+
+const createAuthThunk = (type: string, apiFunction: (credentials?: any) => Promise<any>) => {
     return createAsyncThunk(
         type,
-        async (credentials: any, {rejectWithValue}) => {
+        async (credentials: any = {}, {rejectWithValue}) => {
             try {
-                return await apiFunction(credentials);
+                if (credentials) {
+                    return await apiFunction(credentials);
+                }
+                return await apiFunction();
             } catch (error: any) {
                 return rejectWithValue(error.message || 'Unexpected error occurred');
             }
         }
     );
 };
+
 
 export const login = createAuthThunk('auth/login', loginAPI);
 export const register = createAuthThunk('auth/register', registerAPI);
@@ -49,12 +68,11 @@ const authSlice = createSlice({
     extraReducers: (builder) => {
         //login
         builder.addCase(login.fulfilled, (state, action) => {
-            const {access, refresh} = action.payload;
-            state.token.access = access;
-            state.token.refresh = refresh;
+            const token: Token = action.payload.data;
+            state.token = token;
             //storing keys in cookies
-            Cookies.set('access_token', access, {expires: 7, secure: true, sameSite: 'Strict'});
-            Cookies.set('refresh_token', refresh, {expires: 7, secure: true, sameSite: 'Strict'});
+            Cookies.set('access_token', token.access, {expires: 7, secure: true, sameSite: 'Strict'});
+            Cookies.set('refresh_token', token.refresh, {expires: 7, secure: true, sameSite: 'Strict'});
 
             state.loading = false;
             state.error.message = null;
@@ -87,7 +105,7 @@ const authSlice = createSlice({
         });
         // logout
         builder.addCase(logout.fulfilled, (state) => {
-            state.token = {refresh: null, access: null};
+            state.token = null;
             Cookies.remove('access_token');
             Cookies.remove('refresh_token');
             state.loading = false;

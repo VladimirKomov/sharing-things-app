@@ -129,8 +129,8 @@ const RegistrationForm: React.FC = () => {
                 <div className={styles.successContainer}>
                     <h2 className={styles.successMessage}>Registration is successful!</h2>
                     <button className={styles.successButton}
-                            onClick={() => navigate('/')}>
-                        Go back to the main page
+                            onClick={() => navigate('/login')}>
+                        Sign in
                     </button>
                 </div>
             )}

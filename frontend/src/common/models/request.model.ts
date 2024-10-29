@@ -54,6 +54,6 @@ export class BaseRequest implements RequestConfig {
     }
 
     private log(): void {
-        Logger.logResponse(JSON.stringify(this));
+        Logger.logRequest(JSON.stringify(this));
     }
 }

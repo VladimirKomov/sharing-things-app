@@ -22,7 +22,9 @@
     border-radius: 5px;
 }
 
-.navItem a:hover, .navItem a:focus {
+.navItem a:hover,
+.navItem a:focus {
     color: #017af2;
     background-color: #fff;
 }
+
