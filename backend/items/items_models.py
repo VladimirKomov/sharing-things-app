@@ -4,10 +4,21 @@ import uuid
 from django.contrib.auth.models import User
 from django.db import models
 
+from django.db import models
+from django.utils.text import slugify
+
 
 class Category(models.Model):
-    name = models.CharField(max_length=100, unique=True)
-    description = models.TextField(blank=False)
+    name = models.CharField(max_length=255)
+    description = models.TextField()
+    # for url paths
+    slug = models.SlugField(max_length=255, unique=True, blank=True)
+
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.name)
+        super(Category, self).save(*args, **kwargs)
 
     def __str__(self):
         return self.name
@@ -26,7 +37,7 @@ class Item(models.Model):
 class ItemImage(models.Model):
     item = models.ForeignKey(Item, on_delete=models.CASCADE, related_name='images')
 
-    #create unique name fot the file
+    # create unique name fot the file
     def generate_unique_image_path(self, filename):
         extension = filename.split('.')[-1]
         unique_filename = f"{uuid.uuid4()}.{extension}"

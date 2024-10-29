@@ -9,7 +9,7 @@
     margin-bottom: var(--spacing-large);
     text-align: center; /* Центрирование текста внутри */
     width: 100%; /* Чтобы контейнер занимал всю ширину */
-    max-width: 300px; /* Ограничим ширину для центрирования */
+    max-width: var(--max-width);
     margin-left: auto; /* Центрируем контейнер по горизонтали */
     margin-right: auto; /* Центрируем контейнер по горизонтали */
 }
@@ -18,6 +18,32 @@
     font-size: var(--font-size-large);
     font-weight: 500;
     color: var(--primary-color);
+}
+
+.categoriesContainer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-small);
+    justify-content: center; /* Центрирование кнопок по горизонтали */
+    margin-top: var(--spacing-small);
+}
+
+.categoryButton {
+    background-color: #f0f0f0;
+    border: var(--border-width) solid var(--border-color);
+    border-radius: var(--border-radius);
+    padding: var(--spacing-small) var(--spacing-medium);
+    color: var(--primary-color);
+    cursor: pointer;
+    transition: background-color var(--transition-duration) var(--transition-timing), color var(--transition-duration) var(--transition-timing);
+    font-size: var(--font-size-base);
+}
+
+
+.selected {
+    background-color: var(--primary-color);
+    color: #fff;
+    border-color: var(--primary-color);
 }
 
 .select {
