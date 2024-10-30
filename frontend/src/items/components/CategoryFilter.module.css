@@ -6,7 +6,7 @@
     align-items: center; /* Центрирование элементов по горизонтали */
     justify-content: center; /* Центрирование элементов по вертикали */
     gap: var(--spacing-small);
-    margin-bottom: var(--spacing-large);
+    /*margin-bottom: var(--spacing-large);*/
     text-align: center; /* Центрирование текста внутри */
     width: 100%; /* Чтобы контейнер занимал всю ширину */
     max-width: var(--max-width);
@@ -15,6 +15,7 @@
 }
 
 .label {
+    margin-top: var(--spacing-medium);
     font-size: var(--font-size-large);
     font-weight: 500;
     color: var(--primary-color);
@@ -25,7 +26,7 @@
     flex-wrap: wrap;
     gap: var(--spacing-small);
     justify-content: center; /* Центрирование кнопок по горизонтали */
-    margin-top: var(--spacing-small);
+    /*margin-top: var(--spacing-small);*/
 }
 
 .categoryButton {

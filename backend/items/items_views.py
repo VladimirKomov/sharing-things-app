@@ -42,6 +42,16 @@ class CategoryViewSet(viewsets.ModelViewSet):
 
 
 class ItemViewSet(viewsets.ModelViewSet):
-    queryset = Item.objects.all().order_by('id') # sort by id
+    queryset = Item.objects.all().order_by('id')  # sort by id
     serializer_class = ItemSerializer
     pagination_class = ItemsPagination
+
+    def get_queryset(self):
+        queryset = self.queryset
+        category_slug = self.request.query_params.get('category')
+
+        # if get param "category"
+        if category_slug:
+            queryset = queryset.filter(category__slug=category_slug)
+
+        return queryset

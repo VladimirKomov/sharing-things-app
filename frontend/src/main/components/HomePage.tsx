@@ -2,7 +2,7 @@ import React from "react";
 import CategoryFilter from "../../items/components/CategoryFilter.tsx";
 import ItemsList from "../../items/components/ItemsList.tsx";
 
-const MainPage: React.FC = () => {
+const HomePage: React.FC = () => {
     return (
         <div>
             <CategoryFilter/>
@@ -11,4 +11,4 @@ const MainPage: React.FC = () => {
     )
 }
 
-export default MainPage;
+export default HomePage;

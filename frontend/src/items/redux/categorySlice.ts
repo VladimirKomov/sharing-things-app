@@ -1,10 +1,11 @@
 import {Category} from "../../common/models/category.model.ts";
-import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
+import {createAsyncThunk, createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {getCategories} from "../api/itemsApi.ts";
 import {RootState} from "../../store.ts";
 
 interface CategoryState {
     categories: Category[];
+    selectedCategory: Category | null;
     loading: boolean;
     error: {
         message: string | null,
@@ -13,12 +14,14 @@ interface CategoryState {
 
 const initialState: CategoryState = {
     categories: [],
+    selectedCategory: null,
     loading: false,
     error: {
         message: null,
     },
 }
 
+// fetch categories from the API
 export const fetchCategories = createAsyncThunk(
     'categories/fetchCategories',
     async (_, {rejectWithValue}) => {
@@ -34,8 +37,13 @@ export const fetchCategories = createAsyncThunk(
 const categoriesSlice = createSlice({
     name: 'categories',
     initialState,
-    reducers: {},
+    reducers: {
+        setSelectedCategory: (state, action: PayloadAction<Category | null>) => {
+            state.selectedCategory = action.payload;
+        },
+    },
     extraReducers: (builder) => {
+        // handle different states of category fetching process
         builder.addCase(fetchCategories.pending, (state) => {
             state.loading = true;
             state.error.message = null;
@@ -53,6 +61,9 @@ const categoriesSlice = createSlice({
 
 export default categoriesSlice.reducer;
 
+export const {setSelectedCategory} = categoriesSlice.actions;
+
 export const selectCategories = (state: RootState) => state.categories.categories;
+export const selectSelectedCategory = (state: RootState) => state.categories.selectedCategory;
 export const selectLoading = (state: RootState) => state.categories.loading;
 export const selectError = (state: RootState) => state.categories.error;
