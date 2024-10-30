@@ -9,15 +9,11 @@ import {
     selectSelectedCategory,
     setSelectedCategory
 } from "../redux/categorySlice.ts";
-import {useNavigate, useParams} from "react-router-dom";
 import styles from './CategoryFilter.module.css';
 import {Category} from "../../common/models/category.model.ts";
 
 const CategoryFilter: React.FC = () => {
     const dispatch = useDispatch<AppDispatch>();
-    const navigate = useNavigate();
-    //slug out of the url
-    const { slug } = useParams<{ slug: string }>();
 
     // Get categories, loading state, and error from the Redux store
     const categories: Category[] = useSelector(selectCategories);
@@ -33,26 +29,22 @@ const CategoryFilter: React.FC = () => {
         }
     }, [dispatch, categories.length, loading]);
 
-    useEffect(() => {
-        if (slug && categories.length > 0) {
-            const category = categories.find((cat) => cat.slug === slug);
-            if (category && (!selectedCategory || selectedCategory.id !== category.id)) {
-                dispatch(setSelectedCategory(category));
-            }
-        } else if (!slug && selectedCategory !== null) {
-            dispatch(setSelectedCategory(null));
-        }
-    }, [slug, categories, dispatch, selectedCategory]);
-
     // Handler for changing the selected category
     const handleCategoryChange = (category: Category | null) => {
         if (category !== selectedCategory) {
             dispatch(setSelectedCategory(category));
-            // a new path based on the selected category
-            const newPath = category ? `/items/categories/${category.slug}` : '/';
-            navigate(newPath);
         }
     };
+
+    // // Handler for changing the selected category
+    // const handleCategoryChange = (category: Category | null) => {
+    //     if (category !== selectedCategory) {
+    //         dispatch(setSelectedCategory(category));
+    //         // a new path based on the selected category
+    //         const newPath = category ? `/items/categories/${category.slug}` : '/';
+    //         navigate(newPath);
+    //     }
+    // };
 
     return (
         <div className={styles.categoryFilter}>

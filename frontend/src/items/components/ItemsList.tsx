@@ -44,6 +44,15 @@ const ItemsList: React.FC = () => {
         updateItems(items);
     }, [items]);
 
+    // Load items based on current page and selected category
+    useEffect(() => {
+        const fetchAndCheckItems = async () => {
+            await dispatch(fetchItems({limit, page, category: selectedCategory?.slug || null}));
+        };
+
+        fetchAndCheckItems();
+    }, [dispatch, page, limit, selectedCategory]);
+
     // Updating all loaded items
     const updateItems = (newItems: Item[]) => {
         setAllItems((prevItems) => {
@@ -54,14 +63,6 @@ const ItemsList: React.FC = () => {
         });
     };
 
-    // Load items based on current page and selected category
-    useEffect(() => {
-        const fetchAndCheckItems = async () => {
-            await dispatch(fetchItems({limit, page, category: selectedCategory?.slug || null}));
-        };
-
-        fetchAndCheckItems();
-    }, [dispatch, page, limit, selectedCategory]);
 
     // loading more items when scrolling down
     const lastItemRef = useCallback(
