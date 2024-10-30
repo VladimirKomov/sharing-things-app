@@ -3,12 +3,14 @@ import logger from 'redux-logger';
 import authReducer from './auth/redux/authSlice'
 import categoryReducer from './items/redux/categorySlice'
 import itemReducer from './items/redux/itemsSlice'
+import dashboardReducer from './dashboard/redux/dashboardSlice'
 
 const store = configureStore({
     reducer: {
         auth: authReducer,
         categories: categoryReducer,
         items: itemReducer,
+        dashboard: dashboardReducer,
     },
     middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(logger),
 })

@@ -30,7 +30,6 @@ export const loginAPI = async (credentials: LoginCredentials): Promise<any> => {
             'Content-Type': 'application/json',
         },
     };
-
     const request = new BaseRequest(requestConfig);
     const response = await createAPIRequest<Token>(request);
     return response.data;
@@ -52,7 +51,6 @@ export const registerAPI = async (credentials: ReqCredentials): Promise<any> => 
 //log out
 export const logoutAPI = async (): Promise<any> => {
     const refresh_token = Cookies.get('refresh_token');
-    console.log(refresh_token);
     const requestConfig: RequestConfig = {
         method: 'POST',
         url: usersRoot + 'logout/',
