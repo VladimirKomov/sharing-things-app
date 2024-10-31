@@ -33,6 +33,14 @@ export class BaseError implements Error {
         return this._details;
     }
 
+    asObject(): Error {
+        return {
+            message: this._message,
+            code: this._code,
+            details: this._details
+        }
+    }
+
     private log(): void {
         Logger.logError(JSON.stringify(this));
     }

@@ -13,13 +13,15 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({redirectPath = '/login'}
     const token = useSelector(selectToken);
     const navigate = useNavigate();
 
+    console.log('token: ', token);
+
     useEffect(() => {
         // check token
         const verifyToken = async () => {
             dispatch(checkToken(token));
         };
 
-        if (token?.access && token?.refresh) {
+        if (token) {
             verifyToken();
         } else {
             navigate(redirectPath, {replace: true});

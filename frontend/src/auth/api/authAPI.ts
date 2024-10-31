@@ -61,13 +61,33 @@ export const logoutAPI = async (refresh_token: string): Promise<any> => {
     const response = await createAPIRequest<any>(request);
     return response.message;
 }
+
+// renew the token
+export const refreshToken = async (refresh: string): Promise<Token | null> => {
+
+    const requestConfig: RequestConfig = {
+        method: 'POST',
+        url: usersRoot + 'token/refresh/',
+        data: {refresh},
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    };
+    const request = new BaseRequest(requestConfig);
+    const response = await createAPIRequest<any>(request);
+    // new tokens
+    console.log("New tokens:",
+        response.data);
+    return response.data;
+}
+
 //check token
-export const checkTokenAPI = async (token: Token): Promise<Token | null> => {
+export const checkTokenAPI = async (token: Token) => {
     try {
         const requestConfig: RequestConfig = {
             method: 'POST',
             url: usersRoot + 'token/verify/',
-            data: { token: token.access },
+            data: {token: token.access},
             headers: {
                 'Content-Type': 'application/json',
             },
@@ -80,49 +100,20 @@ export const checkTokenAPI = async (token: Token): Promise<Token | null> => {
             return token;
         }
     } catch (error: any) {
-        if (error.response && error.response.status === 401) {
+        if (error.code === 401) {
             // try to renew the token
             if (token.refresh) {
-                try {
-                    const newToken = await refreshToken(token.refresh);
-                    return newToken;
-                } catch (refreshError: any) {
-                    console.error('Token update error:', refreshError.message);
-                    return null; // if fail
-                }
+                const newToken = await refreshToken(token.refresh);
+                return newToken;
+
             }
-        } else {
-            console.error('Error checking the token:', error.message);
         }
     }
+}
 
-    return null; // if fail
-};
 
-// renew the token
-export const refreshToken = async (refreshToken: string): Promise<Token | null> => {
-    try {
-        const requestConfig: RequestConfig = {
-            method: 'POST',
-            url: usersRoot + 'token/refresh/',
-            data: { refresh: refreshToken },
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        };
-        const request = new BaseRequest(requestConfig);
-        const response = await createAPIRequest<any>(request);
 
-        if (response.code === 200) {
-            // new tokens
-            return response.data;
-        }
-    } catch (error: any) {
-        console.error('The access token could not be updated:', error.response?.data || error.message);
-    }
 
-    return null; // if fail
-};
 
 
 
