@@ -1,5 +1,5 @@
 from rest_framework import viewsets, status
-from rest_framework.permissions import IsAdminUser, IsAuthenticatedOrReadOnly
+from rest_framework.permissions import IsAdminUser, IsAuthenticatedOrReadOnly, AllowAny
 
 from common.mapper import map_to_api_response_as_resp
 from items.item_serializers import CategorySerializer, ItemSerializer
@@ -10,6 +10,8 @@ from items.items_pagination import ItemsPagination
 class CategoryViewSet(viewsets.ModelViewSet):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
+    # access is open
+    permission_classes = [AllowAny]
 
     def get_permissions(self):
         # change only admin
@@ -45,6 +47,8 @@ class ItemViewSet(viewsets.ModelViewSet):
     queryset = Item.objects.all().order_by('id')  # sort by id
     serializer_class = ItemSerializer
     pagination_class = ItemsPagination
+    # access is open
+    permission_classes = [AllowAny]
 
     def get_queryset(self):
         queryset = self.queryset

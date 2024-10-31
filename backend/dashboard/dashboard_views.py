@@ -1,4 +1,5 @@
-from rest_framework import status, viewsets, permissions
+from rest_framework import status, viewsets
+from rest_framework.permissions import IsAuthenticated
 
 from common.mapper import map_to_api_response_as_resp
 from dashboard.dashboard_permissions import IsOwner
@@ -8,7 +9,7 @@ from items.items_models import Item
 
 class UserDashboardViewSet(viewsets.ModelViewSet):
     serializer_class = ItemSerializer
-    permission_classes = [permissions.IsAuthenticated, IsOwner]
+    permission_classes = [IsAuthenticated, IsOwner]
 
     def get_queryset(self):
         # Only current user's items

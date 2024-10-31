@@ -7,6 +7,7 @@ import '../styles/variables.css'
 import Dashboard from "./dashboard/components/Dashboard.tsx";
 import NavigationPanel from "./main/components/NavigationPanel.tsx";
 import React from "react";
+import ProtectedRoute from "./auth/components/ProtectedRoute.tsx";
 
 
 const App: React.FC = () => {
@@ -17,7 +18,9 @@ const App: React.FC = () => {
                 <Route path="/" element={<HomePage />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<RegistrationForm />} />
-                <Route path="/dashboard" element={<Dashboard />} />
+                <Route element={<ProtectedRoute />}>
+                    <Route path="/dashboard" element={<Dashboard />} />
+                </Route>
                 <Route path="/items/categories/:slug" element={<HomePage />} />
             </Routes>
         </Router>

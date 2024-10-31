@@ -17,6 +17,10 @@ const createAPIRequest = async <T>(config: RequestConfig): Promise<BaseResponse<
         return responseToBaseResponse(response);
     } catch (error: any) {
         if (error.response) {
+            const status = error.response.status;
+            if (status === 401) {
+                throw new BaseError('Unauthorized: Token is invalid or expired', 401);
+            }
             throw errorResponseToBaseError(error.response);
         } else {
             throw new BaseError('Network error or request failed', 500);

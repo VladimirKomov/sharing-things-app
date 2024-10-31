@@ -111,13 +111,17 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
+    # access only if is authenticated or local rules
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 10,
 }
 
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=15),  # Access token lives for 15 minutes
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),  # Refresh token lives 7 days
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=1),  # Access token lives for 15 minutes
+    'REFRESH_TOKEN_LIFETIME': timedelta(minutes=2),  # Refresh token lives 7 days
     'ROTATE_REFRESH_TOKENS': True,  # Turning on the rotation of refresh tokens
     'BLACKLIST_AFTER_ROTATION': True,  # We put the old refresh token in the blacklist
 }
@@ -142,7 +146,7 @@ AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
         'OPTIONS': {
-            'min_length': 3,  # Минимум 3 символа
+            'min_length': 3,  # password length 3
         }
     },
 ]

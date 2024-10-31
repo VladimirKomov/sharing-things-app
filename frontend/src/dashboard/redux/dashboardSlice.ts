@@ -1,7 +1,7 @@
 import {Item} from "../../common/models/items.model.ts";
 import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
 import {RootState} from "../../store.ts";
-import {getUserItems} from "../api/dashboardApi.ts";
+import {getItemsUser} from "../api/dashboardApi.ts";
 
 interface DashboardSlice {
     items: Item[];
@@ -35,7 +35,7 @@ const createAuthThunk = (type: string, apiFunction: (credentials?: any) => Promi
     );
 };
 
-export const fetchUserItems = createAuthThunk('dashboard/fetchUserItems', getUserItems);
+export const fetchItemsUser = createAuthThunk('dashboard/fetchUserItems', getItemsUser);
 
 export const dashboardSlice = createSlice({
     name: 'dashboard',
@@ -43,15 +43,15 @@ export const dashboardSlice = createSlice({
     reducers: {},
     extraReducers: (builder) => {
         builder
-            .addCase(fetchUserItems.pending, (state) => {
+            .addCase(fetchItemsUser.pending, (state) => {
                 state.loading = true;
                 state.error.message = '';
             })
-            .addCase(fetchUserItems.fulfilled, (state, action) => {
+            .addCase(fetchItemsUser.fulfilled, (state, action) => {
                 state.loading = false;
                 state.items = action.payload;
             })
-            .addCase(fetchUserItems.rejected, (state, action) => {
+            .addCase(fetchItemsUser.rejected, (state, action) => {
                 state.loading = false;
                 state.error.message = action.payload as string;
             });

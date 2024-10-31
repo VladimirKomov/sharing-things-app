@@ -1,5 +1,6 @@
 from django.contrib.auth import authenticate
 from rest_framework import status
+from rest_framework.permissions import AllowAny
 from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
 
@@ -9,6 +10,9 @@ from .user_serializers import RegistrationSerializer, LoginSerializer
 
 
 class UserRegistrationView(APIView):
+    # access is open
+    permission_classes = [AllowAny]
+
     def post(self, request):
         request_api = map_request_to_request(request)
         # user into serializer
@@ -28,6 +32,9 @@ class UserRegistrationView(APIView):
 
 
 class LoginView(APIView):
+    # access is open
+    permission_classes = [AllowAny]
+
     def post(self, request):
         request_api = map_request_to_request(request)
         serializer = LoginSerializer(data=request_api["data"])
@@ -52,6 +59,8 @@ class LoginView(APIView):
 
 
 class UserLogoutView(APIView):
+    # access is open
+    permission_classes = [AllowAny]
     def post(self, request):
         try:
             request_token = request.data['refresh_token']

@@ -1,18 +1,18 @@
 import React from 'react';
 import styles from './NavigationPanel.module.css';
 import {useDispatch, useSelector} from "react-redux";
-import {logout, selectToken} from "../../auth/redux/authSlice.ts";
+import {logout, selectToken, Token} from "../../auth/redux/authSlice.ts";
 import {Link, useNavigate} from "react-router-dom";
 import {AppDispatch} from "../../store.ts";
 
 
 const NavigationPanel: React.FC = () => {
     const dispatch = useDispatch<AppDispatch>();
-    const token = useSelector(selectToken);
+    const token: Token | null = useSelector(selectToken);
     const navigate = useNavigate();
 
     const handleLogout = () => {
-        dispatch(logout({}));
+        dispatch(logout(token?.refresh));
         navigate("/");
     }
 
