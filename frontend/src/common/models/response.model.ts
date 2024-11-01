@@ -31,6 +31,14 @@ export class BaseResponse<T> implements Response<T> {
         return this._code;
     }
 
+    asObject(): Response<T> {
+        return {
+            data: this._data,
+            message: this._message,
+            code: this._code,
+        };
+    }
+
     private log(): void {
         Logger.logResponse(JSON.stringify(this));
     }

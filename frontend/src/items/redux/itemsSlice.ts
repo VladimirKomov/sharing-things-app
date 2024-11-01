@@ -65,13 +65,11 @@ const itemsSlice = createSlice({
             })
             .addCase(fetchItems.fulfilled, (state, action) => {
                 state.loading = false;
-                state.page = action.payload;
+                state.page = action.payload.data;
             })
             .addCase(fetchItems.rejected, (state, action) => {
                 state.loading = false;
-                state.error.message = typeof action.payload === 'string'
-                    ? action.payload
-                    : 'An error occurred during registration.';
+                state.error.message = action.error.message || 'An error occurred during fetch items.';
             })
             // .addCase(createItem.fulfilled, (state, action) => {
             //     state.items.push(action.payload);

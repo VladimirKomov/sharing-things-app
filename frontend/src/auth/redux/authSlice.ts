@@ -4,8 +4,8 @@ import Cookies from 'js-cookie';
 import {RootState} from "../../store.ts";
 
 export interface Token {
-    refresh: string;
     access: string;
+    refresh: string;
 }
 
 interface AuthSlice {
@@ -21,8 +21,8 @@ const getToken = (): Token | null => {
     const access = Cookies.get('access_token');
     if (refresh && access) {
         return {
-            refresh,
             access,
+            refresh,
         };
     }
     return null;
@@ -57,7 +57,7 @@ const createAuthThunk = (type: string, apiFunction: (credentials?: any) => Promi
 export const login = createAuthThunk('auth/login', loginAPI);
 export const register = createAuthThunk('auth/register', registerAPI);
 export const logout = createAuthThunk('auth/logout', logoutAPI);
-export const checkToken = createAuthThunk('auth/checkToken', checkTokenAPI);
+export const checkRefreshToken = createAuthThunk('auth/checkToken', checkTokenAPI);
 
 
 const authSlice = createSlice({
@@ -117,20 +117,27 @@ const authSlice = createSlice({
             Cookies.remove('refresh_token');
         });
         //check token
-        builder.addCase(checkToken.fulfilled, (state, action) => {
+        builder.addCase(checkRefreshToken.fulfilled, (state, action) => {
             state.loading = false;
-            state.token = action.payload;
+            const {code, data} = action.payload;
+            if (code === 200 && data && data.access && data.refresh) {
+                state.token = data;
+                Cookies.set('access_token', data.access, {expires: 7, secure: true, sameSite: 'Strict'});
+                Cookies.set('refresh_token', data.refresh, {expires: 7, secure: true, sameSite: 'Strict'});
+            }
             state.error.message = null;
         });
-        builder.addCase(checkToken.pending, (state) => {
+        builder.addCase(checkRefreshToken.pending, (state) => {
             state.loading = true;
+            state.error.message = null;
         });
-        builder.addCase(checkToken.rejected, (state, action: PayloadAction<any>) => {
+        builder.addCase(checkRefreshToken.rejected, (state, action: PayloadAction<any>) => {
             state.loading = false;
-            if (action.payload.code === 401) {
-                // state.token = null;
-                // Cookies.remove('access_token');
-                // Cookies.remove('refresh_token');
+            const { code, details } = action.payload;
+            if (code === 401 && details.codeValid === 'token_not_valid') {
+                state.token = null;
+                Cookies.remove('access_token');
+                Cookies.remove('refresh_token');
             }
         })
     }

@@ -9,7 +9,7 @@ export const getCategories = async (): Promise<any> => {
         url: itemsRoot + 'categories/',
     });
     const response = await createAPIRequest(requestConfig);
-    return response.data;
+    return response;
 };
 
 export const getItems = async (params?: Record<string, string>): Promise<any> => {
@@ -19,7 +19,7 @@ export const getItems = async (params?: Record<string, string>): Promise<any> =>
         params: params,
     });
     const response = await createAPIRequest(requestConfig);
-    return response.data;
+    return response;
 };
 
 export const postItem = async (data?: any): Promise<any> => {
@@ -29,7 +29,7 @@ export const postItem = async (data?: any): Promise<any> => {
         data: data,
     });
     const response = await createAPIRequest(requestConfig);
-    return response.data;
+    return response;
 };
 
 export const putItem = async (data?: any): Promise<any> => {
@@ -39,7 +39,7 @@ export const putItem = async (data?: any): Promise<any> => {
         data: data,
     });
     const response = await createAPIRequest(requestConfig);
-    return response.data;
+    return response;
 };
 
 export const delItem = async (params?: Record<string, string>): Promise<any> => {
@@ -49,5 +49,5 @@ export const delItem = async (params?: Record<string, string>): Promise<any> => 
         params: params,
     });
     const response = await createAPIRequest(requestConfig);
-    return response.data;
+    return response;
 };

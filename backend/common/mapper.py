@@ -11,8 +11,8 @@ def map_request_to_request(request: Dict[str, Any]) -> Dict[str, Any]:
     return APIRequest(data=request.data, headers=request.headers).as_request()
 
 
-def map_api_error_as_resp(message: str, code: int, data: Optional[dict] = None) -> APIError:
-    return APIError(message, code, data).as_response()
+def map_api_error_as_resp(message: str, code: int, details: Optional[dict] = None) -> APIError:
+    return APIError(message=message, code=code, details=details).as_response()
 
 
 def map_to_api_response_as_resp(data: Optional[Any] = None, message: str = "Success",

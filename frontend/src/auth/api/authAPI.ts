@@ -31,7 +31,7 @@ export const loginAPI = async (credentials: LoginCredentials): Promise<any> => {
     };
     const request = new BaseRequest(requestConfig);
     const response = await createAPIRequest<Token>(request);
-    return response.data;
+    return response;
 };
 // register user
 export const registerAPI = async (credentials: ReqCredentials): Promise<any> => {
@@ -76,9 +76,7 @@ export const refreshToken = async (refresh: string): Promise<Token | null> => {
     const request = new BaseRequest(requestConfig);
     const response = await createAPIRequest<any>(request);
     // new tokens
-    console.log("New tokens:",
-        response.data);
-    return response.data;
+    return response;
 }
 
 //check token
@@ -97,14 +95,14 @@ export const checkTokenAPI = async (token: Token) => {
 
         if (response.code === 200) {
             // the token is valid, return it
-            return token;
+            return response;
         }
     } catch (error: any) {
         if (error.code === 401) {
             // try to renew the token
             if (token.refresh) {
-                const newToken = await refreshToken(token.refresh);
-                return newToken;
+                const response = await refreshToken(token.refresh);
+                return response;
 
             }
         }

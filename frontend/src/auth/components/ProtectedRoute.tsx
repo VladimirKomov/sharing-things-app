@@ -2,7 +2,7 @@ import React, {useEffect} from 'react';
 import {Outlet, useNavigate} from 'react-router-dom';
 import {useDispatch, useSelector} from "react-redux";
 import {AppDispatch} from "../../store";
-import {checkToken, selectToken} from "../redux/authSlice";
+import {checkRefreshToken, selectLoading, selectToken} from "../redux/authSlice";
 
 interface ProtectedRouteProps {
     redirectPath?: string;
@@ -11,22 +11,22 @@ interface ProtectedRouteProps {
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({redirectPath = '/login'}) => {
     const dispatch = useDispatch<AppDispatch>();
     const token = useSelector(selectToken);
+    const loading = useSelector(selectLoading); // Проверяем состояние загрузки
     const navigate = useNavigate();
 
-    console.log('token: ', token);
-
     useEffect(() => {
-        // check token
         const verifyToken = async () => {
-            dispatch(checkToken(token));
+            if (!loading && token) {
+                await dispatch(checkRefreshToken(token));
+            }
         };
 
-        if (token) {
+        if (!loading && token) {
             verifyToken();
-        } else {
+        } else if (!token && !loading) {
             navigate(redirectPath, {replace: true});
         }
-    }, [token, navigate, redirectPath, dispatch]);
+    }, [token, navigate, dispatch, redirectPath]);
 
     return <Outlet/>;
 };
