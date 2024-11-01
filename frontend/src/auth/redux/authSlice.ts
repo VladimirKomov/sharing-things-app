@@ -59,7 +59,6 @@ export const register = createAuthThunk('auth/register', registerAPI);
 export const logout = createAuthThunk('auth/logout', logoutAPI);
 export const checkRefreshToken = createAuthThunk('auth/checkToken', checkTokenAPI);
 
-
 const authSlice = createSlice({
     name: 'auth',
     initialState,
@@ -116,7 +115,7 @@ const authSlice = createSlice({
             Cookies.remove('access_token');
             Cookies.remove('refresh_token');
         });
-        //check token
+        // check token
         builder.addCase(checkRefreshToken.fulfilled, (state, action) => {
             state.loading = false;
             const {code, data} = action.payload;
@@ -132,13 +131,14 @@ const authSlice = createSlice({
             state.error.message = null;
         });
         builder.addCase(checkRefreshToken.rejected, (state, action: PayloadAction<any>) => {
-            state.loading = false;
-            const { code, details } = action.payload;
-            if (code === 401 && details.codeValid === 'token_not_valid') {
+            const { code } = action.payload;
+            if (code === 401 ) {
                 state.token = null;
                 Cookies.remove('access_token');
                 Cookies.remove('refresh_token');
             }
+            state.loading = false;
+
         })
     }
 })

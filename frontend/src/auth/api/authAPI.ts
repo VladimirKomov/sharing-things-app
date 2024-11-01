@@ -63,8 +63,7 @@ export const logoutAPI = async (refresh_token: string): Promise<any> => {
 }
 
 // renew the token
-export const refreshToken = async (refresh: string): Promise<Token | null> => {
-
+export const refreshTokenAPI = async (refresh: string): Promise<Token | null> => {
     const requestConfig: RequestConfig = {
         method: 'POST',
         url: usersRoot + 'token/refresh/',
@@ -94,16 +93,15 @@ export const checkTokenAPI = async (token: Token) => {
         const response = await createAPIRequest<any>(request);
 
         if (response.code === 200) {
-            // the token is valid, return it
+            // the token is valid
             return response;
         }
     } catch (error: any) {
         if (error.code === 401) {
             // try to renew the token
             if (token.refresh) {
-                const response = await refreshToken(token.refresh);
+                const response = await refreshTokenAPI(token.refresh);
                 return response;
-
             }
         }
     }

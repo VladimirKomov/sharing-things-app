@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import {Outlet, useNavigate} from 'react-router-dom';
+import {Navigate, Outlet} from 'react-router-dom';
 import {useDispatch, useSelector} from "react-redux";
 import {AppDispatch} from "../../store";
 import {checkRefreshToken, selectLoading, selectToken} from "../redux/authSlice";
@@ -12,7 +12,6 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({redirectPath = '/login'}
     const dispatch = useDispatch<AppDispatch>();
     const token = useSelector(selectToken);
     const loading = useSelector(selectLoading); // Проверяем состояние загрузки
-    const navigate = useNavigate();
 
     useEffect(() => {
         const verifyToken = async () => {
@@ -21,12 +20,18 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({redirectPath = '/login'}
             }
         };
 
-        if (!loading && token) {
+        if (token && !loading) {
             verifyToken();
-        } else if (!token && !loading) {
-            navigate(redirectPath, {replace: true});
         }
-    }, [token, navigate, dispatch, redirectPath]);
+    }, []);
+
+    if (loading) {
+        return <div>Loading...</div>;
+    }
+
+    if (!token) {
+        return <Navigate to={redirectPath} replace/>;
+    }
 
     return <Outlet/>;
 };
