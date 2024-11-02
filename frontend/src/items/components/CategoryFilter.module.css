@@ -15,7 +15,6 @@
 }
 
 .label {
-    margin-top: var(--spacing-medium);
     font-size: var(--font-size-large);
     font-weight: 500;
     color: var(--primary-color);

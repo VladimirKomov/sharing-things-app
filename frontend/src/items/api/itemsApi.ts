@@ -1,5 +1,5 @@
 import {BaseRequest} from "../../common/models/request.model.ts";
-import createAPIRequest from "../../common/models/api.model.ts";
+import {createAPIRequest} from "../../common/models/api.model.ts";
 
 const itemsRoot = 'items/';
 

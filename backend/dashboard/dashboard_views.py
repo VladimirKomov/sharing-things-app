@@ -1,12 +1,15 @@
-from rest_framework import status, viewsets
+from rest_framework import status, viewsets, generics
 from rest_framework.permissions import IsAuthenticated
 
 from common.mapper import map_to_api_response_as_resp
+from dashboard.dasboard_serializer import UserSettingsSerializer
+from dashboard.dashboard_models import UserSettings
 from dashboard.dashboard_permissions import IsOwner
 from items.item_serializers import ItemSerializer
 from items.items_models import Item
 
 
+# Items view
 class UserDashboardViewSet(viewsets.ModelViewSet):
     serializer_class = ItemSerializer
     permission_classes = [IsAuthenticated, IsOwner]
@@ -67,3 +70,14 @@ class UserDashboardViewSet(viewsets.ModelViewSet):
             message="Item deleted successfully",
             code=status.HTTP_204_NO_CONTENT
         )
+
+
+# User setting view
+class UserSettingsView(generics.RetrieveUpdateAPIView):
+    queryset = UserSettings.objects.all()
+    serializer_class = UserSettingsSerializer
+    permission_classes = [IsAuthenticated, IsOwner]
+
+    def get_object(self):
+        # return current setting
+        return self.request.user.settings

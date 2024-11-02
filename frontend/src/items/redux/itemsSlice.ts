@@ -1,7 +1,8 @@
-import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
+import {createSlice} from "@reduxjs/toolkit";
 import {Item} from "../../common/models/items.model.ts";
 import {delItem, getItems, postItem, putItem} from "../api/itemsApi.ts";
 import {RootState} from "../../store.ts";
+import createAuthThunk from "../../common/models/createAuthThunk.model.ts";
 
 interface ItemsState {
     page: {
@@ -34,20 +35,6 @@ const initialState: ItemsState = {
     },
 }
 
-
-const createAuthThunk = (type: string, apiFunction: (params?: any) => Promise<any>) => {
-    return createAsyncThunk(
-        type,
-        async (params: any = {}, { rejectWithValue }) => {
-            try {
-                return await apiFunction(params);
-            } catch (error: any) {
-                return rejectWithValue(error.message || 'Unexpected error occurred');
-            }
-        }
-    );
-};
-
 export const fetchItems = createAuthThunk('items/fetchItems', getItems);
 
 export const createItem = createAuthThunk('items/createItem', postItem);
@@ -71,18 +58,18 @@ const itemsSlice = createSlice({
                 state.loading = false;
                 state.error.message = action.error.message || 'An error occurred during fetch items.';
             })
-            // .addCase(createItem.fulfilled, (state, action) => {
-            //     state.items.push(action.payload);
-            // })
-            // .addCase(updateItem.fulfilled, (state, action) => {
-            //     const index = state.items.findIndex(item => item.id === action.payload.id);
-            //     if (index !== -1) {
-            //         state.items[index] = action.payload;
-            //     }
-            // })
-            // .addCase(removeItem.fulfilled, (state, action) => {
-            //     state.items = state.items.filter(item => item.id !== action.payload);
-            // });
+        // .addCase(createItem.fulfilled, (state, action) => {
+        //     state.items.push(action.payload);
+        // })
+        // .addCase(updateItem.fulfilled, (state, action) => {
+        //     const index = state.items.findIndex(item => item.id === action.payload.id);
+        //     if (index !== -1) {
+        //         state.items[index] = action.payload;
+        //     }
+        // })
+        // .addCase(removeItem.fulfilled, (state, action) => {
+        //     state.items = state.items.filter(item => item.id !== action.payload);
+        // });
     },
 })
 

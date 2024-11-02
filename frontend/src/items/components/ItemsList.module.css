@@ -14,7 +14,6 @@
 .itemsListTitle {
     font-size: var(--font-size-large);
     color: var(--primary-color);
-    margin-bottom: var(--spacing-medium);
 }
 
 .loadingText {
@@ -37,7 +36,7 @@
     max-width: var(--max-width); /* Максимальная ширина для центрирования */
     max-height: 80vh; /* Ограничиваем высоту для вертикальной прокрутки */
     overflow-y: auto; /* Добавляем вертикальный скролл, если элементов слишком много */
-    padding: var(--spacing-medium) 0; /* Внутренние отступы сверху и снизу */
+    padding: 0; /* Внутренние отступы сверху и снизу */
 }
 
 /* Стили для вертикального скроллбара */

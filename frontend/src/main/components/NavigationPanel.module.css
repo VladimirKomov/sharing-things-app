@@ -1,6 +1,9 @@
+@import '../../../styles/variables.css';
+
 .navigationPanel {
-    background-color: #017af2;
-    padding: 16px;
+    background-color: var(--primary-color);
+    padding: var(--spacing-medium);
+    margin-bottom: var(--spacing-medium);
 }
 
 .navList {
@@ -24,7 +27,7 @@
 
 .navItem a:hover,
 .navItem a:focus {
-    color: #017af2;
+    color: var(--primary-color);
     background-color: #fff;
 }
 

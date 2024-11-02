@@ -49,7 +49,7 @@ export const dashboardSlice = createSlice({
             })
             .addCase(fetchItemsUser.fulfilled, (state, action) => {
                 state.loading = false;
-                state.items = action.payload;
+                state.items = action.payload.data;
             })
             .addCase(fetchItemsUser.rejected, (state, action) => {
                 state.loading = false;

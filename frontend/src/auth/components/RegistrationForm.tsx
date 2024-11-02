@@ -8,8 +8,6 @@ import {useNavigate} from 'react-router-dom';
 const RegistrationForm: React.FC = () => {
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
-    const [firstName, setFirstName] = useState('');
-    const [lastName, setLastName] = useState('');
     const [password, setPassword] = useState('');
     const [password2, setPassword2] = useState('');
     const [passwordMismatch, setPasswordMismatch] = useState(false);
@@ -30,14 +28,14 @@ const RegistrationForm: React.FC = () => {
         setPasswordMismatch(password !== e.target.value);
     };
 
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
         e.preventDefault();
         //check password before the sending
         if (passwordMismatch) {
             setErrorForm('Passwords do not match');
             return;
         }
-        dispatch(register({username, email, firstName, lastName, password, password2}))
+        dispatch(register({username, email, password, password2}))
             .unwrap()
             .then(() => {
                 setErrorForm('');
@@ -69,28 +67,6 @@ const RegistrationForm: React.FC = () => {
                             id="email"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
-                            required
-                        />
-                    </div>
-                    <div>
-                        <label htmlFor="firstName">First name:</label>
-                        <input
-                            className={styles.input}
-                            type="text"
-                            id="firstName"
-                            value={firstName}
-                            onChange={(e) => setFirstName(e.target.value)}
-                            required
-                        />
-                    </div>
-                    <div>
-                        <label htmlFor="lastName">Last name:</label>
-                        <input
-                            className={styles.input}
-                            type="text"
-                            id="lastName"
-                            value={lastName}
-                            onChange={(e) => setLastName(e.target.value)}
                             required
                         />
                     </div>
