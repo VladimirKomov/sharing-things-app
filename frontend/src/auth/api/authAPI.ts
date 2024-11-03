@@ -61,7 +61,7 @@ export const logoutAPI = async (refresh_token: string): Promise<any> => {
 }
 
 // renew the token
-export const refreshTokenAPI = async (refresh: string): Promise<Token | null> => {
+export const refreshTokenAPI = async (refresh: string): Promise<any | null> => {
     const requestConfig: RequestConfig = new BaseRequest({
         method: 'POST',
         url: usersRoot + 'token/refresh/',

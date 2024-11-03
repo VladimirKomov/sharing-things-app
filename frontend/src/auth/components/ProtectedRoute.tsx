@@ -31,7 +31,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({redirectPath = '/login'}
         };
 
         verifyToken();
-    }, []);
+    }, [tokenAccess]);
 
     // Пока идет проверка токена, можно показывать индикатор загрузки
     if (isTokenValid === null) {

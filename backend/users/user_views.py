@@ -7,6 +7,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.views import TokenRefreshView, TokenVerifyView
 from rest_framework.exceptions import ValidationError
 
+from common.logger import logger
 from common.mapper import map_to_api_response_as_resp, map_api_error_as_resp, map_request_to_request
 from users.user_mapper import map_request_to_user_registration
 from .user_serializers import RegistrationSerializer, LoginSerializer

@@ -48,7 +48,7 @@ const authSlice = createSlice({
     initialState,
     reducers: {
         // Экшн для установки нового токена при обновлении
-        setAccessToken: (state, action: PayloadAction<Token>) => {
+        setToken: (state, action: PayloadAction<Token>) => {
             const newToken = action.payload;
             state.token = newToken;
             Cookies.set('access_token', newToken.access, {expires: 7, secure: true, sameSite: 'Strict'});
@@ -115,7 +115,7 @@ const authSlice = createSlice({
     }
 });
 
-export const {setAccessToken, setLogout} = authSlice.actions;
+export const {setToken: setToken, setLogout} = authSlice.actions;
 
 export const selectToken = (state: RootState) => state.auth.token;
 export const selectTokenAccess = (state: RootState) => state.auth.token?.access;
