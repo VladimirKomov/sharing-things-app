@@ -2,7 +2,7 @@ import {Category} from "../../common/models/category.model.ts";
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {getCategories} from "../api/itemsApi.ts";
 import {RootState} from "../../store.ts";
-import createCommonThunk from "../../common/models/createAuthThunk.model.ts";
+import createCommonThunk from "../../common/models/thunk.model.ts";
 
 interface CategoryState {
     categories: Category[];

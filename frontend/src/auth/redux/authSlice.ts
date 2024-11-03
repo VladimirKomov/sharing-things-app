@@ -2,7 +2,7 @@ import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {checkTokenAPI, loginAPI, logoutAPI, registerAPI} from "../api/authAPI.ts";
 import Cookies from 'js-cookie';
 import {RootState} from "../../store.ts";
-import createCommonThunk from "../../common/models/createAuthThunk.model.ts";
+import createCommonThunk from "../../common/models/thunk.model.ts";
 
 export interface Token {
     access: string;
