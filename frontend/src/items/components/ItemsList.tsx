@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useRef, useState} from 'react';
+import React, {useEffect} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {
     fetchItems,
@@ -11,9 +11,10 @@ import {
 import ItemComponent from './ItemComponent';
 import {AppDispatch} from "../../store";
 import styles from "./ItemsList.module.css";
-import {Item} from "../../common/models/items.model.ts";
 import {Category} from "../../common/models/category.model.ts";
 import {selectSelectedCategory} from "../redux/categorySlice.ts";
+import usePagination from "../hooks/usePagination.ts";
+import useInfiniteScroll from "../hooks/useInfiniteScroll.ts";
 
 const ItemsList: React.FC = () => {
     const dispatch = useDispatch<AppDispatch>();
@@ -26,17 +27,20 @@ const ItemsList: React.FC = () => {
     const hasPreviousPage = useSelector(selectHasPreviousPage);
     const hasNextPage = useSelector(selectHasNextPage); // End of list indicator
 
-    // Scroll settings
-    const [page, setPage] = useState(1); // Starting page
-    const [limit] = useState(10); // Items per page
-    const [allItems, setAllItems] = useState<Item[]>([]); // State to store all loaded items
-    const observer = useRef<IntersectionObserver | null>(null);
+    const {page, setPage, allItems, updateItems, resetPagination, limit} = usePagination({limit: 10});
+
+    const {lastItemRef, firstItemRef} = useInfiniteScroll(
+        loading,
+        hasNextPage,
+        hasPreviousPage,
+        () => setPage((prevPage) => prevPage + 1),
+        () => setPage((prevPage) => prevPage - 1)
+    );
 
     // Reset state when the selected category changes
     useEffect(() => {
         // Clear all items and reset page
-        setAllItems([]);
-        setPage(1);
+        resetPagination();
     }, [selectedCategory]);
 
     // Update allItems with newly loaded items
@@ -46,60 +50,8 @@ const ItemsList: React.FC = () => {
 
     // Load items based on current page and selected category
     useEffect(() => {
-        const fetchAndCheckItems = async () => {
-            await dispatch(fetchItems({limit, page, category: selectedCategory?.slug || null}));
-        };
-
-        fetchAndCheckItems();
+        dispatch(fetchItems({limit, page, category: selectedCategory?.slug || null}));
     }, [dispatch, page, limit, selectedCategory]);
-
-    // Updating all loaded items
-    const updateItems = (newItems: Item[]) => {
-        setAllItems((prevItems) => {
-            const uniqueItems = newItems.filter(
-                (item) => !prevItems.some((prevItem) => prevItem.id === item.id)
-            );
-            return [...prevItems, ...uniqueItems];
-        });
-    };
-
-
-    // loading more items when scrolling down
-    const lastItemRef = useCallback(
-        (node: HTMLDivElement | null) => {
-            if (loading || !hasNextPage) return; // Stop if loading or reached end
-
-            if (observer.current) observer.current.disconnect(); // Clear previous observer
-
-            observer.current = new IntersectionObserver((entries) => {
-                if (entries[0].isIntersecting) {
-                    setPage((prevPage) => prevPage + 1); // Increase page count
-                }
-            });
-
-            if (node) observer.current.observe(node); // Observe last item
-        },
-        [loading, hasNextPage]
-    );
-
-    // loading previous items when scrolling up
-    const firstItemRef = useCallback(
-        (node: HTMLDivElement | null) => {
-            // Stop if loading, at the beginning, or no previous pages
-            if (loading || !hasPreviousPage || page === 1) return;
-
-            if (observer.current) observer.current.disconnect(); // Clear previous observer
-
-            observer.current = new IntersectionObserver((entries) => {
-                if (entries[0].isIntersecting) {
-                    setPage((prevPage) => prevPage - 1); // Decrease page count
-                }
-            });
-
-            if (node) observer.current.observe(node); // Observe first item
-        },
-        [loading, hasPreviousPage, page]
-    );
 
     return (
         <div className={styles.itemsListContainer}>
