@@ -7,11 +7,11 @@ interface ThunkOptions {
 
 //common thunk
 //if there are ThunkOptions, we process them in tokenMiddleware
-const createAuthThunk = (
+const createCommonThunk =  (
     type: string,
     apiFunction: (credentials?: any) => Promise<any>,
     options?: ThunkOptions
-) => {
+): any => {
     return createAsyncThunk(
         type,
         async (credentials: any = {}, {rejectWithValue}) => {
@@ -42,4 +42,4 @@ const createAuthThunk = (
     );
 };
 
-export default createAuthThunk;
+export default createCommonThunk;

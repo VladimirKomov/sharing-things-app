@@ -16,6 +16,10 @@ const Login: React.FC = () => {
 
     const handleLogin = (e: React.FormEvent) => {
         e.preventDefault();
+        loginUser(usernameOrEmail, password);
+    }
+
+    const loginUser = (usernameOrEmail: string, password: string) => {
         dispatch(login({usernameOrEmail, password}));
     }
 

@@ -2,7 +2,7 @@ import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {checkTokenAPI, loginAPI, logoutAPI, registerAPI} from "../api/authAPI.ts";
 import Cookies from 'js-cookie';
 import {RootState} from "../../store.ts";
-import createAuthThunk from "../../common/models/createAuthThunk.model.ts";
+import createCommonThunk from "../../common/models/createAuthThunk.model.ts";
 
 export interface Token {
     access: string;
@@ -38,10 +38,10 @@ const initialState: AuthSlice = {
     },
 }
 
-export const login = createAuthThunk('auth/login', loginAPI);
-export const register = createAuthThunk('auth/register', registerAPI);
-export const logout = createAuthThunk('auth/logout', logoutAPI);
-export const checkToken = createAuthThunk('auth/checkToken', checkTokenAPI, {requiresAuth: true});
+export const login = createCommonThunk('auth/login', loginAPI);
+export const register = createCommonThunk('auth/register', registerAPI);
+export const logout = createCommonThunk('auth/logout', logoutAPI);
+export const checkToken = createCommonThunk('auth/checkToken', checkTokenAPI, {requiresAuth: true});
 
 const authSlice = createSlice({
     name: 'auth',

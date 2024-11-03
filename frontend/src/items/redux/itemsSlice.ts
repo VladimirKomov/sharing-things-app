@@ -2,7 +2,7 @@ import {createSlice} from "@reduxjs/toolkit";
 import {Item} from "../../common/models/items.model.ts";
 import {delItem, getItems, postItem, putItem} from "../api/itemsApi.ts";
 import {RootState} from "../../store.ts";
-import createAuthThunk from "../../common/models/createAuthThunk.model.ts";
+import createCommonThunk from "../../common/models/createAuthThunk.model.ts";
 
 interface ItemsState {
     page: {
@@ -35,11 +35,11 @@ const initialState: ItemsState = {
     },
 }
 
-export const fetchItems = createAuthThunk('items/fetchItems', getItems);
+export const fetchItems = createCommonThunk('items/fetchItems', getItems);
 
-export const createItem = createAuthThunk('items/createItem', postItem);
-export const updateItem = createAuthThunk('items/updateItem', putItem);
-export const removeItem = createAuthThunk('items/removeItem', delItem);
+export const createItem = createCommonThunk('items/createItem', postItem);
+export const updateItem = createCommonThunk('items/updateItem', putItem);
+export const removeItem = createCommonThunk('items/removeItem', delItem);
 
 const itemsSlice = createSlice({
     name: 'items',

@@ -1,7 +1,8 @@
 import {Category} from "../../common/models/category.model.ts";
-import {createAsyncThunk, createSlice, PayloadAction} from "@reduxjs/toolkit";
+import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {getCategories} from "../api/itemsApi.ts";
 import {RootState} from "../../store.ts";
+import createCommonThunk from "../../common/models/createAuthThunk.model.ts";
 
 interface CategoryState {
     categories: Category[];
@@ -22,17 +23,19 @@ const initialState: CategoryState = {
 }
 
 // fetch categories from the API
-export const fetchCategories = createAsyncThunk(
-    'categories/fetchCategories',
-    async (_, {rejectWithValue}) => {
-        try {
-            const response = await getCategories();
-            return response.data;
-        } catch (error: any) {
-            return rejectWithValue(error.message || 'Unexpected error occurred');
-        }
-    }
-);
+// export const fetchCategories = createAsyncThunk(
+//     'categories/fetchCategories',
+//     async (_, {rejectWithValue}) => {
+//         try {
+//             const response = await getCategories();
+//             return response.data;
+//         } catch (error: any) {
+//             return rejectWithValue(error.message || 'Unexpected error occurred');
+//         }
+//     }
+// );
+
+export const fetchCategories = createCommonThunk('categories/fetchCategories', getCategories);
 
 const categoriesSlice = createSlice({
     name: 'categories',
@@ -50,7 +53,7 @@ const categoriesSlice = createSlice({
         });
         builder.addCase(fetchCategories.fulfilled, (state, action) => {
             state.loading = false;
-            state.categories = action.payload;
+            state.categories = action.payload.data;
         });
         builder.addCase(fetchCategories.rejected, (state, action) => {
             state.loading = false;
