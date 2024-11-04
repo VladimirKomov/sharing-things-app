@@ -4,7 +4,7 @@ import rootReducer from "./rootReducer.ts";
 
 const store = configureStore({
     reducer: rootReducer,
-    middleware: (getDefaultMiddleware): any =>
+    middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware().concat(logger),
 });
 
