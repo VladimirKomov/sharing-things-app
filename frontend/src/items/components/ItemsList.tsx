@@ -4,16 +4,19 @@ import {
     fetchItems,
     fetchItemsUser,
     selectError,
-    selectHasNextPage,
-    selectHasPreviousPage,
-    selectItems,
+    selectAllItemsHasNextPage,
+    selectAllItemsHasPreviousPage,
+    selectAllItems,
+    selectUserItemsHasNextPage,
+    selectUserItemsHasPreviousPage,
+    selectUserItems,
     selectLoading
 } from '../redux/itemsSlice';
 import ItemComponent from './ItemComponent';
 import {AppDispatch} from "../../common/store.ts";
 import styles from "./ItemsList.module.css";
 import {Category} from "../../common/models/category.model.ts";
-import {selectSelectedCategory} from "../redux/categorySlice.ts";
+import {clearSelectedCategory, selectSelectedCategory} from "../redux/categorySlice.ts";
 import usePagination from "../hooks/usePagination.ts";
 import useInfiniteScroll from "../hooks/useInfiniteScroll.ts";
 
@@ -26,12 +29,13 @@ const ItemsList: React.FC<ItemsListProps> = ({ownerOnly = false}) => {
     const dispatch = useDispatch<AppDispatch>();
 
     // Get items, category...
-    const items = useSelector(selectItems);
+    const items = useSelector(ownerOnly ? selectUserItems : selectAllItems);
+    const hasPreviousPage = useSelector(ownerOnly ? selectUserItemsHasPreviousPage : selectAllItemsHasPreviousPage);
+    const hasNextPage = useSelector(ownerOnly ? selectUserItemsHasNextPage : selectAllItemsHasNextPage);
     const selectedCategory: Category | null = useSelector(selectSelectedCategory);
     const loading = useSelector(selectLoading);
     const error = useSelector(selectError);
-    const hasPreviousPage = useSelector(selectHasPreviousPage);
-    const hasNextPage = useSelector(selectHasNextPage); // End of list indicator
+
 
     const {page, setPage, allItems, updateItems, resetPagination, limit} = usePagination({limit: 10});
 
@@ -42,6 +46,13 @@ const ItemsList: React.FC<ItemsListProps> = ({ownerOnly = false}) => {
         () => setPage((prevPage) => prevPage + 1),
         () => setPage((prevPage) => prevPage - 1)
     );
+
+    // the dropped category when changing the component, take into account when creating routes for categories
+    useEffect(() => {
+        return () => {
+            dispatch(clearSelectedCategory());
+        };
+    }, [dispatch, location.pathname]);
 
     // Reset state when the selected category changes
     useEffect(() => {

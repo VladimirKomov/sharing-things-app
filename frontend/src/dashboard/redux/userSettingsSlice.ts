@@ -17,7 +17,7 @@ interface UserSettingsState {
     settings: UserSettings | null;
     loading: boolean;
     error: {
-        message: string;
+        message: null;
     };
 }
 
@@ -25,7 +25,7 @@ const initialState: UserSettingsState = {
     settings: null,
     loading: false,
     error: {
-        message: '',
+        message: null,
     },
 };
 
@@ -41,7 +41,7 @@ export const userSettingsSlice = createSlice({
         builder
             .addCase(fetchUserSettings.pending, (state) => {
                 state.loading = true;
-                state.error.message = '';
+                state.error.message = null;
             })
             .addCase(fetchUserSettings.fulfilled, (state, action) => {
                 state.loading = false;
@@ -49,11 +49,11 @@ export const userSettingsSlice = createSlice({
             })
             .addCase(fetchUserSettings.rejected, (state, action) => {
                 state.loading = false;
-                state.error.message = action.payload;
+                state.error.message = action.payload.message;
             })
             .addCase(updateUserSettings.pending, (state) => {
                 state.loading = true;
-                state.error.message = '';
+                state.error.message = null;
             })
             .addCase(updateUserSettings.fulfilled, (state, action) => {
                 state.loading = false;
@@ -61,7 +61,7 @@ export const userSettingsSlice = createSlice({
             })
             .addCase(updateUserSettings.rejected, (state, action) => {
                 state.loading = false;
-                state.error.message = action.payload as string;
+                state.error.message = action.payload.message;
             });
     }
 });

@@ -22,19 +22,6 @@ const initialState: CategoryState = {
     },
 }
 
-// fetch categories from the API
-// export const fetchCategories = createAsyncThunk(
-//     'categories/fetchCategories',
-//     async (_, {rejectWithValue}) => {
-//         try {
-//             const response = await getCategories();
-//             return response.data;
-//         } catch (error: any) {
-//             return rejectWithValue(error.message || 'Unexpected error occurred');
-//         }
-//     }
-// );
-
 export const fetchCategories = createCommonThunk('categories/fetchCategories', getCategories);
 
 const categoriesSlice = createSlice({
@@ -43,6 +30,9 @@ const categoriesSlice = createSlice({
     reducers: {
         setSelectedCategory: (state, action: PayloadAction<Category | null>) => {
             state.selectedCategory = action.payload;
+        },
+        clearSelectedCategory: (state) => {
+            state.selectedCategory = null;
         },
     },
     extraReducers: (builder) => {
@@ -64,7 +54,7 @@ const categoriesSlice = createSlice({
 
 export default categoriesSlice.reducer;
 
-export const {setSelectedCategory} = categoriesSlice.actions;
+export const {setSelectedCategory, clearSelectedCategory} = categoriesSlice.actions;
 
 export const selectCategories = (state: RootState) => state.categories.categories;
 export const selectSelectedCategory = (state: RootState) => state.categories.selectedCategory;
