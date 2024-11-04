@@ -7,21 +7,22 @@ import '../styles/variables.css'
 import Dashboard from "./dashboard/components/Dashboard.tsx";
 import NavigationPanel from "./main/components/NavigationPanel.tsx";
 import React from "react";
-import ProtectedRoute from "./auth/components/ProtectedRoute.tsx";
+import ProfileSettings from "./dashboard/components/ProfileSettings.tsx";
 
 
 const App: React.FC = () => {
     return (
         <Router>
-            <NavigationPanel />
+            <NavigationPanel/>
             <Routes>
-                <Route path="/" element={<HomePage />} />
-                <Route path="/login" element={<Login />} />
-                <Route path="/register" element={<RegistrationForm />} />
-                <Route element={<ProtectedRoute />}>
-                    <Route path="/dashboard" element={<Dashboard />} />
-                </Route>
-                <Route path="/items/categories/:slug" element={<HomePage />} />
+                <Route path="/" element={<HomePage/>}/>
+                <Route path="/login" element={<Login/>}/>
+                <Route path="/register" element={<RegistrationForm/>}/>
+                {/*<Route element={<ProtectedRoute />}>*/}
+                <Route path="/dashboard" element={<Dashboard/>}/>
+                <Route path="/dashboard/settings" element={<ProfileSettings/>}/>
+                {/*</Route>*/}
+                <Route path="/items/categories/:slug" element={<HomePage/>}/>
             </Routes>
         </Router>
     );

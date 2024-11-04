@@ -53,6 +53,7 @@ const itemsSlice = createSlice({
             .addCase(fetchItems.fulfilled, (state, action) => {
                 state.loading = false;
                 state.page = action.payload.data;
+                state.error.message = null;
             })
             .addCase(fetchItems.rejected, (state, action) => {
                 state.loading = false;

@@ -10,6 +10,10 @@ export interface RequestConfig {
     data?: any;
 }
 
+export const createRequest = (requestConfig: RequestConfig): RequestConfig => {
+    return new BaseRequest(requestConfig);
+};
+
 export class BaseRequest implements RequestConfig {
     private _method: Method;
     private _url: string;
@@ -55,5 +59,9 @@ export class BaseRequest implements RequestConfig {
 
     private log(): void {
         Logger.logRequest(JSON.stringify(this));
+    }
+
+    set headers(value: Record<string, string>) {
+        this._headers = value;
     }
 }

@@ -4,7 +4,7 @@ import {BaseError} from "./error.model.ts";
 import {errorResponseToBaseError, responseToBaseResponse} from "../mapper.ts";
 
 
-export const createAPIRequest = async <T>(
+export const sendRequest = async <T>(
     requestConfig: RequestConfig): Promise<any> => {
     try {
         const response: AxiosResponse<T> = await axios({
@@ -21,7 +21,7 @@ export const createAPIRequest = async <T>(
             if (error.response.data.error) {
                 throw errorResponseToBaseError(error.response.data.error).asObject();
             }
-            throw new BaseError('Very bad request', status).asObject();
+            throw new BaseError(error.message, status).asObject();
         } else {
             throw new BaseError('Network error or request failed', 500).asObject();
         }
@@ -35,7 +35,7 @@ export const createAPIRequest = async <T>(
 //     try {
 //         const newToken = await refreshTokenAPI(refreshToken);
 //         if (newToken) {
-//             dispatch(setAccessToken(newToken));
+//             dispatch(setToken(newToken));
 //             return newToken;
 //         }
 //         throw new Error('Не удалось обновить токен.');
@@ -43,14 +43,14 @@ export const createAPIRequest = async <T>(
 //         throw new Error('Ошибка при обновлении токена. Пожалуйста, авторизуйтесь.');
 //     }
 // };
-
-
+//
+//
 // export const createAuthorizedRequest = async (
 //     requestConfig: RequestConfig
 // ): Promise<any> => {
-//     const store = getStore();
-//     const state = store.getState();
-//     let token = state.auth.token;
+//     // const state = store.getState();
+//     // let token = state.auth.token;
+//     const token = null;
 //
 //     if (!token) {
 //         throw new Error('Пожалуйста, авторизуйтесь.');
@@ -72,7 +72,7 @@ export const createAPIRequest = async <T>(
 //         if (error.code === 401 && token.refresh) {
 //             try {
 //                 // Обновляем токен
-//                 const newToken: Token = await handleTokenRefresh(token.refresh, store.dispatch);
+//                 // const newToken: Token = await handleTokenRefresh(token.refresh, store.dispatch);
 //
 //                 // Повторный запрос с обновленным токеном
 //                 const updatedConfig = {
@@ -87,7 +87,6 @@ export const createAPIRequest = async <T>(
 //                 throw new Error('Ошибка при обновлении токена. Пожалуйста, авторизуйтесь.');
 //             }
 //         } else {
-//             // Если ошибка не связана с токеном
 //             throw error;
 //         }
 //     }

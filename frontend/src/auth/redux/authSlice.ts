@@ -41,13 +41,12 @@ const initialState: AuthSlice = {
 export const login = createCommonThunk('auth/login', loginAPI);
 export const register = createCommonThunk('auth/register', registerAPI);
 export const logout = createCommonThunk('auth/logout', logoutAPI);
-export const checkToken = createCommonThunk('auth/checkToken', checkTokenAPI, {requiresAuth: true});
+export const checkToken = createCommonThunk('auth/checkToken', checkTokenAPI);
 
 const authSlice = createSlice({
     name: 'auth',
     initialState,
     reducers: {
-        // Экшн для установки нового токена при обновлении
         setToken: (state, action: PayloadAction<Token>) => {
             const newToken = action.payload;
             state.token = newToken;
@@ -115,7 +114,7 @@ const authSlice = createSlice({
     }
 });
 
-export const {setToken: setToken, setLogout} = authSlice.actions;
+export const {setToken, setLogout} = authSlice.actions;
 
 export const selectToken = (state: RootState) => state.auth.token;
 export const selectTokenAccess = (state: RootState) => state.auth.token?.access;

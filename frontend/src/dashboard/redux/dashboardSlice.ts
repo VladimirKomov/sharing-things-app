@@ -1,7 +1,8 @@
 import {Item} from "../../common/models/items.model.ts";
-import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
+import {createSlice} from "@reduxjs/toolkit";
 import {RootState} from "../../store.ts";
 import {getItemsUser} from "../api/dashboardApi.ts";
+import createCommonThunk from "../../common/models/thunk.model.ts";
 
 interface DashboardSlice {
     items: Item[];
@@ -19,23 +20,8 @@ const initialState: DashboardSlice = {
     },
 }
 
-const createAuthThunk = (type: string, apiFunction: (credentials?: any) => Promise<any>) => {
-    return createAsyncThunk(
-        type,
-        async (credentials: any = {}, {rejectWithValue}) => {
-            try {
-                if (credentials) {
-                    return await apiFunction(credentials);
-                }
-                return await apiFunction();
-            } catch (error: any) {
-                return rejectWithValue(error.message || 'Unexpected error occurred');
-            }
-        }
-    );
-};
 
-export const fetchItemsUser = createAuthThunk('dashboard/fetchUserItems', getItemsUser);
+export const fetchItemsUser = createCommonThunk('dashboard/fetchUserItems', getItemsUser);
 
 export const dashboardSlice = createSlice({
     name: 'dashboard',
@@ -53,7 +39,7 @@ export const dashboardSlice = createSlice({
             })
             .addCase(fetchItemsUser.rejected, (state, action) => {
                 state.loading = false;
-                state.error.message = action.payload as string;
+                state.error.message = action.payload;
             });
     }
 })

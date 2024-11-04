@@ -1,6 +1,5 @@
-import {BaseRequest, RequestConfig} from "../../common/models/request.model.ts";
+import {RequestConfig} from "../../common/models/request.model.ts";
 import {Token} from "../redux/authSlice.ts";
-import {createAPIRequest} from "../../common/models/api.model.ts";
 
 const usersRoot = 'users/';
 
@@ -20,34 +19,30 @@ export interface ReqCredentials {
 }
 
 //get user
-export const loginAPI = async (credentials: LoginCredentials): Promise<any> => {
-    const requestConfig = new BaseRequest({
+export const loginAPI = (credentials: LoginCredentials): RequestConfig => {
+    return {
         method: 'POST',
         url: usersRoot + 'login/',
         data: credentials,
         headers: {
             'Content-Type': 'application/json',
         },
-    });
-    const response = await createAPIRequest<Token>(requestConfig);
-    return response;
+    };
 };
 // register user
-export const registerAPI = async (credentials: ReqCredentials): Promise<any> => {
-    const requestConfig: RequestConfig = new BaseRequest({
+export const registerAPI = (credentials: ReqCredentials): RequestConfig => {
+    return {
         method: 'POST',
         url: usersRoot + 'register/',
         data: credentials,
         headers: {
             'Content-Type': 'application/json',
         },
-    });
-    const response = await createAPIRequest<any>(requestConfig);
-    return response.message;
+    };
 };
 //log out
-export const logoutAPI = async (refresh_token: string): Promise<any> => {
-    const requestConfig: RequestConfig = {
+export const logoutAPI = (refresh_token: string): RequestConfig => {
+    return {
         method: 'POST',
         url: usersRoot + 'logout/',
         data: {refresh_token},
@@ -55,29 +50,23 @@ export const logoutAPI = async (refresh_token: string): Promise<any> => {
             'Content-Type': 'application/json',
         },
     };
-    const request = new BaseRequest(requestConfig);
-    const response = await createAPIRequest<any>(request);
-    return response.message;
 }
 
 // renew the token
-export const refreshTokenAPI = async (refresh: string): Promise<any | null> => {
-    const requestConfig: RequestConfig = new BaseRequest({
+export const refreshTokenAPI = (refresh: string): RequestConfig => {
+    return {
         method: 'POST',
         url: usersRoot + 'token/refresh/',
         data: {refresh},
         headers: {
             'Content-Type': 'application/json',
         },
-    });
-    const response = await createAPIRequest<any>(requestConfig);
-    // new tokens
-    return response;
+    };
 }
 
 //check token
-export const checkTokenAPI = async (token: Token) => {
-    const requestConfig: RequestConfig = {
+export const checkTokenAPI = (token: Token): RequestConfig => {
+    return {
         method: 'POST',
         url: usersRoot + 'token/verify/',
         data: {token: token},
@@ -85,9 +74,6 @@ export const checkTokenAPI = async (token: Token) => {
             'Content-Type': 'application/json',
         },
     };
-    const request = new BaseRequest(requestConfig);
-    const response = await createAPIRequest<any>(request);
-    return response;
 }
 
 

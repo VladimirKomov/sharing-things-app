@@ -1,53 +1,42 @@
-import {BaseRequest} from "../../common/models/request.model.ts";
-import {createAPIRequest} from "../../common/models/api.model.ts";
+import {RequestConfig} from "../../common/models/request.model.ts";
 
 const itemsRoot = 'items/';
 
-export const getCategories = async (): Promise<any> => {
-    const requestConfig = new BaseRequest({
+export const getCategories = (): RequestConfig => {
+    return {
         method: 'GET',
         url: itemsRoot + 'categories/',
-    });
-    const response = await createAPIRequest(requestConfig);
-    return response;
+    };
 };
 
-export const getItems = async (params?: Record<string, string>): Promise<any> => {
-    const requestConfig = new BaseRequest({
+export const getItems = (params?: Record<string, string>): RequestConfig => {
+    return {
         method: 'GET',
         url: itemsRoot + 'items/',
         params: params,
-    });
-    const response = await createAPIRequest(requestConfig);
-    return response;
+    };
 };
 
-export const postItem = async (data?: any): Promise<any> => {
-    const requestConfig = new BaseRequest({
+export const postItem = (data?: any): RequestConfig => {
+    return {
         method: 'POST',
         url: itemsRoot + 'items/',
         data: data,
-    });
-    const response = await createAPIRequest(requestConfig);
-    return response;
+    };
 };
 
-export const putItem = async (data?: any): Promise<any> => {
-    const requestConfig = new BaseRequest({
+export const putItem = (data?: any): RequestConfig => {
+    return {
         method: 'PUT',
         url: itemsRoot + 'items/',
         data: data,
-    });
-    const response = await createAPIRequest(requestConfig);
-    return response;
+    };
 };
 
-export const delItem = async (params?: Record<string, string>): Promise<any> => {
-    const requestConfig = new BaseRequest({
+export const delItem = (params?: Record<string, string>): RequestConfig => {
+    return {
         method: 'DELETE',
         url: itemsRoot + 'items/',
         params: params,
-    });
-    const response = await createAPIRequest(requestConfig);
-    return response;
+    };
 };

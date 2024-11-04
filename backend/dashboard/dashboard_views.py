@@ -81,3 +81,15 @@ class UserSettingsView(generics.RetrieveUpdateAPIView):
     def get_object(self):
         # return current setting
         return self.request.user.settings
+
+    def perform_update(self, serializer):
+        # update current setting
+        serializer.save(user=self.request.user)
+
+    def retrieve(self, request, *args, **kwargs):
+        response = super().retrieve(request, *args, **kwargs)
+        return map_to_api_response_as_resp(
+            data=response.data,
+            message="Settings retrieved successfully",
+            code=status.HTTP_200_OK
+        )
