@@ -7,24 +7,38 @@ from dashboard.dashboard_models import UserSettings
 from dashboard.dashboard_permissions import IsOwner
 from items.item_serializers import ItemSerializer
 from items.items_models import Item
+from items.items_pagination import ItemsPagination
 
 
 # Items view
 class UserDashboardViewSet(viewsets.ModelViewSet):
     serializer_class = ItemSerializer
     permission_classes = [IsAuthenticated, IsOwner]
+    # use paginator
+    pagination_class = ItemsPagination
 
     def get_queryset(self):
         # Only current user's items
-        return Item.objects.filter(user=self.request.user)
+        queryset = Item.objects.filter(user=self.request.user)
+        # category filter
+        category_slug = self.request.query_params.get('category')
+
+        if category_slug:
+            queryset = queryset.filter(category__slug=category_slug)
+        # order by id
+        return queryset.order_by('id')
 
     def perform_create(self, serializer):
         # Set current user as owner
         serializer.save(user=self.request.user)
 
     def list(self, request, *args, **kwargs):
-        queryset = self.get_queryset()
-        serializer = self.get_serializer(queryset, many=True)
+        queryset = self.paginate_queryset(self.get_queryset())
+        if queryset is not None:
+            serializer = self.get_serializer(queryset, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(self.get_queryset(), many=True)
         return map_to_api_response_as_resp(
             data=serializer.data,
             message="Items retrieved successfully",

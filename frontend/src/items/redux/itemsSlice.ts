@@ -3,6 +3,7 @@ import {Item} from "../../common/models/items.model.ts";
 import {delItem, getItems, postItem, putItem} from "../api/itemsApi.ts";
 import {RootState} from "../../common/store.ts";
 import createCommonThunk from "../../common/models/thunk.model.ts";
+import {getItemsUser} from "../../dashboard/api/dashboardApi.ts";
 
 interface ItemsState {
     page: {
@@ -36,6 +37,7 @@ const initialState: ItemsState = {
 }
 
 export const fetchItems = createCommonThunk('items/fetchItems', getItems);
+export const fetchItemsUser = createCommonThunk('items/fetchItemsUser', getItemsUser, {requiresAuth: true});
 
 export const createItem = createCommonThunk('items/createItem', postItem);
 export const updateItem = createCommonThunk('items/updateItem', putItem);
@@ -49,6 +51,7 @@ const itemsSlice = createSlice({
         builder
             .addCase(fetchItems.pending, (state) => {
                 state.loading = true;
+                state.error.message = null;
             })
             .addCase(fetchItems.fulfilled, (state, action) => {
                 state.loading = false;
@@ -58,7 +61,21 @@ const itemsSlice = createSlice({
             .addCase(fetchItems.rejected, (state, action) => {
                 state.loading = false;
                 state.error.message = action.error.message || 'An error occurred during fetch items.';
+            });
+
+        builder
+            .addCase(fetchItemsUser.pending, (state) => {
+                state.loading = true;
+                state.error.message = null;
             })
+            .addCase(fetchItemsUser.fulfilled, (state, action) => {
+                state.loading = false;
+                state.page = action.payload.data;
+            })
+            .addCase(fetchItemsUser.rejected, (state, action) => {
+                state.loading = false;
+                state.error.message = action.error.message || 'Failed to fetch user items';
+            });
         // .addCase(createItem.fulfilled, (state, action) => {
         //     state.items.push(action.payload);
         // })

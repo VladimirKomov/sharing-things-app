@@ -4,10 +4,11 @@ import {UserSettings} from "../redux/userSettingsSlice.ts";
 const dashboardRoot = 'dashboard/';
 
 
-export const getItemsUser = (): RequestConfig => {
+export const getItemsUser = (params?: Record<string, string>): RequestConfig => {
     return {
         method: 'GET',
         url: dashboardRoot + 'items/',
+        params: params,
     };
 };
 

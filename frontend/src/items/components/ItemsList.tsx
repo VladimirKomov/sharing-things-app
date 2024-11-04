@@ -2,6 +2,7 @@ import React, {useEffect} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {
     fetchItems,
+    fetchItemsUser,
     selectError,
     selectHasNextPage,
     selectHasPreviousPage,
@@ -16,7 +17,12 @@ import {selectSelectedCategory} from "../redux/categorySlice.ts";
 import usePagination from "../hooks/usePagination.ts";
 import useInfiniteScroll from "../hooks/useInfiniteScroll.ts";
 
-const ItemsList: React.FC = () => {
+
+interface ItemsListProps {
+    ownerOnly?: boolean;
+}
+
+const ItemsList: React.FC<ItemsListProps> = ({ownerOnly = false}) => {
     const dispatch = useDispatch<AppDispatch>();
 
     // Get items, category...
@@ -50,8 +56,12 @@ const ItemsList: React.FC = () => {
 
     // Load items based on current page and selected category
     useEffect(() => {
-        dispatch(fetchItems({limit, page, category: selectedCategory?.slug || null}));
-    }, [dispatch, page, limit, selectedCategory]);
+        if (ownerOnly) {
+            dispatch(fetchItemsUser({limit, page, category: selectedCategory?.slug || null}));
+        } else {
+            dispatch(fetchItems({limit, page, category: selectedCategory?.slug || null}));
+        }
+    }, [dispatch, page, limit, selectedCategory, ownerOnly]);
 
     return (
         <div className={styles.itemsListContainer}>
@@ -80,7 +90,7 @@ const ItemsList: React.FC = () => {
                 })}
             </div>
             {/* Display message if no more items to load */}
-            {!hasNextPage && <p className={styles.loadingText}>No more items</p>}
+            {!hasNextPage && allItems.length !== 0  && <p className={styles.loadingText}>No more items</p>}
         </div>
     );
 };
