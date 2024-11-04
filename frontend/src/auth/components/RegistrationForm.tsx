@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 import styles from "./RegistrationForm.module.css";
 import {useDispatch, useSelector} from "react-redux";
-import {AppDispatch, RootState} from "../../store.ts";
+import {AppDispatch, RootState} from "../../common/store.ts";
 import {register} from "../redux/authSlice.ts";
 import {useNavigate} from 'react-router-dom';
 

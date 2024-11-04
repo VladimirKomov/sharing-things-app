@@ -1,5 +1,5 @@
 import {useDispatch, useSelector} from 'react-redux';
-import {AppDispatch} from "../../store";
+import {AppDispatch} from "../../common/store.ts";
 import {ChangeEvent, FormEvent, useEffect, useState} from "react";
 import {
     fetchUserSettings,
@@ -8,6 +8,7 @@ import {
     updateUserSettings,
     UserSettings
 } from "../redux/userSettingsSlice";
+import styles from './ProfileSettings.module.css';
 
 const ProfileSettings = () => {
     const dispatch = useDispatch<AppDispatch>();
@@ -48,48 +49,52 @@ const ProfileSettings = () => {
     };
 
     return (
-        <div>
-            <h2>Profile settings</h2>
-            {loading && <p>Загрузка...</p>}
+        <div className={styles.container}>
+            <h2 className={styles.title}>Profile settings</h2>
+            {loading && <p>Loading...</p>}
             {data && (
-                <form onSubmit={handleSubmit}>
-                    <label>
+                <form className={styles.form} onSubmit={handleSubmit}>
+                    <label className={styles.label}>
                         First name:
                         <input
+                            className={styles.input}
                             type="text"
                             name="firstName"
                             value={formData.firstName || ''}
                             onChange={handleChange}
                         />
                     </label>
-                    <label>
+                    <label className={styles.label}>
                         Last name:
                         <input
+                            className={styles.input}
                             type="text"
                             name="lastName"
                             value={formData.lastName || ''}
                             onChange={handleChange}
                         />
                     </label>
-                    <label>
+                    <label className={styles.label}>
                         Phone number:
                         <input
+                            className={styles.input}
                             type="text"
                             name="phoneNumber"
                             value={formData.phoneNumber || ''}
                             onChange={handleChange}
                         />
                     </label>
-                    <label>
+                    <label className={styles.label}>
                         Address:
                         <input
+                            className={styles.input}
                             type="text"
                             name="address"
                             value={formData.address || ''}
                             onChange={handleChange}
                         />
                     </label>
-                    <button type="submit">Submit</button>
+                    <button className={styles.button} type="submit">Submit</button>
                 </form>
             )}
         </div>

@@ -3,7 +3,7 @@ import styles from './NavigationPanel.module.css';
 import {useDispatch, useSelector} from "react-redux";
 import {logout, selectToken, Token} from "../../auth/redux/authSlice.ts";
 import {Link, useNavigate} from "react-router-dom";
-import {AppDispatch} from "../../store.ts";
+import {AppDispatch} from "../../common/store.ts";
 
 
 const NavigationPanel: React.FC = () => {

@@ -80,7 +80,8 @@ class UserSettingsView(generics.RetrieveUpdateAPIView):
 
     def get_object(self):
         # return current setting
-        return self.request.user.settings
+        user_settings, created = UserSettings.objects.get_or_create(user=self.request.user)
+        return user_settings
 
     def perform_update(self, serializer):
         # update current setting

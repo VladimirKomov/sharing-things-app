@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {Navigate, Outlet} from 'react-router-dom';
 import {useDispatch, useSelector} from 'react-redux';
-import {AppDispatch} from '../../store';
+import {AppDispatch} from '../../common/store.ts';
 import {checkToken, selectTokenAccess} from '../redux/authSlice';
 
 interface ProtectedRouteProps {

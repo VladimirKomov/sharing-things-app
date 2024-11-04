@@ -1,5 +1,5 @@
 import {useDispatch, useSelector} from "react-redux";
-import {AppDispatch} from "../../store.ts";
+import {AppDispatch} from "../../common/store.ts";
 import React, {useEffect, useState} from "react";
 import {login, selectError, selectLoading, selectToken} from "../redux/authSlice.ts";
 import styles from './LoginForm.module.css';

@@ -1,7 +1,7 @@
 import {createSlice} from "@reduxjs/toolkit";
-import {RootState} from "../../store";
+import {RootState} from "../../common/store.ts";
 import createCommonThunk from "../../common/models/thunk.model.ts";
-import {configUserSettings, patchUserSettings} from "../api/dashboardApi.ts";
+import {getUserSettings, patchUserSettings} from "../api/dashboardApi.ts";
 
 
 export interface UserSettings {
@@ -30,7 +30,7 @@ const initialState: UserSettingsState = {
 };
 
 
-export const fetchUserSettings = createCommonThunk('userSettings/fetchUserSettings', configUserSettings, {requiresAuth: true});
+export const fetchUserSettings = createCommonThunk('userSettings/fetchUserSettings', getUserSettings, {requiresAuth: true});
 export const updateUserSettings = createCommonThunk('userSettings/updateUserSettings', patchUserSettings, {requiresAuth: true});
 
 export const userSettingsSlice = createSlice({

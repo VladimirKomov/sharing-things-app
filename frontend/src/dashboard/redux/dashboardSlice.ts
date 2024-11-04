@@ -1,6 +1,6 @@
 import {Item} from "../../common/models/items.model.ts";
 import {createSlice} from "@reduxjs/toolkit";
-import {RootState} from "../../store.ts";
+import {RootState} from "../../common/store.ts";
 import {getItemsUser} from "../api/dashboardApi.ts";
 import createCommonThunk from "../../common/models/thunk.model.ts";
 

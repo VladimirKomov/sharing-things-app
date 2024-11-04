@@ -1,7 +1,7 @@
 import {createSlice} from "@reduxjs/toolkit";
 import {Item} from "../../common/models/items.model.ts";
 import {delItem, getItems, postItem, putItem} from "../api/itemsApi.ts";
-import {RootState} from "../../store.ts";
+import {RootState} from "../../common/store.ts";
 import createCommonThunk from "../../common/models/thunk.model.ts";
 
 interface ItemsState {

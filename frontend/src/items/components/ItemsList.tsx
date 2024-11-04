@@ -9,7 +9,7 @@ import {
     selectLoading
 } from '../redux/itemsSlice';
 import ItemComponent from './ItemComponent';
-import {AppDispatch} from "../../store";
+import {AppDispatch} from "../../common/store.ts";
 import styles from "./ItemsList.module.css";
 import {Category} from "../../common/models/category.model.ts";
 import {selectSelectedCategory} from "../redux/categorySlice.ts";

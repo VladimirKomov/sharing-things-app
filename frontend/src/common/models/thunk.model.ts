@@ -1,5 +1,5 @@
 import {createAsyncThunk} from "@reduxjs/toolkit";
-import {RootState} from "../../store.ts";
+import {RootState} from "../store.ts";
 import {createRequest, RequestConfig} from "./request.model.ts";
 import {sendRequest} from "./api.model.ts";
 import {refreshTokenAPI} from "../../auth/api/authAPI.ts";
