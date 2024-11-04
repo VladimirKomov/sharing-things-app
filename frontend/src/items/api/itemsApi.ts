@@ -17,6 +17,14 @@ export const getItems = (params?: Record<string, string>): RequestConfig => {
     };
 };
 
+export const getItemById = (id: string): RequestConfig => {
+    return {
+        method: 'GET',
+        url: `${itemsRoot}items/${id}/`,
+    };
+};
+
+
 export const postItem = (data?: any): RequestConfig => {
     return {
         method: 'POST',

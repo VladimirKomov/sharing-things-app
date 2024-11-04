@@ -1,21 +1,23 @@
 import React from 'react';
-import {Link, Outlet} from 'react-router-dom';
+import { Link, Outlet } from 'react-router-dom';
+import styles from './Dashboard.module.css';
 
 const Dashboard: React.FC = () => {
     return (
-        <div>
-            <h1>Personal account</h1>
-            <Link to="settings">
-                <button>Go to Profile Settings</button>
+        <div className={styles.container}>
+            <h1 className={styles.title}>Personal account</h1>
+            <Link to="settings" className={styles.linkButton}>
+                Go to Profile Settings
             </Link>
-            <Link to="items">
-                <button>Go to Items</button>
+            <Link to="items" className={styles.linkButton}>
+                Go Your to Items
             </Link>
 
-            <Outlet/>
+            <div className={styles.outletContainer}>
+                <Outlet />
+            </div>
         </div>
     );
 };
 
 export default Dashboard;
-

@@ -59,3 +59,12 @@ class ItemViewSet(viewsets.ModelViewSet):
             queryset = queryset.filter(category__slug=category_slug)
 
         return queryset
+
+    def retrieve(self, request, *args, **kwargs):
+        instance = self.get_object()  # Получаем элемент по id
+        serializer = self.get_serializer(instance)
+        return map_to_api_response_as_resp(
+            serializer.data,
+            "Item retrieved successfully",
+            status.HTTP_200_OK
+        )

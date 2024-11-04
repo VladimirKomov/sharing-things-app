@@ -8,6 +8,7 @@ import NavigationPanel from "./main/components/NavigationPanel.tsx";
 import React from "react";
 import ProtectedRoute from "./auth/components/ProtectedRoute.tsx";
 import DashboardRoutes from "./dashboard/components/DashboardRoutes.tsx";
+import ItemDetails from "./items/components/ItemDetails.tsx";
 
 
 const App: React.FC = () => {
@@ -21,6 +22,7 @@ const App: React.FC = () => {
                 <Route element={<ProtectedRoute/>}>
                     <Route path="/dashboard/*" element={<DashboardRoutes/>}/>
                 </Route>
+                <Route path="/items/:itemId" element={<ItemDetails />} />
                 <Route path="/items/categories/:slug" element={<HomePage/>}/>
             </Routes>
         </Router>

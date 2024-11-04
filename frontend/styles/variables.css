@@ -8,7 +8,8 @@
     --secondary-color-light: #9dc6ef;
     --tertiary-color: #6daeee;
     --quaternary-color: #a3c8ec;
-    --background-color: #d8e1e9;
+    --background-color: rgba(196, 209, 223, 0.8);
+    --common-background-color: rgba(216, 225, 233, 0.5);
     --error-color: #ff0000;
     --success-color: #00796b;
 

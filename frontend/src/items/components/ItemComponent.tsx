@@ -1,6 +1,7 @@
 import React from 'react';
 import {Item} from "../../common/models/items.model";
 import styles from "./ItemComponent.module.css"
+import {useNavigate} from "react-router-dom";
 
 
 interface ItemProps {
@@ -8,8 +9,14 @@ interface ItemProps {
 }
 
 const ItemComponent: React.FC<ItemProps> = ({item}) => {
+    const navigate = useNavigate();
+
+    const handleClick = () => {
+        navigate(`/items/${item.id}`);
+    };
+
     return (
-        <div className={styles.itemContainer}>
+        <div className={styles.itemContainer} onClick={handleClick}>
             <div className={styles.imagesContainer}>
                 {item.imagesUrl.slice(0, 1).map((image, index) => (
                     <img

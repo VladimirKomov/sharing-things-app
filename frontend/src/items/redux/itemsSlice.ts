@@ -1,6 +1,6 @@
 import {createSlice} from "@reduxjs/toolkit";
 import {Item} from "../../common/models/items.model.ts";
-import {delItem, getItems, postItem, putItem} from "../api/itemsApi.ts";
+import {delItem, getItemById, getItems, postItem, putItem} from "../api/itemsApi.ts";
 import {RootState} from "../../common/store.ts";
 import createCommonThunk from "../../common/models/thunk.model.ts";
 import {getItemsUser} from "../../dashboard/api/dashboardApi.ts";
@@ -17,6 +17,7 @@ interface PaginationState {
 interface ItemsState {
     allItems: PaginationState;
     userItems: PaginationState;
+    selectedItem: Item | null;
     loading: boolean;
     error: {
         message: string | null,
@@ -40,6 +41,7 @@ const initialState: ItemsState = {
         hasNextPage: true,
         hasPreviousPage: false,
     },
+    selectedItem: null,
     loading: false,
     error: {
         message: null,
@@ -47,8 +49,9 @@ const initialState: ItemsState = {
 }
 
 export const fetchItems = createCommonThunk('items/fetchItems', getItems);
+export const fetchItemById = createCommonThunk('items/fetchItemById', getItemById);
+//protected routes
 export const fetchItemsUser = createCommonThunk('items/fetchItemsUser', getItemsUser, {requiresAuth: true});
-
 export const createItem = createCommonThunk('items/createItem', postItem);
 export const updateItem = createCommonThunk('items/updateItem', putItem);
 export const removeItem = createCommonThunk('items/removeItem', delItem);
@@ -72,6 +75,21 @@ const itemsSlice = createSlice({
             .addCase(fetchItems.rejected, (state, action) => {
                 state.loading = false;
                 state.error.message = action.error.message || 'An error occurred during fetch items.';
+            });
+        // iem by id
+        builder
+            .addCase(fetchItemById.pending, (state) => {
+                state.loading = true;
+                state.error.message = null;
+            })
+            .addCase(fetchItemById.fulfilled, (state, action) => {
+                state.loading = false;
+                state.selectedItem = action.payload.data;
+                state.error.message = null;
+            })
+            .addCase(fetchItemById.rejected, (state, action) => {
+                state.loading = false;
+                state.error.message = action.error.message || 'Failed to fetch item details';
             });
         // users items
         builder
@@ -103,6 +121,8 @@ const itemsSlice = createSlice({
 })
 
 export default itemsSlice.reducer;
+
+export const selectSelectedItem = (state: RootState) => state.items.selectedItem;
 
 // all items selector
 export const selectAllItems = (state: RootState) => state.items.allItems.items;

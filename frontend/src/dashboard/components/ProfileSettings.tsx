@@ -94,7 +94,7 @@ const ProfileSettings = () => {
                             onChange={handleChange}
                         />
                     </label>
-                    <button className={styles.button} type="submit">Submit</button>
+                    <button className={styles.button} type="submit">Save changes</button>
                 </form>
             )}
         </div>
