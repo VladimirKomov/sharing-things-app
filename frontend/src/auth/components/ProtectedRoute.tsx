@@ -18,7 +18,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({redirectPath = '/login'}
             if (tokenAccess) {
                 try {
                     // Проверяем, действителен ли токен на сервере
-                    await dispatch(checkToken(tokenAccess))
+                    await dispatch(checkToken())
                     setIsTokenValid(true);
                 } catch (error: any) {
                     // Если ошибка — токен истек или недействителен

@@ -78,6 +78,10 @@ class UserLogoutView(APIView):
 
 class CustomTokenVerifyView(TokenVerifyView):
     def post(self, request, *args, **kwargs):
+        auth_header = request.headers.get("Authorization")
+        if auth_header and auth_header.startswith("Bearer "):
+            token = auth_header.split(" ")[1]
+            request.data["token"] = token
         try:
             response = super().post(request, *args, **kwargs)
             if response.status_code == status.HTTP_200_OK:
@@ -93,14 +97,11 @@ class CustomTokenVerifyView(TokenVerifyView):
                     response.data
                 )
         except InvalidToken as e:
-            # Ошибка: недействительный токен
             return map_api_error_as_resp(
                 'Invalid token provided',
                 status.HTTP_401_UNAUTHORIZED,
                 {
-                    'detail': str(e),
-                    'refresh': False,
-                    'codeValid': 'token_not_valid'
+                    'detail': str(e)
                 }
             )
         except TokenError as e:
@@ -109,9 +110,7 @@ class CustomTokenVerifyView(TokenVerifyView):
                 'Token error occurred',
                 status.HTTP_401_UNAUTHORIZED,
                 {
-                    'detail': str(e),
-                    'refresh': False,
-                    'codeValid': 'token_error'
+                    'detail': str(e)
                 }
             )
         except ValidationError as e:
@@ -120,9 +119,7 @@ class CustomTokenVerifyView(TokenVerifyView):
                 'Validation error occurred',
                 status.HTTP_400_BAD_REQUEST,
                 {
-                    'detail': str(e),
-                    'refresh': False,
-                    'codeValid': 'validation_error'
+                    'detail': str(e)
                 }
             )
         except Exception as e:
@@ -131,8 +128,7 @@ class CustomTokenVerifyView(TokenVerifyView):
                 'Token verification failed',
                 status.HTTP_400_BAD_REQUEST,
                 {
-                    'detail': str(e),
-                    'refresh': False
+                    'detail': str(e)
                 }
             )
 
@@ -157,18 +153,17 @@ class CustomTokenRefreshView(TokenRefreshView):
                 'Invalid token provided',
                 status.HTTP_401_UNAUTHORIZED,
                 {
-                    'detail': str(e),
-                    'refresh': True,
-                    'codeValid': 'token_not_valid'}
+                    'detail': str(e)
+                }
             )
         except TokenError as e:
             # General token error
             return map_api_error_as_resp(
                 'Token error occurred',
                 status.HTTP_401_UNAUTHORIZED,
-                {'detail': str(e),
-                 'refresh': True,
-                 'codeValid': 'token_not_valid'}
+                {
+                    'detail': str(e)
+                }
             )
         except Exception as e:
             # Other error
@@ -176,7 +171,6 @@ class CustomTokenRefreshView(TokenRefreshView):
                 'Token refresh failed',
                 status.HTTP_400_BAD_REQUEST,
                 {
-                    'detail': str(e),
-                    'refresh': True
+                    'detail': str(e)
                 }
             )

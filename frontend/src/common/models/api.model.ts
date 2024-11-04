@@ -1,7 +1,7 @@
 import axios, {AxiosResponse} from "axios";
 import {RequestConfig} from "./request.model.ts";
 import {BaseError} from "./error.model.ts";
-import {errorResponseToBaseError, responseToBaseResponse} from "../mapper.ts";
+import {errorResponseToBaseError, errorToBaseError, responseToBaseResponse} from "../mapper.ts";
 
 
 export const sendRequest = async <T>(
@@ -17,11 +17,11 @@ export const sendRequest = async <T>(
         return responseToBaseResponse(response).asObject();
     } catch (error: any) {
         if (error.response) {
-            const status = error.response.status;
             if (error.response.data.error) {
                 throw errorResponseToBaseError(error.response.data.error).asObject();
             }
-            throw new BaseError(error.message, status).asObject();
+            console.log(error);
+            throw errorToBaseError(error).asObject();
         } else {
             throw new BaseError('Network error or request failed', 500).asObject();
         }

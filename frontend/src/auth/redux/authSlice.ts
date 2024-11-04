@@ -41,7 +41,7 @@ const initialState: AuthSlice = {
 export const login = createCommonThunk('auth/login', loginAPI);
 export const register = createCommonThunk('auth/register', registerAPI);
 export const logout = createCommonThunk('auth/logout', logoutAPI);
-export const checkToken = createCommonThunk('auth/checkToken', checkTokenAPI);
+export const checkToken = createCommonThunk('auth/checkToken', checkTokenAPI, {requiresAuth: true});
 
 const authSlice = createSlice({
     name: 'auth',
