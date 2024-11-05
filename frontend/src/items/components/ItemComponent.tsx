@@ -1,16 +1,42 @@
 import React from 'react';
+import IconButton from '@mui/material/IconButton';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
 import {Item} from "../../common/models/items.model";
 import styles from "./ItemComponent.module.css"
+import {useDispatch} from "react-redux";
+import {AppDispatch} from "../../common/store.ts";
+import {removeUserItem} from "../../dashboard/redux/userItemsSlice.ts";
 
 
 interface ItemProps {
     item: Item;
+    ownerOnly?: boolean;
 }
 
-const ItemComponent: React.FC<ItemProps> = ({item}) => {
+const ItemComponent: React.FC<ItemProps> = ({item, ownerOnly = false}) => {
+    const dispatch = useDispatch<AppDispatch>();
+
 
     const handleClick = () => {
         window.open(`/items/${item.id}`, '_blank');
+    };
+
+    const handleEdit = (event: React.MouseEvent) => {
+        if (ownerOnly) {
+            event.stopPropagation();
+            window.open(`items/${item.id}/edit`, '_blank');
+        }
+    };
+
+    // Deleting an element
+    const handleDelete = (event: React.MouseEvent) => {
+        if (ownerOnly) {
+            event.stopPropagation();
+            if (window.confirm("Are you sure you want to delete this item?")) {
+                dispatch(removeUserItem(item.id));
+            }
+        }
     };
 
     return (
@@ -31,6 +57,16 @@ const ItemComponent: React.FC<ItemProps> = ({item}) => {
                 <p className={styles.itemOwner}><span>Owner:</span> {item.ownerName}</p>
                 <p className={styles.itemCategory}><span>Category:</span> {item.categoryName}</p>
             </div>
+            {ownerOnly && (
+                <div className={styles.buttonContainer}>
+                    <IconButton onClick={handleEdit} color="primary" aria-label="edit">
+                        <EditIcon/>
+                    </IconButton>
+                    <IconButton onClick={handleDelete} color="error" aria-label="delete">
+                        <DeleteIcon/>
+                    </IconButton>
+                </div>
+            )}
         </div>
     );
 };

@@ -45,6 +45,7 @@ class UserDashboardViewSet(viewsets.ModelViewSet):
             code=status.HTTP_200_OK
         )
 
+    # get item by id
     def retrieve(self, request, *args, **kwargs):
         instance = self.get_object()
         serializer = self.get_serializer(instance)

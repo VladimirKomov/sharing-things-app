@@ -25,7 +25,6 @@ export const createCommonThunk = (
                 ...(options?.requiresAuth && token ? { "Authorization": `Bearer ${token.access}` } : {}),
                 ...config.headers,
             };
-
             const executeRequest = async (config: RequestConfig) => {
                 try {
                     const request = createRequest(config);

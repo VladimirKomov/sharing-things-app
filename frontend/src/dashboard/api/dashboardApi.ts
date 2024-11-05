@@ -3,15 +3,6 @@ import {UserSettings} from "../redux/userSettingsSlice.ts";
 
 const dashboardRoot = 'dashboard/';
 
-
-export const getItemsUser = (params?: Record<string, string>): RequestConfig => {
-    return {
-        method: 'GET',
-        url: dashboardRoot + 'items/',
-        params: params,
-    };
-};
-
 export const getUserSettings = (): RequestConfig => {
     return {
         method: 'GET',
@@ -26,3 +17,42 @@ export const patchUserSettings = (data: UserSettings): RequestConfig => {
         data: data,
     }
 }
+
+export const getUserItems = (params?: Record<string, string>): RequestConfig => {
+    return {
+        method: 'GET',
+        url: dashboardRoot + 'items/',
+        params: params,
+    };
+};
+
+export const getUserItemById = (id: string): RequestConfig => {
+    return {
+        method: 'GET',
+        url: `${dashboardRoot}items/${id}/`,
+    };
+};
+
+interface putUserItemData {
+    id: string;
+    data: {
+        name?: string;
+        description?: string;
+    };
+}
+
+export const putUserItem = (credentials: putUserItemData): RequestConfig => {
+    const {id, data} = credentials;
+    return {
+        method: 'PUT',
+        url: `${dashboardRoot}items/${id}/`,
+        data: data,
+    };
+};
+
+export const delUserItem = (id: string): RequestConfig => {
+    return {
+        method: 'DELETE',
+        url: `${dashboardRoot}items/${id}/`,
+    };
+};

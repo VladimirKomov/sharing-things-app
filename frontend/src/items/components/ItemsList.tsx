@@ -2,14 +2,10 @@ import React, {useEffect} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {
     fetchItems,
-    fetchItemsUser,
     selectError,
     selectAllItemsHasNextPage,
     selectAllItemsHasPreviousPage,
     selectAllItems,
-    selectUserItemsHasNextPage,
-    selectUserItemsHasPreviousPage,
-    selectUserItems,
     selectLoading
 } from '../redux/itemsSlice';
 import ItemComponent from './ItemComponent';
@@ -19,13 +15,19 @@ import {Category} from "../../common/models/category.model.ts";
 import {clearSelectedCategory, selectSelectedCategory} from "../redux/categorySlice.ts";
 import usePagination from "../hooks/usePagination.ts";
 import useInfiniteScroll from "../hooks/useInfiniteScroll.ts";
+import {
+    fetchUserItems,
+    selectUserItems,
+    selectUserItemsHasNextPage,
+    selectUserItemsHasPreviousPage
+} from "../../dashboard/redux/userItemsSlice.ts";
 
 
 interface ItemsListProps {
     ownerOnly?: boolean;
 }
 
-const ItemsList: React.FC<ItemsListProps> = ({ownerOnly = false}) => {
+const ItemsList: React.FC<ItemsListProps> = ({ ownerOnly = false }) => {
     const dispatch = useDispatch<AppDispatch>();
 
     // Get items, category...
@@ -37,9 +39,9 @@ const ItemsList: React.FC<ItemsListProps> = ({ownerOnly = false}) => {
     const error = useSelector(selectError);
 
 
-    const {page, setPage, allItems, updateItems, resetPagination, limit} = usePagination({limit: 10});
+    const { page, setPage, allItems, updateItems, resetPagination, limit } = usePagination({limit: 10});
 
-    const {lastItemRef, firstItemRef} = useInfiniteScroll(
+    const { lastItemRef, firstItemRef } = useInfiniteScroll(
         loading,
         hasNextPage,
         hasPreviousPage,
@@ -68,7 +70,7 @@ const ItemsList: React.FC<ItemsListProps> = ({ownerOnly = false}) => {
     // Load items based on current page and selected category
     useEffect(() => {
         if (ownerOnly) {
-            dispatch(fetchItemsUser({limit, page, category: selectedCategory?.slug || null}));
+            dispatch(fetchUserItems({limit, page, category: selectedCategory?.slug || null}));
         } else {
             dispatch(fetchItems({limit, page, category: selectedCategory?.slug || null}));
         }
@@ -95,7 +97,7 @@ const ItemsList: React.FC<ItemsListProps> = ({ownerOnly = false}) => {
 
                     return (
                         <div key={item.id} {...refProps}>
-                            <ItemComponent item={item}/>
+                            <ItemComponent item={item} ownerOnly={ownerOnly}/>
                         </div>
                     );
                 })}

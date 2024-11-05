@@ -25,26 +25,12 @@ export const getItemById = (id: string): RequestConfig => {
 };
 
 
-export const postItem = (data?: any): RequestConfig => {
+export const postItem = (id: string, data?: any): RequestConfig => {
     return {
         method: 'POST',
-        url: itemsRoot + 'items/',
+        url: `${itemsRoot}items/${id}/`,
         data: data,
     };
 };
 
-export const putItem = (data?: any): RequestConfig => {
-    return {
-        method: 'PUT',
-        url: itemsRoot + 'items/',
-        data: data,
-    };
-};
 
-export const delItem = (params?: Record<string, string>): RequestConfig => {
-    return {
-        method: 'DELETE',
-        url: itemsRoot + 'items/',
-        params: params,
-    };
-};
