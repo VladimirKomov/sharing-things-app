@@ -1,7 +1,6 @@
 import React from 'react';
 import {Item} from "../../common/models/items.model";
 import styles from "./ItemComponent.module.css"
-import {useNavigate} from "react-router-dom";
 
 
 interface ItemProps {
@@ -9,10 +8,9 @@ interface ItemProps {
 }
 
 const ItemComponent: React.FC<ItemProps> = ({item}) => {
-    const navigate = useNavigate();
 
     const handleClick = () => {
-        navigate(`/items/${item.id}`);
+        window.open(`/items/${item.id}`, '_blank');
     };
 
     return (
