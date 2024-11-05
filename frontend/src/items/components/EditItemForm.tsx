@@ -58,7 +58,7 @@ const EditItemForm: React.FC = () => {
         setLoading(true);
         try {
             await dispatch(updateUserItem({id, data: formData})).unwrap();
-            window.close() // Navigate back to the item list after saving
+            // window.close() // Navigate back to the item list after saving
         } catch (error) {
             console.error("Error updating item:", error);
         } finally {

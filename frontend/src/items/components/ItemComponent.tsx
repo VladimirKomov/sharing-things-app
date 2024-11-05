@@ -1,31 +1,43 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import IconButton from '@mui/material/IconButton';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
-import {Item} from "../../common/models/items.model";
 import styles from "./ItemComponent.module.css"
-import {useDispatch} from "react-redux";
-import {AppDispatch} from "../../common/store.ts";
-import {removeUserItem} from "../../dashboard/redux/userItemsSlice.ts";
+import {useDispatch, useSelector} from "react-redux";
+import {AppDispatch, RootState} from "../../common/store.ts";
+import {removeUserItem, selectUserItems} from "../../dashboard/redux/userItemsSlice.ts";
+import {selectAllItems} from "../redux/itemsSlice.ts";
 
 
 interface ItemProps {
-    item: Item;
+    itemId: number;
     ownerOnly?: boolean;
 }
 
-const ItemComponent: React.FC<ItemProps> = ({item, ownerOnly = false}) => {
+const ItemComponent: React.FC<ItemProps> = ({itemId, ownerOnly = false}) => {
     const dispatch = useDispatch<AppDispatch>();
 
+    const reduxItem = ownerOnly
+        ? useSelector((state: RootState) => selectUserItems(state).find(i => i.id === itemId))
+        : useSelector((state: RootState) => selectAllItems(state).find(i => i.id === itemId));
+
+    const [item, setItem] = useState(reduxItem);
+
+    // Обновление локального состояния при изменении reduxItem
+    useEffect(() => {
+        setItem(reduxItem);
+    }, [reduxItem]); // Здесь мы следим за reduxItem
+
+    if (!item) return 'No item found';
 
     const handleClick = () => {
-        window.open(`/items/${item.id}`, '_blank');
+        window.open(`/items/${itemId}`, '_blank');
     };
 
     const handleEdit = (event: React.MouseEvent) => {
         if (ownerOnly) {
             event.stopPropagation();
-            window.open(`items/${item.id}/edit`, '_blank');
+            window.open(`items/${itemId}/edit`, '_blank');
         }
     };
 

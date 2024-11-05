@@ -97,7 +97,7 @@ const ItemsList: React.FC<ItemsListProps> = ({ ownerOnly = false }) => {
 
                     return (
                         <div key={item.id} {...refProps}>
-                            <ItemComponent item={item} ownerOnly={ownerOnly}/>
+                            <ItemComponent itemId={item.id} ownerOnly={ownerOnly}/>
                         </div>
                     );
                 })}
