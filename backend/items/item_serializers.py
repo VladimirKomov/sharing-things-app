@@ -14,7 +14,7 @@ class ItemImageSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ItemImage
-        fields = ['url']
+        fields = ['id', 'url']
 
     def get_url(self, obj):
         request = self.context.get('request')
@@ -25,10 +25,17 @@ class ItemSerializer(serializers.ModelSerializer):
     images_url = ItemImageSerializer(source='images', many=True, read_only=True)
     category_name = serializers.CharField(source='category.name', read_only=True)
     username = serializers.CharField(source='user.username', read_only=True)
+    category = serializers.PrimaryKeyRelatedField(
+        queryset=Category.objects.all(),
+        write_only=True
+    )
 
     class Meta:
         model = Item
-        fields = ['id', 'name', 'description', 'category_name', 'username', 'images_url']
+        fields = ['id', 'name', 'description', 'category', 'category_name', 'username', 'images_url']
+        extra_kwargs = {
+            'category': {'write_only': True}
+        }
 
     def to_representation(self, instance):
         data = super().to_representation(instance)

@@ -1,3 +1,4 @@
+from django.core.exceptions import ValidationError
 from rest_framework import status, viewsets, generics
 from rest_framework.permissions import IsAuthenticated
 
@@ -6,7 +7,7 @@ from dashboard.dasboard_serializer import UserSettingsSerializer
 from dashboard.dashboard_models import UserSettings
 from dashboard.dashboard_permissions import IsOwner
 from items.item_serializers import ItemSerializer
-from items.items_models import Item
+from items.items_models import Item, ItemImage
 from items.items_pagination import ItemsPagination
 
 
@@ -55,9 +56,34 @@ class UserDashboardViewSet(viewsets.ModelViewSet):
             code=status.HTTP_200_OK
         )
 
+    def handle_images(self, item, images, max_images=5, max_size_mb=2):
+        """
+        Handle image uploading and saving with restrictions.
+        :param item: Item instance to associate images with.
+        :param images: List of images to be uploaded.
+        :param max_images: Maximum number of images allowed.
+        :param max_size_mb: Maximum size of each image in megabytes.
+        """
+        # check count images
+        if len(images) > max_images:
+            raise ValidationError(f"Maximum of {max_images} images are allowed.")
+
+        for image in images:
+            # check size
+            if image.size > max_size_mb * 1024 * 1024:
+                raise ValidationError(f"Each image must be smaller than {max_size_mb} MB.")
+
+            # save
+            ItemImage.objects.create(item=item, image=image)
+
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
+
+        item = serializer.save(user=self.request.user)
+        images = request.FILES.getlist('images')
+        self.handle_images(item, images)
+
         self.perform_create(serializer)
         headers = self.get_success_headers(serializer.data)
         return map_to_api_response_as_resp(
@@ -71,6 +97,13 @@ class UserDashboardViewSet(viewsets.ModelViewSet):
         instance = self.get_object()
         serializer = self.get_serializer(instance, data=request.data, partial=partial)
         serializer.is_valid(raise_exception=True)
+
+        item = serializer.save(user=self.request.user)
+        images = request.FILES.getlist('images')
+        # delete old images
+        instance.images.all().delete()
+        self.handle_images(item, images)
+
         self.perform_update(serializer)
         return map_to_api_response_as_resp(
             data=serializer.data,
@@ -80,11 +113,11 @@ class UserDashboardViewSet(viewsets.ModelViewSet):
 
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
-        #save id
+        # save id
         item_id = instance.id
         self.perform_destroy(instance)
         return map_to_api_response_as_resp(
-            data={'id': item_id}, # return id element after destroy
+            data={'id': item_id},  # return id element after destroy
             message="Item deleted successfully",
             code=status.HTTP_200_OK
         )

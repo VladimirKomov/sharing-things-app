@@ -1,6 +1,6 @@
-import React, {useEffect, useState} from 'react';
-import {useDispatch, useSelector} from 'react-redux';
-import {AppDispatch} from '../../common/store.ts';
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch } from '../../common/store.ts';
 import {
     Button,
     CircularProgress,
@@ -19,9 +19,9 @@ import {
     selectUserSelectedItem,
     updateUserItem
 } from "../redux/userItemsSlice.ts";
-import {fetchCategories, selectCategories} from "../../items/redux/categorySlice.ts";
-import {Item} from "../../common/models/items.model.ts";
-import {Category} from "../../common/models/category.model.ts";
+import { fetchCategories, selectCategories } from "../../items/redux/categorySlice.ts";
+import { Item } from "../../common/models/items.model.ts";
+import { Category } from "../../common/models/category.model.ts";
 
 interface SidebarEditProps {
     isOpen: boolean;
@@ -29,29 +29,29 @@ interface SidebarEditProps {
     itemId: number;
 }
 
-const SidebarEditItem: React.FC<SidebarEditProps> = ({isOpen, onClose, itemId}) => {
+const SidebarEditItem: React.FC<SidebarEditProps> = ({ isOpen, onClose, itemId }) => {
     const dispatch = useDispatch<AppDispatch>();
 
     const item: Item | null = useSelector(selectUserSelectedItem);
-    const categories: Category[] = useSelector(selectCategories); // Select available categories from Redux
+    const categories: Category[] = useSelector(selectCategories);
     const loading = useSelector(selectUserItemsLoading);
     const error = useSelector(selectUserItemsError);
 
     const [formData, setFormData] = useState({
         name: '',
         description: '',
-        categoryName: '',
+        categoryId: '',
     });
 
     useEffect(() => {
         if (itemId) {
-            dispatch(fetchUserItemById(itemId))
+            dispatch(fetchUserItemById(itemId));
         }
     }, [itemId, dispatch]);
 
     useEffect(() => {
         if (!categories.length) {
-            dispatch(fetchCategories()); // Load categories if not loaded
+            dispatch(fetchCategories());
         }
     }, [categories, dispatch]);
 
@@ -60,43 +60,40 @@ const SidebarEditItem: React.FC<SidebarEditProps> = ({isOpen, onClose, itemId}) 
             setFormData({
                 name: item.name || '',
                 description: item.description || '',
-                categoryName: item.categoryName || '',
+                categoryId: categories.find(cat => cat.name === item.categoryName)?.id.toString() || '',
             });
         }
-    }, [item]);
+    }, [item, categories]);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        const {name, value} = e.target;
+        const { name, value } = e.target;
         setFormData((prevData) => ({
             ...prevData,
             [name]: value,
         }));
     };
 
-    // Handle category change by setting categoryName
     const handleCategoryChange = (e: SelectChangeEvent<string>) => {
-        const selectedCategoryId = e.target.value as string;
-        const selectedCategory = categories.find((cat) => cat.id === selectedCategoryId);
         setFormData((prevData) => ({
             ...prevData,
-            categoryName: selectedCategory ? selectedCategory.name : '',
+            categoryId: e.target.value,
         }));
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        await dispatch(updateUserItem({id: itemId, data: formData})).unwrap();
-        onClose(); // close sidebar
+        await dispatch(updateUserItem({ id: itemId, data: { ...formData, category: formData.categoryId } })).unwrap();
+        onClose();
     };
 
     return (
         <Drawer anchor="right" open={isOpen} onClose={onClose}>
-            <div style={{width: 400, padding: '20px'}}>
+            <div style={{ width: 600, padding: '20px' }}>
                 <h2>Edit Item</h2>
                 {loading ? (
-                    <CircularProgress/>
+                    <CircularProgress />
                 ) : error.message ? (
-                    <div style={{color: 'red', marginBottom: '1em'}}>{error.message}</div>
+                    <div style={{ color: 'red', marginBottom: '1em' }}>{error.message}</div>
                 ) : (
                     <form onSubmit={handleSubmit}>
                         <TextField
@@ -124,12 +121,12 @@ const SidebarEditItem: React.FC<SidebarEditProps> = ({isOpen, onClose, itemId}) 
                             <InputLabel>Category</InputLabel>
                             <Select
                                 label="Category"
-                                value={categories.find(cat => cat.name === formData.categoryName)?.id || ''}
+                                value={formData.categoryId}
                                 onChange={handleCategoryChange}
                                 required
                             >
                                 {categories.map((category) => (
-                                    <MenuItem key={category.id} value={category.id}>
+                                    <MenuItem key={category.id} value={category.id.toString()}>
                                         {category.name}
                                     </MenuItem>
                                 ))}
@@ -140,7 +137,7 @@ const SidebarEditItem: React.FC<SidebarEditProps> = ({isOpen, onClose, itemId}) 
                             variant="contained"
                             color="primary"
                             fullWidth
-                            style={{marginTop: '1em'}}
+                            style={{ marginTop: '1em' }}
                             disabled={loading}
                         >
                             Save
@@ -150,7 +147,7 @@ const SidebarEditItem: React.FC<SidebarEditProps> = ({isOpen, onClose, itemId}) 
                             color="secondary"
                             fullWidth
                             onClick={onClose}
-                            style={{marginTop: '1em'}}
+                            style={{ marginTop: '1em' }}
                         >
                             Cancel
                         </Button>
