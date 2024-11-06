@@ -19,7 +19,7 @@ const ItemComponent: React.FC<ItemProps> = ({itemId, ownerOnly = false}) => {
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
     // Select item based on ownerOnly flag
-    const item = useSelector((state: RootState) =>
+    let item = useSelector((state: RootState) =>
         ownerOnly
             ? selectUserItems(state).find(i => i.id === itemId)
             : selectAllItems(state).find(i => i.id === itemId)

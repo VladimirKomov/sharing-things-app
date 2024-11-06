@@ -85,10 +85,7 @@ const userItemsSlice = createSlice({
             })
             .addCase(updateUserItem.fulfilled, (state, action) => {
                 const updatedItem = action.payload.data;
-                console.log('#updatedItem', updatedItem);
-                console.log('#Items', state.page.items);
                 const index = state.page.items.findIndex(item => item.id === updatedItem.id);
-                console.log("#Index", index);
                 if (index !== -1) {
                     state.page.items[index] = updatedItem;
                 }
@@ -105,8 +102,8 @@ const userItemsSlice = createSlice({
                 state.error.message = null;
             })
             .addCase(removeUserItem.fulfilled, (state, action) => {
-                const removedItemId = action.payload;
-                state.page.items = state.page.items.filter(item => item.id !== removedItemId);
+                const id = action.payload.data.id;
+                state.page.items = state.page.items.filter(item => item.id !== id);
                 state.loading = false;
                 state.error.message = null;
             })
