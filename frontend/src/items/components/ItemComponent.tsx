@@ -7,7 +7,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {AppDispatch, RootState} from "../../common/store.ts";
 import {removeUserItem, selectUserItems} from "../../dashboard/redux/userItemsSlice.ts";
 import {selectAllItems} from "../redux/itemsSlice.ts";
-import SidebarEditItem from "../../dashboard/components/SidebarEditItem.tsx";
+import Old_SidebarEditItem from "../../dashboard/components/SidebarEditItem.tsx";
 
 interface ItemProps {
     itemId: number;
@@ -69,7 +69,7 @@ const ItemComponent: React.FC<ItemProps> = ({itemId, ownerOnly = false}) => {
 
             {isSidebarOpen && (
                 <div onClick={(e) => e.stopPropagation()}>
-                    <SidebarEditItem isOpen={isSidebarOpen} onClose={handleCloseSidebar} itemId={item.id}/>
+                    <Old_SidebarEditItem isOpen={isSidebarOpen} onClose={handleCloseSidebar} itemId={item.id}/>
                 </div>
             )}
         </div>

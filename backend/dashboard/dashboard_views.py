@@ -1,3 +1,6 @@
+import json
+from urllib.parse import urlparse
+
 from django.core.exceptions import ValidationError
 from rest_framework import status, viewsets, generics
 from rest_framework.permissions import IsAuthenticated
@@ -94,15 +97,32 @@ class UserDashboardViewSet(viewsets.ModelViewSet):
 
     def update(self, request, *args, **kwargs):
         partial = kwargs.pop('partial', False)
+
         instance = self.get_object()
         serializer = self.get_serializer(instance, data=request.data, partial=partial)
         serializer.is_valid(raise_exception=True)
 
         item = serializer.save(user=self.request.user)
-        images = request.FILES.getlist('images')
-        # delete old images
-        instance.images.all().delete()
-        self.handle_images(item, images)
+
+        # get current images
+        current_images = request.data.get('currentImages', '[]')
+        if isinstance(current_images, str):
+            try:
+                current_images = json.loads(current_images)
+            except json.JSONDecodeError:
+                raise ValidationError("Invalid format for currentImages. Expected a JSON array of URLs.")
+
+        # Converting URLs
+        current_images_relative = [self.extract_relative_path(url) for url in current_images]
+
+        # Deleting old images that are missing from the list of current images
+        for image in instance.images.all():
+            if image.image.name not in current_images_relative:
+                image.delete()
+
+        # new images
+        new_images = request.FILES.getlist('images')
+        self.handle_images(item, new_images)
 
         self.perform_update(serializer)
         return map_to_api_response_as_resp(
@@ -110,6 +130,13 @@ class UserDashboardViewSet(viewsets.ModelViewSet):
             message="Item updated successfully",
             code=status.HTTP_200_OK
         )
+
+    def extract_relative_path(self, full_url):
+        parsed_url = urlparse(full_url)
+        path = parsed_url.path
+        if path.startswith('/public/'):
+            path = path[len('/public/'):]
+        return path.lstrip('/')
 
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()

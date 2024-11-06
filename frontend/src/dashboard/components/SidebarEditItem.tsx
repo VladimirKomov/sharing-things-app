@@ -1,4 +1,4 @@
-import React, {ChangeEvent, useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch } from '../../common/store.ts';
 import {
@@ -20,6 +20,7 @@ import {
     updateUserItem
 } from "../redux/userItemsSlice.ts";
 import { fetchCategories, selectCategories } from "../../items/redux/categorySlice.ts";
+import ImageUploader from './ImageUploader'; // Импортируем компонент
 import { Item } from "../../common/models/items.model.ts";
 import { Category } from "../../common/models/category.model.ts";
 
@@ -31,7 +32,6 @@ interface SidebarEditProps {
 
 const SidebarEditItem: React.FC<SidebarEditProps> = ({ isOpen, onClose, itemId }) => {
     const dispatch = useDispatch<AppDispatch>();
-
     const item: Item | null = useSelector(selectUserSelectedItem);
     const categories: Category[] = useSelector(selectCategories);
     const loading = useSelector(selectUserItemsLoading);
@@ -42,9 +42,8 @@ const SidebarEditItem: React.FC<SidebarEditProps> = ({ isOpen, onClose, itemId }
         description: '',
         categoryId: '',
     });
-
-    // # images
-    const [images, setImages] = useState<File[]>([]);
+    const [currentImages, setCurrentImages] = useState<string[]>([]);
+    const [newImages, setNewImages] = useState<File[]>([]);
 
     useEffect(() => {
         if (itemId) {
@@ -65,6 +64,7 @@ const SidebarEditItem: React.FC<SidebarEditProps> = ({ isOpen, onClose, itemId }
                 description: item.description || '',
                 categoryId: categories.find(cat => cat.name === item.categoryName)?.id.toString() || '',
             });
+            setCurrentImages(item.imagesUrl.map(url => url.url));
         }
     }, [item, categories]);
 
@@ -83,11 +83,12 @@ const SidebarEditItem: React.FC<SidebarEditProps> = ({ isOpen, onClose, itemId }
         }));
     };
 
-    // # images
-    const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
-        if (e.target.files) {
-            setImages(Array.from(e.target.files));
-        }
+    const handleAddImages = (images: File[]) => {
+        setNewImages((prevImages) => [...prevImages, ...images]);
+    };
+
+    const handleDeleteCurrentImage = (url: string) => {
+        setCurrentImages((prevImages) => prevImages.filter((image) => image !== url));
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -97,12 +98,15 @@ const SidebarEditItem: React.FC<SidebarEditProps> = ({ isOpen, onClose, itemId }
         formDataWithFiles.append('description', formData.description);
         formDataWithFiles.append('category', formData.categoryId);
 
-        images.forEach((image) => {
-            formDataWithFiles.append(`images`, image);
-        });
-        console.log("########## ", formDataWithFiles, " #################");
+        // the list of old images
+        formDataWithFiles.append('currentImages', JSON.stringify(currentImages));
 
-        await dispatch(updateUserItem({ id: itemId, data: formDataWithFiles }));
+        // add new files
+        newImages.forEach((image) => {
+            formDataWithFiles.append('images', image);
+        });
+
+        await dispatch(updateUserItem({ id: itemId, data: formDataWithFiles })).unwrap();
         onClose();
     };
 
@@ -115,7 +119,7 @@ const SidebarEditItem: React.FC<SidebarEditProps> = ({ isOpen, onClose, itemId }
                 ) : error.message ? (
                     <div style={{ color: 'red', marginBottom: '1em' }}>{error.message}</div>
                 ) : (
-                    <form onSubmit={handleSubmit} encType="multipart/form-data">
+                    <form onSubmit={handleSubmit}>
                         <TextField
                             label="Name"
                             variant="outlined"
@@ -152,12 +156,11 @@ const SidebarEditItem: React.FC<SidebarEditProps> = ({ isOpen, onClose, itemId }
                                 ))}
                             </Select>
                         </FormControl>
-                        <input
-                            type="file"
-                            multiple
-                            accept="image/*"
-                            onChange={handleImageChange}
-                            style={{ margin: '20px 0' }}
+                        work with images
+                        <ImageUploader
+                            currentImages={currentImages}
+                            onDeleteImage={handleDeleteCurrentImage}
+                            onAddImages={handleAddImages}
                         />
                         <Button
                             type="submit"
