@@ -6,7 +6,7 @@ import {Button, CircularProgress, TextField} from '@mui/material';
 import {fetchUserItemById, selectUserSelectedItem, updateUserItem} from "../../dashboard/redux/userItemsSlice.ts";
 import {Item} from "../../common/models/items.model.ts";
 
-const EditItemForm: React.FC = () => {
+const Old_EditItemForm: React.FC = () => {
     const {id} = useParams<{ id: string }>(); // Get item ID from URL
     const dispatch = useDispatch<AppDispatch>();
 
@@ -118,4 +118,4 @@ const EditItemForm: React.FC = () => {
     );
 };
 
-export default EditItemForm;
+export default Old_EditItemForm;

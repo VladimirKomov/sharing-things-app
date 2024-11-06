@@ -107,6 +107,8 @@ const userItemsSlice = createSlice({
             .addCase(removeUserItem.fulfilled, (state, action) => {
                 const removedItemId = action.payload;
                 state.page.items = state.page.items.filter(item => item.id !== removedItemId);
+                state.loading = false;
+                state.error.message = null;
             })
             .addCase(removeUserItem.rejected, (state, action) => {
                 state.loading = false;
@@ -117,14 +119,11 @@ const userItemsSlice = createSlice({
 
 export default userItemsSlice.reducer;
 
-// Selectors
 export const selectUserSelectedItem = (state: RootState) => state.userItems.selectedItem;
 
-// User items selector
 export const selectUserItems = (state: RootState) => state.userItems.page.items;
 export const selectUserItemsHasNextPage = (state: RootState) => state.userItems.page.hasNextPage;
 export const selectUserItemsHasPreviousPage = (state: RootState) => state.userItems.page.hasPreviousPage;
 
-// Common selectors
-export const selectLoading = (state: RootState) => state.userItems.loading;
-export const selectError = (state: RootState) => state.userItems.error;
+export const selectUserItemsLoading = (state: RootState) => state.userItems.loading;
+export const selectUserItemsError = (state: RootState) => state.userItems.error;
