@@ -20,11 +20,20 @@ export const createCommonThunk = (
             const state = getState() as RootState;
             const token = state.auth.token;
             const config = requestConfig(credentials);
+
+            const isFormData = credentials.data instanceof FormData;
+
             config.headers = {
-                "Content-Type": "application/json",
                 ...(options?.requiresAuth && token ? { "Authorization": `Bearer ${token.access}` } : {}),
                 ...config.headers,
             };
+
+            if (isFormData) {
+                delete config.headers['Content-Type'];
+            } else {
+                config.headers['Content-Type'] = "application/json";
+            }
+
             const executeRequest = async (config: RequestConfig) => {
                 try {
                     const request = createRequest(config);

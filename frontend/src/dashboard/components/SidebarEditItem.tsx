@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, {ChangeEvent, useEffect, useState} from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch } from '../../common/store.ts';
 import {
@@ -43,6 +43,9 @@ const SidebarEditItem: React.FC<SidebarEditProps> = ({ isOpen, onClose, itemId }
         categoryId: '',
     });
 
+    // # images
+    const [images, setImages] = useState<File[]>([]);
+
     useEffect(() => {
         if (itemId) {
             dispatch(fetchUserItemById(itemId));
@@ -80,9 +83,26 @@ const SidebarEditItem: React.FC<SidebarEditProps> = ({ isOpen, onClose, itemId }
         }));
     };
 
+    // # images
+    const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files) {
+            setImages(Array.from(e.target.files));
+        }
+    };
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        await dispatch(updateUserItem({ id: itemId, data: { ...formData, category: formData.categoryId } })).unwrap();
+        const formDataWithFiles = new FormData();
+        formDataWithFiles.append('name', formData.name);
+        formDataWithFiles.append('description', formData.description);
+        formDataWithFiles.append('category', formData.categoryId);
+
+        images.forEach((image) => {
+            formDataWithFiles.append(`images`, image);
+        });
+        console.log("########## ", formDataWithFiles, " #################");
+
+        await dispatch(updateUserItem({ id: itemId, data: formDataWithFiles }));
         onClose();
     };
 
@@ -95,7 +115,7 @@ const SidebarEditItem: React.FC<SidebarEditProps> = ({ isOpen, onClose, itemId }
                 ) : error.message ? (
                     <div style={{ color: 'red', marginBottom: '1em' }}>{error.message}</div>
                 ) : (
-                    <form onSubmit={handleSubmit}>
+                    <form onSubmit={handleSubmit} encType="multipart/form-data">
                         <TextField
                             label="Name"
                             variant="outlined"
@@ -132,6 +152,13 @@ const SidebarEditItem: React.FC<SidebarEditProps> = ({ isOpen, onClose, itemId }
                                 ))}
                             </Select>
                         </FormControl>
+                        <input
+                            type="file"
+                            multiple
+                            accept="image/*"
+                            onChange={handleImageChange}
+                            style={{ margin: '20px 0' }}
+                        />
                         <Button
                             type="submit"
                             variant="contained"

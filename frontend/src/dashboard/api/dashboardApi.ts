@@ -35,10 +35,7 @@ export const getUserItemById = (id: string): RequestConfig => {
 
 interface putUserItemData {
     id: string;
-    data: {
-        name?: string;
-        description?: string;
-    };
+    data: FormData;
 }
 
 export const putUserItem = (credentials: putUserItemData): RequestConfig => {
