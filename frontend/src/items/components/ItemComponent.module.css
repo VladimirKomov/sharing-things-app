@@ -22,7 +22,7 @@
     margin-bottom: var(--spacing-large);
     transition: box-shadow var(--transition-duration) var(--transition-timing);
     cursor: pointer;
-    width: 94%;
+    width: 93%;
 }
 
 
@@ -56,11 +56,11 @@
 .itemTitle {
     color: var(--primary-color);
     font-size: var(--font-size-large);
-    margin-bottom: var(--spacing-small);
+    margin-bottom: 0;
 }
 
 .itemDescription, .itemOwner, .itemCategory {
     color: var(--secondary-color);
     font-size: var(--font-size-base);
-    margin: var(--spacing-small) 0;
+    margin: 0;
 }

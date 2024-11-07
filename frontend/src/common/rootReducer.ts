@@ -1,10 +1,9 @@
-import {combineReducers} from "redux";
 import authReducer from "../auth/redux/authSlice";
 import categoryReducer from "../items/redux/categorySlice";
 import itemsReducer from "../items/redux/itemsSlice";
 import userSettingsReducer from "../dashboard/redux/userSettingsSlice";
 import userItemsReducer from "../dashboard/redux/userItemsSlice.ts";
-import {PayloadAction} from "@reduxjs/toolkit";
+import {combineReducers, PayloadAction} from "@reduxjs/toolkit";
 
 const appReducer = combineReducers({
     auth: authReducer,

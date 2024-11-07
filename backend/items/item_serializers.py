@@ -32,7 +32,7 @@ class ItemSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Item
-        fields = ['id', 'name', 'description', 'category', 'category_name', 'username', 'images_url']
+        fields = ['id', 'name', 'description', 'category', 'price_per_day', 'category_name', 'username', 'images_url']
         extra_kwargs = {
             'category': {'write_only': True}
         }
@@ -43,4 +43,5 @@ class ItemSerializer(serializers.ModelSerializer):
         data['categoryName'] = data.pop('category_name')
         data['ownerName'] = data.pop('username')
         data['imagesUrl'] = data.pop('images_url')
+        data['pricePerDay'] = data.pop('price_per_day')
         return data

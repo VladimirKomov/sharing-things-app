@@ -57,9 +57,13 @@ const ItemComponent: React.FC<ItemProps> = ({ itemId, ownerOnly = false, onEdit 
                 ))}
             </div>
             <div className={styles.textContainer}>
-                <h3 className={styles.itemTitle}><span>Name:</span> {item.name}</h3>
-                <p className={styles.itemDescription}><span>Description:</span> {item.description}</p>
-                <p className={styles.itemOwner}><span>Owner:</span> {item.ownerName}</p>
+                <h3 className={styles.itemTitle}><span>Name: </span> {item.name}</h3>
+                <p className={styles.itemDescription}><span>Description: </span> {item.description}</p>
+                <p className={styles.itemOwner}><span>Owner: </span> {item.ownerName}</p>
+                <p className={styles.itemOwner}><span>Price per day: </span>
+                    {/*{item.pricePerDay === 0.00 ? `$${item.pricePerDay}` : ' Free' }*/}
+                    {item.pricePerDay > 0 ? item.pricePerDay : ' Free'  }
+                </p>
                 <p className={styles.itemCategory}><span>Category:</span> {item.categoryName}</p>
             </div>
             {ownerOnly && (

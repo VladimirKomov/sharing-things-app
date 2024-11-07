@@ -3,8 +3,6 @@ import uuid
 
 from django.contrib.auth.models import User
 from django.db import models
-
-from django.db import models
 from django.utils.text import slugify
 
 
@@ -13,7 +11,6 @@ class Category(models.Model):
     description = models.TextField()
     # for url paths
     slug = models.SlugField(max_length=255, unique=True, blank=True)
-
 
     def save(self, *args, **kwargs):
         if not self.slug:
@@ -27,11 +24,15 @@ class Category(models.Model):
 class Item(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField()
+    price_per_day = models.DecimalField(max_digits=10, decimal_places=2)
     category = models.ForeignKey('Category', on_delete=models.PROTECT, null=True, related_name='items')
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='items')
 
     def __str__(self):
         return self.name
+
+    def is_free(self):
+        return self.price_per_day == 0
 
 
 class ItemImage(models.Model):

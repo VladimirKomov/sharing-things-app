@@ -42,6 +42,7 @@ const SidebarAddOrEditItem: React.FC<SidebarEditProps> = ({ isOpen, onClose, ite
         name: '',
         description: '',
         categoryId: '',
+        pricePerDay: ''
     });
     const [currentImages, setCurrentImages] = useState<string[]>([]);
     const [newImages, setNewImages] = useState<File[]>([]);
@@ -54,6 +55,7 @@ const SidebarAddOrEditItem: React.FC<SidebarEditProps> = ({ isOpen, onClose, ite
                 name: '',
                 description: '',
                 categoryId: '',
+                pricePerDay: ''
             });
             setCurrentImages([]);
             setNewImages([]);
@@ -72,6 +74,7 @@ const SidebarAddOrEditItem: React.FC<SidebarEditProps> = ({ isOpen, onClose, ite
                 name: item.name || '',
                 description: item.description || '',
                 categoryId: categories.find(cat => cat.name === item.categoryName)?.id.toString() || '',
+                pricePerDay: item.pricePerDay?.toString() || ''
             });
             setCurrentImages(item.imagesUrl.map(url => url.url));
         }
@@ -106,6 +109,7 @@ const SidebarAddOrEditItem: React.FC<SidebarEditProps> = ({ isOpen, onClose, ite
         formDataWithFiles.append('name', formData.name);
         formDataWithFiles.append('description', formData.description);
         formDataWithFiles.append('category', formData.categoryId);
+        formDataWithFiles.append('price_per_day', formData.pricePerDay);
 
         // the list of old images
         formDataWithFiles.append('currentImages', JSON.stringify(currentImages));
@@ -153,6 +157,18 @@ const SidebarAddOrEditItem: React.FC<SidebarEditProps> = ({ isOpen, onClose, ite
                             onChange={handleChange}
                             multiline
                             rows={3}
+                        />
+                        <TextField
+                            label="Price per Day"
+                            variant="outlined"
+                            fullWidth
+                            margin="normal"
+                            name="pricePerDay"
+                            value={formData.pricePerDay}
+                            onChange={handleChange}
+                            required
+                            type="number"
+                            inputMode="decimal"
                         />
                         <FormControl fullWidth margin="normal">
                             <InputLabel>Category</InputLabel>
