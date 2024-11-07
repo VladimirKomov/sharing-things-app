@@ -61,7 +61,6 @@ class UserDashboardViewSet(viewsets.ModelViewSet):
         )
 
     def handle_images(self, item, images, max_images=5, max_size_mb=2):
-        print(f"Handling {len(images)} images for item {item.id}")
         """
         Handle image uploading and saving with restrictions.
         :param item: Item instance to associate images with.
@@ -92,8 +91,6 @@ class UserDashboardViewSet(viewsets.ModelViewSet):
             # the second save image
             item = serializer.instance
             images = request.FILES.getlist('images')
-            if not images:
-                print("No images received in request.FILES. Available keys: %s", request.FILES.keys())
 
             self.handle_images(item, images)
 
