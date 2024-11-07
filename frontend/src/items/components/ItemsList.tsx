@@ -1,5 +1,5 @@
-import React, {useEffect, useState} from 'react';
-import {useDispatch, useSelector} from 'react-redux';
+import React, { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import {
     clearPage,
@@ -11,9 +11,9 @@ import {
     selectLoading,
 } from '../redux/itemsSlice';
 import ItemComponent from './ItemComponent';
-import {AppDispatch} from '../../common/store.ts';
+import { AppDispatch } from '../../common/store.ts';
 import styles from './ItemsList.module.css';
-import {Category} from '../../common/models/category.model.ts';
+import { Category } from '../../common/models/category.model.ts';
 import {
     fetchCategories,
     selectCategories,
@@ -29,14 +29,16 @@ import {
     selectUserItemsHasNextPage,
     selectUserItemsLoading,
 } from '../../dashboard/redux/userItemsSlice.ts';
-import SidebarEditItem from '../../dashboard/components/SidebarEditItem.tsx';
-import {FixedSizeList as VirtualizedList} from 'react-window';
+import SidebarAddOrEditItem from '../../dashboard/components/SidebarAddOrEditItem.tsx';
+import { FixedSizeList as VirtualizedList } from 'react-window';
+import AddIcon from '@mui/icons-material/Add';
+import IconButton from "@mui/material/IconButton";
 
 interface ItemsListProps {
     ownerOnly?: boolean;
 }
 
-const ItemsList: React.FC<ItemsListProps> = ({ownerOnly = false}) => {
+const ItemsList: React.FC<ItemsListProps> = ({ ownerOnly = false }) => {
     const dispatch = useDispatch<AppDispatch>();
 
     // Get items, category, etc.
@@ -58,14 +60,13 @@ const ItemsList: React.FC<ItemsListProps> = ({ownerOnly = false}) => {
     }, [dispatch, categories.length, loading]);
 
     // Load items based on current page and selected category
-    // Clear items and load items based on current page and selected category
     useEffect(() => {
         if (ownerOnly) {
-            dispatch(clearUserItemsPage()); // Clear items when category changes
-            dispatch(fetchUserItems({page: 1, limit: 10, category: selectedCategory?.slug || null}));
+            dispatch(clearUserItemsPage());
+            dispatch(fetchUserItems({ page: 1, limit: 10, category: selectedCategory?.slug || null }));
         } else {
-            dispatch(clearPage()); // Clear items when category changes
-            dispatch(fetchItems({page: 1, limit: 10, category: selectedCategory?.slug || null}));
+            dispatch(clearPage());
+            dispatch(fetchItems({ page: 1, limit: 10, category: selectedCategory?.slug || null }));
         }
     }, [dispatch, ownerOnly, selectedCategory]);
 
@@ -79,9 +80,9 @@ const ItemsList: React.FC<ItemsListProps> = ({ownerOnly = false}) => {
     const loadMoreItems = () => {
         if (hasNextPage) {
             if (ownerOnly) {
-                dispatch(fetchUserItems({page: currentPage + 1, limit: 10, category: selectedCategory?.slug || null}));
+                dispatch(fetchUserItems({ page: currentPage + 1, limit: 10, category: selectedCategory?.slug || null }));
             } else {
-                dispatch(fetchItems({page: currentPage + 1, limit: 10, category: selectedCategory?.slug || null}));
+                dispatch(fetchItems({ page: currentPage + 1, limit: 10, category: selectedCategory?.slug || null }));
             }
         }
     };
@@ -100,11 +101,24 @@ const ItemsList: React.FC<ItemsListProps> = ({ownerOnly = false}) => {
         }
     };
 
+    const handleAddNewItem = () => {
+        setIsSidebarOpen(true);
+        setSelectedItemId(null);
+    };
+
     return (
         <div className={styles.itemsListContainer}>
-            <h2 className={styles.itemsListTitle}>Items list:</h2>
+            <div className={styles.itemsListHeader}>
+                <IconButton onClick={handleAddNewItem} color="primary" aria-label="add" size="large">
+                    <AddIcon />
+                    New Item
+                </IconButton>
+                <h2 className={styles.itemsListTitle}>Items list:</h2>
+            </div>
+
             {/* Display error message if any */}
             {error.message && <p className={styles.errorText}>Error: {error.message}</p>}
+
             {/* Infinite scroll component */}
             <InfiniteScroll
                 dataLength={items.length}
@@ -119,7 +133,7 @@ const ItemsList: React.FC<ItemsListProps> = ({ownerOnly = false}) => {
                     itemSize={300} // The height of one element
                     width={'60vw'}
                 >
-                    {({index, style}) => (
+                    {({ index, style }) => (
                         <div key={items[index].id} style={style} className={styles.itemContainer}>
                             <ItemComponent
                                 itemId={items[index].id}
@@ -132,8 +146,8 @@ const ItemsList: React.FC<ItemsListProps> = ({ownerOnly = false}) => {
             </InfiniteScroll>
 
             {/* Sidebar for editing item */}
-            {selectedItemId !== null && (
-                <SidebarEditItem
+            {ownerOnly && (
+                <SidebarAddOrEditItem
                     isOpen={isSidebarOpen}
                     onClose={handleCloseSidebar}
                     itemId={selectedItemId}

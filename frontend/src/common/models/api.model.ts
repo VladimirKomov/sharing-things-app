@@ -20,7 +20,6 @@ export const sendRequest = async <T>(
             if (error.response.data.error) {
                 throw errorResponseToBaseError(error.response.data.error).asObject();
             }
-            console.log(error);
             throw errorToBaseError(error).asObject();
         } else {
             throw new BaseError('Network error or request failed', 500).asObject();

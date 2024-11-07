@@ -2,7 +2,7 @@ import {createSlice} from "@reduxjs/toolkit";
 import {Item} from "../../common/models/items.model.ts";
 import {RootState} from "../../common/store.ts";
 import createCommonThunk from "../../common/models/thunk.model.ts";
-import {delUserItem, getUserItemById, getUserItems, putUserItem} from "../api/dashboardApi.ts";
+import {delUserItem, getUserItemById, getUserItems, postUserItem, putUserItem} from "../api/dashboardApi.ts";
 
 
 interface PaginationState {
@@ -42,6 +42,7 @@ const initialState: ItemsState = {
 // Protected routes
 export const fetchUserItems = createCommonThunk('userItems/fetchUserItems', getUserItems, {requiresAuth: true});
 export const fetchUserItemById = createCommonThunk('userItems/fetchUserItemById', getUserItemById, {requiresAuth: true});
+export const createUserItem = createCommonThunk('userItems/createUserItem', postUserItem, {requiresAuth: true});
 export const updateUserItem = createCommonThunk('userItems/updateUserItem', putUserItem, {requiresAuth: true});
 export const removeUserItem = createCommonThunk('userItems/removeUserItem', delUserItem, {requiresAuth: true});
 
@@ -54,6 +55,7 @@ const userItemsSlice = createSlice({
         }
     },
     extraReducers: (builder) => {
+        //get user items
         builder
             .addCase(fetchUserItems.pending, (state) => {
                 state.loading = true;
@@ -70,7 +72,7 @@ const userItemsSlice = createSlice({
                 state.loading = false;
                 state.error.message = action.error.message || 'Failed to fetch user items';
             });
-
+        // get user item by id
         builder
             .addCase(fetchUserItemById.pending, (state) => {
                 state.loading = true;
@@ -84,7 +86,20 @@ const userItemsSlice = createSlice({
                 state.loading = false;
                 state.error.message = action.error.message || 'Failed to fetch item details';
             });
-
+        //add new item
+        builder
+            .addCase(createUserItem.pending, (state) => {
+                state.loading = true;
+                state.error.message = null;
+            })
+            .addCase(createUserItem.fulfilled, (state) => {
+                state.loading = false;
+            })
+            .addCase(createUserItem.rejected, (state, action) => {
+                state.loading = false;
+                state.error.message = action.error.message || 'Failed to update user items';
+            });
+        // update user item by id
         builder
             .addCase(updateUserItem.pending, (state) => {
                 state.loading = true;
@@ -102,7 +117,7 @@ const userItemsSlice = createSlice({
                 state.loading = false;
                 state.error.message = action.error.message || 'Failed to update user items';
             });
-
+        // delete user item by id
         builder
             .addCase(removeUserItem.pending, (state) => {
                 state.loading = true;

@@ -33,12 +33,24 @@ export const getUserItemById = (id: string): RequestConfig => {
     };
 };
 
-interface putUserItemData {
+interface PostUserItemData {
+    data: FormData;
+}
+
+export const postUserItem = (credentials: PostUserItemData): RequestConfig => {
+    return {
+        method: 'POST',
+        url: `${dashboardRoot}items/`,
+        data: credentials.data,
+    };
+};
+
+interface PutUserItemData {
     id: string;
     data: FormData;
 }
 
-export const putUserItem = (credentials: putUserItemData): RequestConfig => {
+export const putUserItem = (credentials: PutUserItemData): RequestConfig => {
     const {id, data} = credentials;
     return {
         method: 'PUT',

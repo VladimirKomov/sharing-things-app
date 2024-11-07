@@ -13,6 +13,7 @@ import {
     TextField
 } from '@mui/material';
 import {
+    createUserItem,
     fetchUserItemById,
     selectUserItemsError,
     selectUserItemsLoading,
@@ -20,17 +21,17 @@ import {
     updateUserItem
 } from "../redux/userItemsSlice.ts";
 import { fetchCategories, selectCategories } from "../../items/redux/categorySlice.ts";
-import ImageUploader from './ImageUploader'; // Импортируем компонент
+import ImageUploader from './ImageUploader'; // Import image uploader component
 import { Item } from "../../common/models/items.model.ts";
 import { Category } from "../../common/models/category.model.ts";
 
 interface SidebarEditProps {
     isOpen: boolean;
     onClose: () => void;
-    itemId: number;
+    itemId?: number | null;
 }
 
-const SidebarEditItem: React.FC<SidebarEditProps> = ({ isOpen, onClose, itemId }) => {
+const SidebarAddOrEditItem: React.FC<SidebarEditProps> = ({ isOpen, onClose, itemId }) => {
     const dispatch = useDispatch<AppDispatch>();
     const item: Item | null = useSelector(selectUserSelectedItem);
     const categories: Category[] = useSelector(selectCategories);
@@ -48,6 +49,14 @@ const SidebarEditItem: React.FC<SidebarEditProps> = ({ isOpen, onClose, itemId }
     useEffect(() => {
         if (itemId) {
             dispatch(fetchUserItemById(itemId));
+        } else {
+            setFormData({
+                name: '',
+                description: '',
+                categoryId: '',
+            });
+            setCurrentImages([]);
+            setNewImages([]);
         }
     }, [itemId, dispatch]);
 
@@ -58,7 +67,7 @@ const SidebarEditItem: React.FC<SidebarEditProps> = ({ isOpen, onClose, itemId }
     }, [categories, dispatch]);
 
     useEffect(() => {
-        if (item) {
+        if (item && itemId) {
             setFormData({
                 name: item.name || '',
                 description: item.description || '',
@@ -66,7 +75,7 @@ const SidebarEditItem: React.FC<SidebarEditProps> = ({ isOpen, onClose, itemId }
             });
             setCurrentImages(item.imagesUrl.map(url => url.url));
         }
-    }, [item, categories]);
+    }, [item, categories, itemId]);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
@@ -106,14 +115,18 @@ const SidebarEditItem: React.FC<SidebarEditProps> = ({ isOpen, onClose, itemId }
             formDataWithFiles.append('images', image);
         });
 
-        await dispatch(updateUserItem({ id: itemId, data: formDataWithFiles })).unwrap();
+        if (itemId) {
+            await dispatch(updateUserItem({ id: itemId, data: formDataWithFiles })).unwrap();
+        } else {
+            await dispatch(createUserItem({data: formDataWithFiles})).unwrap();
+        }
         onClose();
     };
 
     return (
         <Drawer anchor="right" open={isOpen} onClose={onClose}>
             <div style={{ width: 600, padding: '20px' }}>
-                <h2>Edit Item</h2>
+                <h2>{itemId ? 'Edit Item' : 'Add New Item'}</h2>
                 {loading ? (
                     <CircularProgress />
                 ) : error.message ? (
@@ -156,7 +169,7 @@ const SidebarEditItem: React.FC<SidebarEditProps> = ({ isOpen, onClose, itemId }
                                 ))}
                             </Select>
                         </FormControl>
-                        work with images
+                        {/*work with images*/}
                         <ImageUploader
                             currentImages={currentImages}
                             onDeleteImage={handleDeleteCurrentImage}
@@ -170,7 +183,7 @@ const SidebarEditItem: React.FC<SidebarEditProps> = ({ isOpen, onClose, itemId }
                             style={{ marginTop: '1em' }}
                             disabled={loading}
                         >
-                            Save
+                            {itemId ? 'Save' : 'Add Item'}
                         </Button>
                         <Button
                             variant="outlined"
@@ -188,4 +201,4 @@ const SidebarEditItem: React.FC<SidebarEditProps> = ({ isOpen, onClose, itemId }
     );
 };
 
-export default SidebarEditItem;
+export default SidebarAddOrEditItem;
