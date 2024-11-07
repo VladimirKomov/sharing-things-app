@@ -48,7 +48,11 @@ export const removeUserItem = createCommonThunk('userItems/removeUserItem', delU
 const userItemsSlice = createSlice({
     name: 'userItems',
     initialState,
-    reducers: {},
+    reducers: {
+        clearUserItemsPage: (state) => {
+            state.page.items = [];
+        }
+    },
     extraReducers: (builder) => {
         builder
             .addCase(fetchUserItems.pending, (state) => {
@@ -57,7 +61,10 @@ const userItemsSlice = createSlice({
             })
             .addCase(fetchUserItems.fulfilled, (state, action) => {
                 state.loading = false;
-                state.page = action.payload.data;
+                const page: PaginationState = action.payload.data;
+                page.items = [...state.page.items, ...page.items];
+                state.page = page;
+                state.error.message = null;
             })
             .addCase(fetchUserItems.rejected, (state, action) => {
                 state.loading = false;
@@ -116,11 +123,15 @@ const userItemsSlice = createSlice({
 
 export default userItemsSlice.reducer;
 
+export const {clearUserItemsPage} = userItemsSlice.actions;
+
 export const selectUserSelectedItem = (state: RootState) => state.userItems.selectedItem;
 
 export const selectUserItems = (state: RootState) => state.userItems.page.items;
 export const selectUserItemsHasNextPage = (state: RootState) => state.userItems.page.hasNextPage;
 export const selectUserItemsHasPreviousPage = (state: RootState) => state.userItems.page.hasPreviousPage;
+export const selectUserItemsCurrentPage = (state: RootState) => state.userItems.page.currentPage;
+export const selectUserItemsTotalPages = (state: RootState) => state.userItems.page.totalPages;
 
 export const selectUserItemsLoading = (state: RootState) => state.userItems.loading;
 export const selectUserItemsError = (state: RootState) => state.userItems.error;

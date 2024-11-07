@@ -1,20 +1,21 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import IconButton from '@mui/material/IconButton';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import styles from "./ItemComponent.module.css";
-import {useDispatch, useSelector} from "react-redux";
-import {AppDispatch, RootState} from "../../common/store.ts";
-import {removeUserItem, selectUserItems} from "../../dashboard/redux/userItemsSlice.ts";
-import {selectAllItems} from "../redux/itemsSlice.ts";
-import Old_SidebarEditItem from "../../dashboard/components/SidebarEditItem.tsx";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../common/store.ts";
+import { removeUserItem, selectUserItems } from "../../dashboard/redux/userItemsSlice.ts";
+import { selectAllItems } from "../redux/itemsSlice.ts";
+import SidebarEditItem from "../../dashboard/components/SidebarEditItem.tsx";
 
 interface ItemProps {
     itemId: number;
     ownerOnly?: boolean;
+    onEdit?: () => void;
 }
 
-const ItemComponent: React.FC<ItemProps> = ({itemId, ownerOnly = false}) => {
+const ItemComponent: React.FC<ItemProps> = ({ itemId, ownerOnly = false, onEdit }) => {
     const dispatch = useDispatch<AppDispatch>();
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
@@ -29,7 +30,12 @@ const ItemComponent: React.FC<ItemProps> = ({itemId, ownerOnly = false}) => {
 
     const handleEdit = (event: React.MouseEvent) => {
         event.stopPropagation();
-        if (ownerOnly) setIsSidebarOpen(true);
+        if (ownerOnly) {
+            setIsSidebarOpen(true);
+            if (onEdit) {
+                onEdit();
+            }
+        }
     };
 
     const handleCloseSidebar = () => setIsSidebarOpen(false);
@@ -47,7 +53,7 @@ const ItemComponent: React.FC<ItemProps> = ({itemId, ownerOnly = false}) => {
         <div className={styles.itemContainer} onClick={handleClick}>
             <div className={styles.imagesContainer}>
                 {item.imagesUrl.slice(0, 1).map((image, index) => (
-                    <img key={index} src={image.url} alt="Item image" className={styles.image}/>
+                    <img key={index} src={image.url} alt="Item image" className={styles.image} />
                 ))}
             </div>
             <div className={styles.textContainer}>
@@ -59,17 +65,17 @@ const ItemComponent: React.FC<ItemProps> = ({itemId, ownerOnly = false}) => {
             {ownerOnly && (
                 <div className={styles.buttonContainer}>
                     <IconButton onClick={handleEdit} color="primary" aria-label="edit">
-                        <EditIcon/>
+                        <EditIcon />
                     </IconButton>
                     <IconButton onClick={handleDelete} color="error" aria-label="delete">
-                        <DeleteIcon/>
+                        <DeleteIcon />
                     </IconButton>
                 </div>
             )}
 
             {isSidebarOpen && (
                 <div onClick={(e) => e.stopPropagation()}>
-                    <Old_SidebarEditItem isOpen={isSidebarOpen} onClose={handleCloseSidebar} itemId={item.id}/>
+                    <SidebarEditItem isOpen={isSidebarOpen} onClose={handleCloseSidebar} itemId={item.id} />
                 </div>
             )}
         </div>

@@ -36,16 +36,6 @@ const CategoryFilter: React.FC = () => {
         }
     };
 
-    // // Handler for changing the selected category
-    // const handleCategoryChange = (category: Category | null) => {
-    //     if (category !== selectedCategory) {
-    //         dispatch(setSelectedCategory(category));
-    //         // a new path based on the selected category
-    //         const newPath = category ? `/items/categories/${category.slug}` : '/';
-    //         navigate(newPath);
-    //     }
-    // };
-
     return (
         <div className={styles.categoryFilter}>
             <label className={styles.label}>Select category:</label>

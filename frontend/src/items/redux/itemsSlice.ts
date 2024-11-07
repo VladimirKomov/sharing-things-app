@@ -45,7 +45,11 @@ export const fetchItemById = createCommonThunk('items/fetchItemById', getItemByI
 const itemsSlice = createSlice({
     name: 'items',
     initialState,
-    reducers: {},
+    reducers: {
+        clearPage: (state) => {
+            state.page.items = [];
+        }
+    },
     extraReducers: (builder) => {
         builder
             .addCase(fetchItems.pending, (state) => {
@@ -54,7 +58,9 @@ const itemsSlice = createSlice({
             })
             .addCase(fetchItems.fulfilled, (state, action) => {
                 state.loading = false;
-                state.page = action.payload.data;
+                const page: PaginationState = action.payload.data;
+                page.items = [...state.page.items, ...page.items];
+                state.page = page;
                 state.error.message = null;
             })
             .addCase(fetchItems.rejected, (state, action) => {
@@ -80,6 +86,8 @@ const itemsSlice = createSlice({
 
 export default itemsSlice.reducer;
 
+export const { clearPage } = itemsSlice.actions;
+
 // Selectors
 export const selectSelectedItem = (state: RootState) => state.items.selectedItem;
 
@@ -87,6 +95,8 @@ export const selectSelectedItem = (state: RootState) => state.items.selectedItem
 export const selectAllItems = (state: RootState) => state.items.page.items;
 export const selectAllItemsHasNextPage = (state: RootState) => state.items.page.hasNextPage;
 export const selectAllItemsHasPreviousPage = (state: RootState) => state.items.page.hasPreviousPage;
+export const selectAllItemsCurrentPage = (state: RootState) => state.items.page.currentPage;
+export const selectAllItemsTotalPages = (state: RootState) => state.items.page.totalPages;
 
 // Common selectors
 export const selectLoading = (state: RootState) => state.items.loading;
