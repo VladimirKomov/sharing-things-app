@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from dashboard.dashboard_models import UserSettings
+from dashboard.models import UserSettings
 
 
 @admin.register(UserSettings)

@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from dashboard.dashboard_models import UserSettings
+from dashboard.models import UserSettings
 
 
 class UserSettingsSerializer(serializers.ModelSerializer):

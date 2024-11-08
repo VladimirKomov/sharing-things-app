@@ -2,9 +2,9 @@ from rest_framework import viewsets, status
 from rest_framework.permissions import IsAdminUser, IsAuthenticatedOrReadOnly, AllowAny
 
 from common.mapper import map_to_api_response_as_resp
-from items.item_serializers import CategorySerializer, ItemSerializer
-from items.items_models import Category, Item
-from items.items_pagination import ItemsPagination
+from items.serializers import CategorySerializer, ItemSerializer
+from items.models import Category, Item
+from items.paginations import ItemsPagination
 
 
 class CategoryViewSet(viewsets.ModelViewSet):

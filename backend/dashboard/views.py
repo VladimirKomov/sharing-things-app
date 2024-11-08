@@ -7,12 +7,12 @@ from rest_framework import status, viewsets, generics
 from rest_framework.permissions import IsAuthenticated
 
 from common.mapper import map_to_api_response_as_resp
-from dashboard.dasboard_serializer import UserSettingsSerializer
-from dashboard.dashboard_models import UserSettings
-from dashboard.dashboard_permissions import IsOwner
-from items.item_serializers import ItemSerializer
-from items.items_models import Item, ItemImage
-from items.items_pagination import ItemsPagination
+from dashboard.models import UserSettings
+from dashboard.permissions import IsOwner
+from dashboard.serializer import UserSettingsSerializer
+from items.models import Item, ItemImage
+from items.paginations import ItemsPagination
+from items.serializers import ItemSerializer
 
 
 # Items view

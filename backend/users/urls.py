@@ -20,7 +20,7 @@ from rest_framework_simplejwt.views import (
     TokenRefreshView, TokenObtainPairView, TokenVerifyView,
 )
 
-from .user_views import UserRegistrationView, UserLogoutView, LoginView, CustomTokenVerifyView, CustomTokenRefreshView
+from .views import UserRegistrationView, UserLogoutView, LoginView, CustomTokenVerifyView, CustomTokenRefreshView
 
 urlpatterns = [
     path('register/', UserRegistrationView.as_view(), name='user_registration'),

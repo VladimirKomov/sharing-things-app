@@ -1,7 +1,7 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 
-from .dashboard_views import UserDashboardViewSet, UserSettingsView
+from dashboard.views import UserDashboardViewSet, UserSettingsView
 
 router = DefaultRouter()
 router.register(r'items', UserDashboardViewSet, basename='user-dashboard-items')
