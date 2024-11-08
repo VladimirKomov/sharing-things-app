@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import IconButton from '@mui/material/IconButton';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -7,18 +7,17 @@ import {useDispatch, useSelector} from "react-redux";
 import {AppDispatch, RootState} from "../../common/store.ts";
 import {removeUserItem, selectUserItems} from "../../dashboard/redux/userItemsSlice.ts";
 import {selectAllItems} from "../redux/itemsSlice.ts";
-import SidebarAddOrEditItem from "../../dashboard/components/SidebarAddOrEditItem.tsx";
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 
 interface ItemProps {
     itemId: number;
     ownerOnly?: boolean;
     onEdit?: () => void;
+    onOrder?: () => void;
 }
 
-const ItemComponent: React.FC<ItemProps> = ({itemId, ownerOnly = false, onEdit}) => {
+const ItemComponent: React.FC<ItemProps> = ({itemId, ownerOnly = false, onEdit, onOrder}) => {
     const dispatch = useDispatch<AppDispatch>();
-    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
     // Select item based on ownerOnly flag
     let item = useSelector((state: RootState) =>
@@ -32,14 +31,11 @@ const ItemComponent: React.FC<ItemProps> = ({itemId, ownerOnly = false, onEdit})
     const handleEdit = (event: React.MouseEvent) => {
         event.stopPropagation();
         if (ownerOnly) {
-            setIsSidebarOpen(true);
             if (onEdit) {
                 onEdit();
             }
         }
     };
-
-    const handleCloseSidebar = () => setIsSidebarOpen(false);
 
     const handleDelete = (event: React.MouseEvent) => {
         event.stopPropagation();
@@ -48,9 +44,13 @@ const ItemComponent: React.FC<ItemProps> = ({itemId, ownerOnly = false, onEdit})
         }
     };
 
-    const handOrder = (event: React.MouseEvent) => {
+    const handleOrder = (event: React.MouseEvent) => {
         event.stopPropagation();
-        console.log(`${event} button clicked`);
+        if (!ownerOnly) {
+            if (onOrder) {
+                onOrder();
+            }
+        }
     };
 
     if (!item) return null;
@@ -85,15 +85,10 @@ const ItemComponent: React.FC<ItemProps> = ({itemId, ownerOnly = false, onEdit})
             {!ownerOnly && (
                 <div className={styles.buttonContainer}>
                     {/* Button with AddShoppingCartIcon */}
-                    <IconButton onClick={handOrder} color="secondary"
+                    <IconButton onClick={handleOrder} color="secondary"
                                 aria-label="add order" style={{fontSize: '3rem'}}>
                         <AddShoppingCartIcon style={{fontSize: '3rem'}}/>
                     </IconButton>
-                </div>
-            )}
-            {isSidebarOpen && (
-                <div onClick={(e) => e.stopPropagation()}>
-                    <SidebarAddOrEditItem isOpen={isSidebarOpen} onClose={handleCloseSidebar} itemId={item.id}/>
                 </div>
             )}
         </div>

@@ -94,6 +94,8 @@ export const selectSelectedItem = (state: RootState) => state.items.selectedItem
 // Selectors for pagination
 export const selectAllItems = (state: RootState) => state.items.page.items;
 export const selectAllItemsHasNextPage = (state: RootState) => state.items.page.hasNextPage;
+export const selectItemById = (itemId?: number) => (state: RootState) => state.items.page.items.find(item => item.id === itemId);
+
 export const selectAllItemsHasPreviousPage = (state: RootState) => state.items.page.hasPreviousPage;
 export const selectAllItemsCurrentPage = (state: RootState) => state.items.page.currentPage;
 export const selectAllItemsTotalPages = (state: RootState) => state.items.page.totalPages;
