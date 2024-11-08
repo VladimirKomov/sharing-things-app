@@ -64,7 +64,7 @@ const authSlice = createSlice({
         builder.addCase(login.fulfilled, (state, action) => {
             const token: Token = action.payload.data;
             state.token = token;
-            // Сохранение токенов в cookies
+            // Save the token to cookies
             Cookies.set('access_token', token.access, {expires: 7, secure: true, sameSite: 'Strict'});
             Cookies.set('refresh_token', token.refresh, {expires: 7, secure: true, sameSite: 'Strict'});
             state.loading = false;
