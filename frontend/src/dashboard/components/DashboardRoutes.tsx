@@ -3,6 +3,7 @@ import {Route, Routes} from 'react-router-dom';
 import Dashboard from './Dashboard';
 import ProfileSettings from './ProfileSettings';
 import ItemsSetting from './ItemsSetting';
+import OrdersList from "../../orders/conponents/OrdersList.tsx";
 
 const DashboardRoutes: React.FC = () => {
     return (
@@ -10,6 +11,7 @@ const DashboardRoutes: React.FC = () => {
             <Route path="/" element={<Dashboard/>}>
                 <Route path="settings" element={<ProfileSettings/>}/>
                 <Route path="items" element={<ItemsSetting/>}/>
+                <Route path="orders" element={<OrdersList />} />
             </Route>
         </Routes>
     );

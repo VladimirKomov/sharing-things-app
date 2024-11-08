@@ -1,7 +1,7 @@
 import {RequestConfig} from "../../common/models/request.model.ts";
 import {UserSettings} from "../redux/userSettingsSlice.ts";
 
-const dashboardRoot = 'dashboard/';
+export const dashboardRoot = 'dashboard/';
 
 export const getUserSettings = (): RequestConfig => {
     return {
