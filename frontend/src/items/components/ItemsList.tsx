@@ -108,13 +108,17 @@ const ItemsList: React.FC<ItemsListProps> = ({ ownerOnly = false }) => {
 
     return (
         <div className={styles.itemsListContainer}>
+
             <div className={styles.itemsListHeader}>
-                <IconButton onClick={handleAddNewItem} color="primary" aria-label="add" size="large">
-                    <AddIcon />
-                    New Item
-                </IconButton>
                 <h2 className={styles.itemsListTitle}>Items list:</h2>
+                {ownerOnly &&
+                    <IconButton onClick={handleAddNewItem} color="primary" aria-label="add" size="large">
+                        <AddIcon />
+                        New Item
+                    </IconButton>
+                }
             </div>
+
 
             {/* Display error message if any */}
             {error.message && <p className={styles.errorText}>Error: {error.message}</p>}
