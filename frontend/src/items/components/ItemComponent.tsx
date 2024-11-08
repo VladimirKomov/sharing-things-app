@@ -1,13 +1,14 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import IconButton from '@mui/material/IconButton';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import styles from "./ItemComponent.module.css";
-import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "../../common/store.ts";
-import { removeUserItem, selectUserItems } from "../../dashboard/redux/userItemsSlice.ts";
-import { selectAllItems } from "../redux/itemsSlice.ts";
+import {useDispatch, useSelector} from "react-redux";
+import {AppDispatch, RootState} from "../../common/store.ts";
+import {removeUserItem, selectUserItems} from "../../dashboard/redux/userItemsSlice.ts";
+import {selectAllItems} from "../redux/itemsSlice.ts";
 import SidebarAddOrEditItem from "../../dashboard/components/SidebarAddOrEditItem.tsx";
+import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 
 interface ItemProps {
     itemId: number;
@@ -15,7 +16,7 @@ interface ItemProps {
     onEdit?: () => void;
 }
 
-const ItemComponent: React.FC<ItemProps> = ({ itemId, ownerOnly = false, onEdit }) => {
+const ItemComponent: React.FC<ItemProps> = ({itemId, ownerOnly = false, onEdit}) => {
     const dispatch = useDispatch<AppDispatch>();
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
@@ -47,13 +48,18 @@ const ItemComponent: React.FC<ItemProps> = ({ itemId, ownerOnly = false, onEdit 
         }
     };
 
+    const handOrder = (event: React.MouseEvent) => {
+        event.stopPropagation();
+        console.log(`${event} button clicked`);
+    };
+
     if (!item) return null;
 
     return (
         <div className={styles.itemContainer} onClick={handleClick}>
             <div className={styles.imagesContainer}>
                 {item.imagesUrl.slice(0, 1).map((image, index) => (
-                    <img key={index} src={image.url} alt="Item image" className={styles.image} />
+                    <img key={index} src={image.url} alt="Item image" className={styles.image}/>
                 ))}
             </div>
             <div className={styles.textContainer}>
@@ -62,24 +68,32 @@ const ItemComponent: React.FC<ItemProps> = ({ itemId, ownerOnly = false, onEdit 
                 <p className={styles.itemOwner}><span>Owner: </span> {item.ownerName}</p>
                 <p className={styles.itemOwner}><span>Price per day: </span>
                     {/*{item.pricePerDay === 0.00 ? `$${item.pricePerDay}` : ' Free' }*/}
-                    {item.pricePerDay > 0 ? item.pricePerDay : ' Free'  }
+                    {item.pricePerDay > 0 ? item.pricePerDay : ' Free'}
                 </p>
                 <p className={styles.itemCategory}><span>Category:</span> {item.categoryName}</p>
             </div>
             {ownerOnly && (
                 <div className={styles.buttonContainer}>
                     <IconButton onClick={handleEdit} color="primary" aria-label="edit">
-                        <EditIcon />
+                        <EditIcon fontSize={'large'}/>
                     </IconButton>
                     <IconButton onClick={handleDelete} color="error" aria-label="delete">
-                        <DeleteIcon />
+                        <DeleteIcon fontSize={'large'}/>
                     </IconButton>
                 </div>
             )}
-
+            {!ownerOnly && (
+                <div className={styles.buttonContainer}>
+                    {/* Button with AddShoppingCartIcon */}
+                    <IconButton onClick={handOrder} color="secondary"
+                                aria-label="add order" style={{fontSize: '3rem'}}>
+                        <AddShoppingCartIcon style={{fontSize: '3rem'}}/>
+                    </IconButton>
+                </div>
+            )}
             {isSidebarOpen && (
                 <div onClick={(e) => e.stopPropagation()}>
-                    <SidebarAddOrEditItem isOpen={isSidebarOpen} onClose={handleCloseSidebar} itemId={item.id} />
+                    <SidebarAddOrEditItem isOpen={isSidebarOpen} onClose={handleCloseSidebar} itemId={item.id}/>
                 </div>
             )}
         </div>

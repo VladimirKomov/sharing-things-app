@@ -1,6 +1,8 @@
+import {Item} from "./items.model.ts";
+
 export interface Order {
     id: number;
-    item: string;
+    item: Item;
     status: string;
     start_date: string;
     end_date: string;
