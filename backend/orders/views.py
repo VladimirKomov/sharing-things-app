@@ -13,5 +13,5 @@ class UserOrderViewSet(viewsets.ModelViewSet):
     pagination_class = OrdersPagination  # Custom pagination class
 
     def get_queryset(self):
-        # # Limit the selection to only the current user's orders
+        # Limit the selection to only the current user's orders
         return Order.objects.filter(user=self.request.user)
