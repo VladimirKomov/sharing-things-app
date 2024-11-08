@@ -22,7 +22,7 @@ const OrderComponent: React.FC<OrderComponentProps> = ({ orderId }) => {
                     Order №{order.id}
                 </Typography>
                 <Box mt={2}>
-                    <Typography variant="body1"><strong>Item:</strong> {order.item}</Typography>
+                    <Typography variant="body1"><strong>Item:</strong> {order.item.name}</Typography>
                     <Typography variant="body1"><strong>Status:</strong> {order.status}</Typography>
                     <Typography variant="body1"><strong>Start Date:</strong> {order.start_date}</Typography>
                     <Typography variant="body1"><strong>End Date:</strong> {order.end_date}</Typography>

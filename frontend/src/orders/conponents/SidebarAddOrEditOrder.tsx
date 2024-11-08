@@ -21,6 +21,7 @@ const SidebarAddOrder: React.FC<SidebarOrderProps> = ({isOpen, onClose, itemId})
         itemId: itemId,
         startDate: '',
         endDate: '',
+        totalAmount: 0,
     });
     const [daysCount, setDaysCount] = useState<number | null>(null);
     const [totalAmount, setTotalAmount] = useState<number>(0);
@@ -56,7 +57,7 @@ const SidebarAddOrder: React.FC<SidebarOrderProps> = ({isOpen, onClose, itemId})
             }
 
             // Check that the end date is greater than the start date
-            if (end <= start) {
+            if (end < start) {
                 setDateError('End date must be greater than start date.');
                 setDaysCount(null);
                 setTotalAmount(0);
@@ -66,7 +67,7 @@ const SidebarAddOrder: React.FC<SidebarOrderProps> = ({isOpen, onClose, itemId})
             setDateError(null); // Reset error if everything is correct
 
             const differenceInTime = end.getTime() - start.getTime();
-            const differenceInDays = Math.ceil(differenceInTime / (1000 * 3600 * 24));
+            const differenceInDays = Math.ceil(differenceInTime / (1000 * 3600 * 24)) + 1;
             setDaysCount(differenceInDays);
 
             // Calculate the total amount based on the number of days and the price per day

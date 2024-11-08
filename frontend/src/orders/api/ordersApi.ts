@@ -1,10 +1,11 @@
 import {RequestConfig} from "../../common/models/request.model.ts";
-import {dashboardRoot} from "../../dashboard/api/dashboardApi.ts";
+
+const ordersRoot = 'orders/';
 
 export const getOrders = (params?: Record<string, string>): RequestConfig => {
     return {
         method: 'GET',
-        url: dashboardRoot + 'orders/',
+        url: ordersRoot,
         params: params,
     };
 };
@@ -12,7 +13,7 @@ export const getOrders = (params?: Record<string, string>): RequestConfig => {
 export const getOrderById = (id: string): RequestConfig => {
     return {
         method: 'GET',
-        url: `${dashboardRoot}orders/${id}/`,
+        url: `${ordersRoot}${id}/`,
     };
 };
 
@@ -23,7 +24,7 @@ interface PostOrderData{
 export const postOrder = (credentials: PostOrderData): RequestConfig => {
     return {
         method: 'POST',
-        url: `${dashboardRoot}orders/`,
+        url: `${ordersRoot}`,
         data: credentials.data,
     };
 };
@@ -37,7 +38,7 @@ export const putOrder = (credentials: PutOrderData): RequestConfig => {
     const {id, data} = credentials;
     return {
         method: 'PUT',
-        url: `${dashboardRoot}orders/${id}/`,
+        url: `${ordersRoot}${id}/`,
         data: data,
     };
 };

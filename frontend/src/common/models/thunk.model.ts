@@ -22,6 +22,8 @@ export const createCommonThunk = (
             const config = requestConfig(credentials);
 
             const isFormData = credentials.data instanceof FormData;
+            console.log('isFormData', isFormData);
+            console.log('credentials', credentials);
 
             config.headers = {
                 ...(options?.requiresAuth && token ? { "Authorization": `Bearer ${token.access}` } : {}),
@@ -65,21 +67,6 @@ export const createCommonThunk = (
                 return rejectWithValue(error.message || "Unexpected error occurred");
             }
         },
-        // {
-            // condition: (_, { getState }) => {
-            //     if (options?.requiresAuth) {
-            //         const state = getState() as RootState;
-            //         if (!state.auth.token) {
-            //             console.warn("Authorization is required but token is missing.");
-            //             return false;
-            //         }
-            //     }
-            //     return true;
-            // },
-            // getPendingMeta: () => ({
-            //     requiresAuth: options?.requiresAuth ?? false,
-            // }),
-        // }
     );
 };
 
