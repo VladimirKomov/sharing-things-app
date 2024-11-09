@@ -44,7 +44,9 @@ const ordersSlice = createSlice({
     name: 'orders',
     initialState,
     reducers: {
-        // Место для дополнительных синхронных действий
+        clearOrders(state) {
+            state.page = initialState.page;
+        }
     },
     extraReducers: (builder) => {
         builder
@@ -67,6 +69,8 @@ const ordersSlice = createSlice({
 });
 
 export default ordersSlice.reducer;
+
+export const { clearOrders } = ordersSlice.actions;
 
 export const selectOrders = (state: RootState) => state.orders.page.orders;
 export const selectOrderById = (state: RootState, orderId: number) =>

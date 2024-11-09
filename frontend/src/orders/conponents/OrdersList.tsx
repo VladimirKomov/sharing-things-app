@@ -1,8 +1,9 @@
-import React, { useEffect } from 'react';
+import React, {useEffect, useState} from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState, AppDispatch } from '../../common/store';
-import { fetchOrders } from '../redux/ordersSlice';
+import {clearOrders, fetchOrders} from '../redux/ordersSlice';
 import OrderComponent from './OrderComponent';
+import OrderFilter from './OrderFilter';
 import { Typography, Box, CircularProgress } from '@mui/material';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { FixedSizeList as VirtualizedList } from 'react-window';
@@ -10,16 +11,24 @@ import { FixedSizeList as VirtualizedList } from 'react-window';
 const OrdersList: React.FC = () => {
     const dispatch = useDispatch<AppDispatch>();
     const { page, loading, error } = useSelector((state: RootState) => state.orders);
+    //filtering orders
+    const [filter, setFilter] = useState<{ status: string; startDate: string; endDate: string }>({
+        status: '',
+        startDate: '',
+        endDate: '',
+    });
+
+    console.log(filter);
 
     useEffect(() => {
-        if (page.orders.length === 0) {
-            dispatch(fetchOrders());
-        }
-    }, [dispatch, page.orders.length]);
+       // Clear the list of orders and load new data when the filter changes
+        dispatch(clearOrders());
+        dispatch(fetchOrders(filter));
+    }, [dispatch, filter]);
 
     const fetchMoreOrders = () => {
         if (page.hasNextPage) {
-            dispatch(fetchOrders());
+            dispatch(fetchOrders(filter));
         }
     };
 
@@ -28,6 +37,12 @@ const OrdersList: React.FC = () => {
             <Typography variant="h4" gutterBottom sx={{ textAlign: 'center' }}>
                 Orders:
             </Typography>
+            <OrderFilter onFilter={(status, startDate, endDate) => setFilter({ status, startDate, endDate })} />
+            {loading && <CircularProgress />}
+            {error && <Typography color="error">{error}</Typography>}
+            {page.orders.length === 0 && !loading && !error && (
+                <Typography variant="body1">No orders found.</Typography>
+            )}
             {loading && <CircularProgress />}
             {error && <Typography color="error">{error}</Typography>}
             {page.orders.length === 0 && !loading && !error && (

@@ -2,11 +2,20 @@ import {RequestConfig} from "../../common/models/request.model.ts";
 
 const ordersRoot = 'orders/';
 
-export const getOrders = (params?: Record<string, string>): RequestConfig => {
+interface OrderFilter {
+    status: string;
+    startDate: string;
+    endDate: string;
+}
+
+export const getOrders = (filter: OrderFilter): RequestConfig => {
+    const urlParams = new URLSearchParams();
+    if (filter.status) urlParams.append('status', filter.status);
+    if (filter.startDate) urlParams.append('start_date', filter.startDate);
+    if (filter.endDate) urlParams.append('end_date', filter.endDate);
     return {
         method: 'GET',
-        url: ordersRoot,
-        params: params,
+        url: `${ordersRoot}?${urlParams.toString()}`,
     };
 };
 
