@@ -1,12 +1,12 @@
 import React, {useEffect, useState} from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { RootState, AppDispatch } from '../../common/store';
+import {useDispatch, useSelector} from 'react-redux';
+import {AppDispatch, RootState} from '../../common/store';
 import {clearOrders, fetchOrders, fetchOwnerOrders} from '../redux/ordersSlice';
 import OrderComponent from './OrderComponent';
-import OrderFilter from './OrderFilter';
-import { Typography, Box, CircularProgress } from '@mui/material';
+import {Box, CircularProgress, Typography} from '@mui/material';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import { FixedSizeList as VirtualizedList } from 'react-window';
+import {FixedSizeList as VirtualizedList} from 'react-window';
+import CombinedFilter from "../../main/components/CombinedFilter.tsx";
 
 interface OrderListProps {
     ownerOnly?: boolean;
@@ -14,19 +14,27 @@ interface OrderListProps {
 
 const OrdersList: React.FC<OrderListProps> = ({ownerOnly = false}) => {
     const dispatch = useDispatch<AppDispatch>();
-    const { page, loading, error } = useSelector((state: RootState) => state.orders);
-    //filtering orders
-    const [filter, setFilter] = useState<{ status: string; startDate: string; endDate: string }>({
+    const {page, loading, error} = useSelector((state: RootState) => state.orders);
+
+    /// Filtering orders
+    const [filter, setFilter] = useState<{
+        category: string | null;
+        status: string;
+        startDate: string;
+        endDate: string
+    }>({
+        category: null,
         status: '',
         startDate: '',
         endDate: '',
     });
+
     useEffect(() => {
-       // Clear the list of orders and load new data when the filter changes
+        // Clear the list of orders and load new data when the filter changes
         dispatch(clearOrders());
         if (ownerOnly) {
             dispatch(fetchOwnerOrders(filter));
-        }   else {
+        } else {
             dispatch(fetchOrders(filter));
         }
     }, [dispatch, filter]);
@@ -38,22 +46,28 @@ const OrdersList: React.FC<OrderListProps> = ({ownerOnly = false}) => {
     };
 
     return (
-        <Box sx={{ padding: '20px' }}>
-            <Typography variant="h5" gutterBottom sx={{ textAlign: 'center' }}>
+        <Box sx={{padding: '0px'}}>
+            <CombinedFilter
+                onFilter={(category, status, startDate, endDate) => setFilter({category, status, startDate, endDate})}
+                showCategoryFilter={false}
+                showStatusFilter={true}
+                showDateFilter={true}
+            />
+            <Typography variant="h5" gutterBottom sx={{textAlign: 'center', padding: '20px'}}>
                 Orders:
             </Typography>
-            <OrderFilter onFilter={(status, startDate, endDate) => setFilter({ status, startDate, endDate })} />
-            {loading && <CircularProgress />}
+            {loading && <CircularProgress/>}
             {error && <Typography color="error">{error}</Typography>}
             {page.orders.length === 0 && !loading && !error && (
-                <Typography variant="body1" sx={{ textAlign: 'center' }}>No orders found.</Typography>
+                <Typography variant="body1" sx={{textAlign: 'center'}}>No orders found.</Typography>
             )}
             <InfiniteScroll
                 dataLength={page.orders.length}
                 next={fetchMoreOrders}
                 hasMore={page.hasNextPage}
-                loader={<CircularProgress />}
-                endMessage={<Typography variant="body2" sx={{ textAlign: 'center' }}>No more orders to display</Typography>}
+                loader={<CircularProgress/>}
+                endMessage={<Typography variant="body2" sx={{textAlign: 'center'}}>No more orders to
+                    display</Typography>}
             >
                 <VirtualizedList
                     height={800}
@@ -61,9 +75,9 @@ const OrdersList: React.FC<OrderListProps> = ({ownerOnly = false}) => {
                     itemSize={300} // Adjust based on the size of each item
                     width="100%"
                 >
-                    {({ index, style }) => (
+                    {({index, style}) => (
                         <div style={style} key={page.orders[index].id}>
-                            <OrderComponent orderId={page.orders[index].id} ownerOnly={ownerOnly} />
+                            <OrderComponent orderId={page.orders[index].id} ownerOnly={ownerOnly}/>
                         </div>
                     )}
                 </VirtualizedList>

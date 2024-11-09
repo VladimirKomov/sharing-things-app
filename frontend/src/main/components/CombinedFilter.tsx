@@ -78,19 +78,21 @@ const CombinedFilter: React.FC<CombinedFilterProps> = ({
             )}
 
             {showStatusFilter && (
-                <TextField
-                    label="Order Status"
-                    select
-                    value={status}
-                    onChange={(e) => setStatus(e.target.value as OrderStatusKey)}
-                    fullWidth
-                >
-                    {Object.values(ORDER_STATUSES).map((statusOption) => (
-                        <MenuItem key={statusOption.key} value={statusOption.key}>
-                            {statusOption.displayName}
-                        </MenuItem>
-                    ))}
-                </TextField>
+                <Box display="flex" justifyContent="center">
+                    <TextField
+                        label="Order Status"
+                        select
+                        value={status}
+                        onChange={(e) => setStatus(e.target.value as OrderStatusKey)}
+                        sx={{ width: '200px' }}
+                    >
+                        {Object.values(ORDER_STATUSES).map((statusOption) => (
+                            <MenuItem key={statusOption.key} value={statusOption.key}>
+                                {statusOption.displayName}
+                            </MenuItem>
+                        ))}
+                    </TextField>
+                </Box>
             )}
 
             {showDateFilter && (
