@@ -58,7 +58,7 @@ const OrdersList: React.FC<OrderListProps> = ({ownerOnly = false}) => {
                 <VirtualizedList
                     height={800}
                     itemCount={page.orders.length}
-                    itemSize={150} // Adjust based on the size of each item
+                    itemSize={300} // Adjust based on the size of each item
                     width="100%"
                 >
                     {({ index, style }) => (

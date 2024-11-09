@@ -177,7 +177,7 @@ const ItemsList: React.FC<ItemsListProps> = ({ownerOnly = false}) => {
                 />
             )}
             {/* Sidebar for order item */}
-            {!ownerOnly && (
+            {!ownerOnly && selectedItemId && (
                 <SidebarAddOrEditOrder
                     isOpen={isOrderSidebarOpen}
                     onClose={handleCloseOrderSidebar}
