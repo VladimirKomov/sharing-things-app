@@ -9,6 +9,7 @@ import React from "react";
 import ProtectedRoute from "./auth/components/ProtectedRoute.tsx";
 import DashboardRoutes from "./dashboard/components/DashboardRoutes.tsx";
 import ItemDetails from "./items/components/ItemDetails.tsx";
+import OrdersManager from "./orders/conponents/OrdersManager.tsx";
 
 
 const App: React.FC = () => {
@@ -21,8 +22,9 @@ const App: React.FC = () => {
                 <Route path="/register" element={<RegistrationForm/>}/>
                 <Route element={<ProtectedRoute/>}>
                     <Route path="/dashboard/*" element={<DashboardRoutes/>}/>
+                    <Route path="/orders" element={<OrdersManager/>}/>
                 </Route>
-                <Route path="/items/:itemId" element={<ItemDetails />} />
+                <Route path="/items/:itemId" element={<ItemDetails/>}/>
                 <Route path="/items/categories/:slug" element={<HomePage/>}/>
             </Routes>
         </Router>

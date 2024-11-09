@@ -25,6 +25,9 @@ const NavigationPanel: React.FC = () => {
                 {token ? (
                     <>
                         <li className={styles.navItem}>
+                            <Link to="/orders" className={styles.navLink}>Your orders</Link>
+                        </li>
+                        <li className={styles.navItem}>
                             <Link to="/dashboard" className={styles.navLink}>Personal account</Link>
                         </li>
                         <li className={styles.navItem}>
@@ -46,7 +49,7 @@ const NavigationPanel: React.FC = () => {
                             <Link to="/login" className={styles.navLink}>Sign in</Link>
                         </li>
                         <li className={styles.navItem}>
-                        <Link to="/register" className={styles.navLink}>Sign up</Link>
+                            <Link to="/register" className={styles.navLink}>Sign up</Link>
                         </li>
                     </>
                 )}

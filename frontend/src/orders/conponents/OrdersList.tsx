@@ -25,8 +25,8 @@ const OrdersList: React.FC = () => {
 
     return (
         <Box sx={{ padding: '20px' }}>
-            <Typography variant="h4" gutterBottom>
-                Orders
+            <Typography variant="h4" gutterBottom sx={{ textAlign: 'center' }}>
+                Orders:
             </Typography>
             {loading && <CircularProgress />}
             {error && <Typography color="error">{error}</Typography>}
@@ -38,10 +38,10 @@ const OrdersList: React.FC = () => {
                 next={fetchMoreOrders}
                 hasMore={page.hasNextPage}
                 loader={<CircularProgress />}
-                endMessage={<Typography variant="body2">No more orders to display</Typography>}
+                endMessage={<Typography variant="body2" sx={{ textAlign: 'center' }}>No more orders to display</Typography>}
             >
                 <VirtualizedList
-                    height={600}
+                    height={800}
                     itemCount={page.orders.length}
                     itemSize={150} // Adjust based on the size of each item
                     width="100%"

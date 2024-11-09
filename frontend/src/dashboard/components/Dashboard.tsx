@@ -12,6 +12,9 @@ const Dashboard: React.FC = () => {
             <Link to="items" className={styles.linkButton}>
                 Go Your to Items
             </Link>
+            <Link to="orders" className={styles.linkButton}>
+                Go Your to Orders
+            </Link>
 
             <div className={styles.outletContainer}>
                 <Outlet />
