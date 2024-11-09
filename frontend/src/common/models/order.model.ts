@@ -9,9 +9,11 @@ export const ORDER_STATUSES = {
     REJECTED: { key: 'rejected', displayName: 'Rejected', buttonName: 'Reject' },
 } as const;
 
-export type OrderStatusKey = keyof typeof ORDER_STATUSES;
-export type OrderStatus = typeof ORDER_STATUSES[OrderStatusKey]['key'];
-export type OrderStatusDespl = typeof ORDER_STATUSES[OrderStatusKey]['displayName'];
+export type OrderStatus = keyof typeof ORDER_STATUSES;
+export type OrderStatusKey = typeof ORDER_STATUSES[OrderStatus]['key'];
+export type OrderStatusDesp = typeof ORDER_STATUSES[OrderStatus]['displayName'];
+export type OrderStatusButton = typeof ORDER_STATUSES[OrderStatus]['buttonName'];
+
 export const getStatusByKey = (key: string): { key: string; displayName: string; buttonName: string } | undefined => {
     return Object.values(ORDER_STATUSES).find(status => status.key === key);
 };
@@ -32,7 +34,7 @@ export interface Order {
     ownerName: string;
     userId: number;
     userName: string;
-    status: OrderStatus;
+    status: OrderStatusKey;
     startDate: string;
     endDate: string;
     totalAmount: number;
@@ -40,7 +42,7 @@ export interface Order {
 
 
 // acceptable transitions
-export const statusTransitions: Record<OrderStatus, OrderStatus[]> = {
+export const statusTransitions: Record<OrderStatusKey, OrderStatusKey[]> = {
     [ORDER_STATUSES.PENDING.key]: [ORDER_STATUSES.CONFIRMED.key, ORDER_STATUSES.CANCELED.key, ORDER_STATUSES.REJECTED.key],
     [ORDER_STATUSES.CONFIRMED.key]: [ORDER_STATUSES.ISSUED.key, ORDER_STATUSES.CANCELED.key],
     [ORDER_STATUSES.ISSUED.key]: [ORDER_STATUSES.RETURNED.key],
@@ -53,10 +55,15 @@ export const statusTransitions: Record<OrderStatus, OrderStatus[]> = {
 
 export const availableStatus = (
     owner: boolean,
-    status: OrderStatus): boolean => {
+    status: OrderStatusKey): boolean => {
     if (owner) {
-        return status === ORDER_STATUSES.CONFIRMED.key || status === ORDER_STATUSES.REJECTED.key;
+        return status === ORDER_STATUSES.CONFIRMED.key ||
+            status === ORDER_STATUSES.REJECTED.key ||
+            status === ORDER_STATUSES.ISSUED.key ||
+            status === ORDER_STATUSES.COMPLETED.key;
     } else {
-        return status === ORDER_STATUSES.CANCELED.key || status === ORDER_STATUSES.REJECTED.key;
+        return status === ORDER_STATUSES.CANCELED.key ||
+            status === ORDER_STATUSES.REJECTED.key ||
+            status === ORDER_STATUSES.RETURNED.key;
     }
 };

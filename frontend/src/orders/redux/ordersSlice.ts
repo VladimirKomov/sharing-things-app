@@ -1,6 +1,6 @@
 import {createSlice} from '@reduxjs/toolkit';
 import createCommonThunk from "../../common/models/thunk.model.ts";
-import {getOrderById, getOrders, getOwnerOrders, postOrder, putOrder} from "../api/ordersApi.ts";
+import {getOrders, getOwnerOrders, postOrder, putOrderStatus} from "../api/ordersApi.ts";
 import {Order} from "../../common/models/order.model.ts";
 import {RootState} from "../../common/store.ts";
 
@@ -36,9 +36,9 @@ const initialState: OrderState = {
 
 export const fetchOrders = createCommonThunk('orders/fetchOrders', getOrders, {requiresAuth: true});
 export const fetchOwnerOrders = createCommonThunk('orders/fetchOwnerOrders', getOwnerOrders, {requiresAuth: true});
-export const fetchOrderById = createCommonThunk('orders/fetchOrderById', getOrderById, {requiresAuth: true});
+// export const fetchOrderById = createCommonThunk('orders/fetchOrderById', getOrderById, {requiresAuth: true});
 export const createOrder = createCommonThunk('orders/createOrder', postOrder, {requiresAuth: true});
-export const updateOrder = createCommonThunk('orders/updateOrder', putOrder, {requiresAuth: true});
+export const updateOrderStatus = createCommonThunk('orders/updateOrderStatus', putOrderStatus, {requiresAuth: true});
 
 const ordersSlice = createSlice({
     name: 'orders',
@@ -83,12 +83,32 @@ const ordersSlice = createSlice({
                 state.loading = false;
                 state.error = action.error.message || 'Failed to load orders';
             });
+        // updateOrderStatus reducer
+        builder
+            .addCase(updateOrderStatus.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(updateOrderStatus.fulfilled, (state, action) => {
+                state.loading = false;
+                const updatedOrder: Order = action.payload.data;
+                const index = state.page.orders.findIndex(order => order.id === updatedOrder.id);
+                if (index !== -1) {
+                    state.page.orders[index] = updatedOrder;
+                }
+                state.selectedOrder = updatedOrder;
+                state.error = null;
+            })
+            .addCase(updateOrderStatus.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.error.message || 'Failed to update order status';
+            });
     },
 });
 
 export default ordersSlice.reducer;
 
-export const { clearOrders } = ordersSlice.actions;
+export const {clearOrders} = ordersSlice.actions;
 
 export const selectOrders = (state: RootState) => state.orders.page.orders;
 export const selectOrderById = (state: RootState, orderId: number) =>

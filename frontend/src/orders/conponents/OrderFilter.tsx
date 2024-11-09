@@ -1,13 +1,13 @@
 import React, {useState} from 'react';
 import {Box, Button, MenuItem, TextField} from '@mui/material';
-import {ORDER_STATUSES, OrderStatus} from '../../common/models/order.model.ts';
+import {ORDER_STATUSES, OrderStatusKey} from '../../common/models/order.model.ts';
 
 interface OrderFilterProps {
-    onFilter: (status: OrderStatus, startDate: string, endDate: string) => void;
+    onFilter: (status: OrderStatusKey, startDate: string, endDate: string) => void;
 }
 
 const OrderFilter: React.FC<OrderFilterProps> = ({onFilter}) => {
-    const [status, setStatus] = useState<OrderStatus>(ORDER_STATUSES.ALL.key);
+    const [status, setStatus] = useState<OrderStatusKey>(ORDER_STATUSES.ALL.key);
     const [startDate, setStartDate] = useState<string>('');
     const [endDate, setEndDate] = useState<string>('');
 
@@ -35,7 +35,7 @@ const OrderFilter: React.FC<OrderFilterProps> = ({onFilter}) => {
                 label="Order Status"
                 select
                 value={status}
-                onChange={(e) => setStatus(e.target.value as OrderStatus)}
+                onChange={(e) => setStatus(e.target.value as OrderStatusKey)}
                 fullWidth
             >
                 {Object.values(ORDER_STATUSES).map((statusObj) => (

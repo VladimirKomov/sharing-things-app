@@ -21,7 +21,6 @@ const OrdersList: React.FC<OrderListProps> = ({ownerOnly = false}) => {
         startDate: '',
         endDate: '',
     });
-
     useEffect(() => {
        // Clear the list of orders and load new data when the filter changes
         dispatch(clearOrders());
@@ -64,7 +63,7 @@ const OrdersList: React.FC<OrderListProps> = ({ownerOnly = false}) => {
                 >
                     {({ index, style }) => (
                         <div style={style} key={page.orders[index].id}>
-                            <OrderComponent orderId={page.orders[index].id} ownerOnly />
+                            <OrderComponent orderId={page.orders[index].id} ownerOnly={ownerOnly} />
                         </div>
                     )}
                 </VirtualizedList>

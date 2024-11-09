@@ -1,6 +1,6 @@
 import React from 'react';
 import {useDispatch, useSelector} from 'react-redux';
-import {selectOrderById} from "../redux/ordersSlice";
+import {selectOrderById, updateOrderStatus} from "../redux/ordersSlice";
 import {RootState} from "../../common/store";
 import {Box, Button, Card, CardContent, Typography} from '@mui/material';
 import {
@@ -8,7 +8,7 @@ import {
     getStatusButtonNameByKey,
     getStatusDisplayNameByKey,
     ORDER_STATUSES,
-    OrderStatus,
+    OrderStatusKey,
     statusTransitions
 } from '../../common/models/order.model.ts';
 
@@ -20,17 +20,12 @@ interface OrderComponentProps {
 const OrderComponent: React.FC<OrderComponentProps> = ({orderId, ownerOnly = false}) => {
     const order = useSelector((state: RootState) => selectOrderById(state, orderId));
     const dispatch = useDispatch();
-
     if (!order) {
         return <Typography variant="body1" color="error" sx={{textAlign: 'center'}}>Order not found</Typography>;
     }
 
-    const handleUpdateStatus = (status: OrderStatus) => {
-        // if (canTransitionToStatus(order.status, status)) {
-        //     // dispatch(updateOrderStatus({ orderId: order.id, status: ORDER_STATUSES[status].key }));
-        // } else {
-        //     alert(`Transition from ${order.status} to ${ORDER_STATUSES[status].displayName} is not allowed.`);
-        // }
+    const handleUpdateStatus = (status: OrderStatusKey) => {
+        dispatch(updateOrderStatus({id: order.id, status}));
     };
 
     return (

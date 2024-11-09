@@ -1,10 +1,10 @@
 import {RequestConfig} from "../../common/models/request.model.ts";
-import {ORDER_STATUSES, OrderStatus, OrderStatusDespl} from "../../common/models/order.model.ts";
+import {ORDER_STATUSES, OrderStatusKey, OrderStatusDesp} from "../../common/models/order.model.ts";
 
 const ordersRoot = 'orders/';
 
 interface OrderFilter {
-    status: OrderStatusDespl;
+    status: OrderStatusDesp;
     startDate: string;
     endDate: string;
 }
@@ -17,7 +17,7 @@ export const getOrders = (filter: OrderFilter): RequestConfig => {
     if (filter.endDate) urlParams.append('end_date', filter.endDate);
     return {
         method: 'GET',
-        url: `${ordersRoot}user-orders?${urlParams.toString()}`,
+        url: `${ordersRoot}user?${urlParams.toString()}`,
     };
 };
 
@@ -29,18 +29,32 @@ export const getOwnerOrders = (filter: OrderFilter): RequestConfig => {
     if (filter.endDate) urlParams.append('end_date', filter.endDate);
     return {
         method: 'GET',
-        url: `${ordersRoot}owner-orders/?${urlParams.toString()}`,
+        url: `${ordersRoot}owner/?${urlParams.toString()}`,
     };
 };
 
-export const getOrderById = (id: string): RequestConfig => {
+interface PutOrderData {
+    id: string;
+    status: OrderStatusKey;
+}
+
+export const putOrderStatus = (credentials: PutOrderData): RequestConfig => {
+    const {id, status} = credentials;
     return {
-        method: 'GET',
-        url: `${ordersRoot}${id}/`,
+        method: 'PUT',
+        url: `${ordersRoot}update/${id}/`,
+        data: { status },
     };
 };
 
-interface PostOrderData{
+// export const getOrderById = (id: string): RequestConfig => {
+//     return {
+//         method: 'GET',
+//         url: `${ordersRoot}${id}/`,
+//     };
+// };
+//
+interface PostOrderData {
     data: FormData;
 }
 
@@ -49,19 +63,5 @@ export const postOrder = (credentials: PostOrderData): RequestConfig => {
         method: 'POST',
         url: `${ordersRoot}`,
         data: credentials.data,
-    };
-};
-
-interface PutOrderData {
-    id: string;
-    data: FormData;
-}
-
-export const putOrder = (credentials: PutOrderData): RequestConfig => {
-    const {id, data} = credentials;
-    return {
-        method: 'PUT',
-        url: `${ordersRoot}${id}/`,
-        data: data,
     };
 };
