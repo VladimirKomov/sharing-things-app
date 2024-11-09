@@ -68,36 +68,40 @@ class OrderViewSet(viewsets.ModelViewSet):
         instance = self.get_object()
         user = request.user
 
-        # Проверка, что пользователь — владелец вещи или создатель заказа
+        # Verification that the user is the owner of the item or the creator of the order
         if user != instance.user and user != instance.item.user:
             return Response(
                 {"detail": "You do not have permission to change the status of this order."},
                 status=status.HTTP_403_FORBIDDEN
             )
 
-        # Проверка допустимости перехода статуса
-        current_status = instance.status
         new_status = request.data.get('status')
 
-        if not self.can_transition_to_status(current_status, new_status):
+        # Checking the validity of the user's status and rights transition
+        if not self.can_user_update_status(user, instance, new_status):
             return Response(
-                {"detail": f"Transition from {current_status} to {new_status} is not allowed."},
-                status=status.HTTP_400_BAD_REQUEST
+                {"detail": f"User is not allowed to change status to {new_status}."},
+                status=status.HTTP_403_FORBIDDEN
             )
 
-        # Обновление статуса
+        # Status Update
         instance.status = new_status
+        if new_status == 'completed':
+            instance.mark_as_completed()
+        elif new_status == 'canceled':
+            instance.mark_as_canceled()
+        elif new_status == 'rejected':
+            instance.mark_as_rejected()
+
         instance.save()
 
         serializer = self.get_serializer(instance)
-        return map_to_api_response_as_resp(
-            serializer.data
-        )
+        return map_to_api_response_as_resp(serializer.data)
 
-    def can_transition_to_status(self, current_status, new_status):
-        # Определение допустимых переходов статусов
+    def can_user_update_status(self, user, order, new_status):
+        # Determination of available status transitions
         status_transitions = {
-            'pending': ['confirmed', 'canceled'],
+            'pending': ['confirmed', 'canceled', 'rejected'],
             'confirmed': ['issued', 'canceled'],
             'issued': ['returned'],
             'returned': ['completed'],
@@ -105,4 +109,26 @@ class OrderViewSet(viewsets.ModelViewSet):
             'canceled': [],
             'rejected': [],
         }
-        return new_status in status_transitions.get(current_status, [])
+
+        # Determining which statuses the owner of the item can set
+        owner_allowed_statuses = ['confirmed', 'rejected', 'issued', 'completed']
+
+        # Determining which statuses the creator of the order can set
+        creator_allowed_statuses = ['canceled', 'rejected', 'returned']
+
+        # Checking the status transition
+        current_status = order.status
+        if new_status not in status_transitions.get(current_status, []):
+            return False
+
+        # Checking user rights
+        if user == order.item.user:
+            # The user is the owner of the item
+            return new_status in owner_allowed_statuses
+        elif user == order.user:
+            # The user is the creator of the order
+            return new_status in creator_allowed_statuses
+
+        return False
+
+

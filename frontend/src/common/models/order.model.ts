@@ -63,7 +63,6 @@ export const availableStatus = (
             status === ORDER_STATUSES.COMPLETED.key;
     } else {
         return status === ORDER_STATUSES.CANCELED.key ||
-            status === ORDER_STATUSES.REJECTED.key ||
             status === ORDER_STATUSES.RETURNED.key;
     }
 };
