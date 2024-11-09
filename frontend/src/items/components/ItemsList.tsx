@@ -34,6 +34,7 @@ import {FixedSizeList as VirtualizedList} from 'react-window';
 import AddIcon from '@mui/icons-material/Add';
 import IconButton from "@mui/material/IconButton";
 import SidebarAddOrEditOrder from "../../orders/conponents/SidebarAddOrEditOrder.tsx";
+import {Typography} from "@mui/material";
 
 interface ItemsListProps {
     ownerOnly?: boolean;
@@ -125,6 +126,9 @@ const ItemsList: React.FC<ItemsListProps> = ({ownerOnly = false}) => {
         <div className={styles.itemsListContainer}>
 
             <div className={styles.itemsListHeader}>
+                {/*<Typography variant="h5" gutterBottom sx={{ textAlign: 'center' }}>*/}
+                {/*    Items list:*/}
+                {/*</Typography>*/}
                 <h2 className={styles.itemsListTitle}>Items list:</h2>
                 {ownerOnly &&
                     <IconButton onClick={handleAddNewItem} color="primary" aria-label="add" size="large">

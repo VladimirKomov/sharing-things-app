@@ -7,8 +7,11 @@ from items.models import Item
 class Order(models.Model):
     STATUS_CHOICES = [
         ('pending', 'Pending'),
+        ('canceled', 'Canceled'),
         ('confirmed', 'Confirmed'),
         ('rejected', 'Rejected'),
+        ('issued ', 'Issued' ),
+        ('returned', 'Returned'),
         ('completed', 'Completed'),
     ]
 

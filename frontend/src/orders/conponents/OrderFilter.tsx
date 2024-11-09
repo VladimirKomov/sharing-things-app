@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { TextField, MenuItem, Button, Box } from '@mui/material';
+import { ORDER_STATUSES, OrderStatus } from '../../common/models/order.model.ts';
 
 interface OrderFilterProps {
-    onFilter: (status: string, startDate: string, endDate: string) => void;
+    onFilter: (status: OrderStatus, startDate: string, endDate: string) => void;
 }
 
 const OrderFilter: React.FC<OrderFilterProps> = ({ onFilter }) => {
-    const [status, setStatus] = useState<string>('');
+    const [status, setStatus] = useState<OrderStatus>(ORDER_STATUSES.ALL);
     const [startDate, setStartDate] = useState<string>('');
     const [endDate, setEndDate] = useState<string>('');
 
@@ -15,10 +16,10 @@ const OrderFilter: React.FC<OrderFilterProps> = ({ onFilter }) => {
     };
 
     const handleReset = () => {
-        setStatus('');
+        setStatus(ORDER_STATUSES.ALL);
         setStartDate('');
         setEndDate('');
-        onFilter('', '', '');
+        onFilter(ORDER_STATUSES.ALL, '', '');
     };
 
     return (
@@ -34,14 +35,14 @@ const OrderFilter: React.FC<OrderFilterProps> = ({ onFilter }) => {
                 label="Order Status"
                 select
                 value={status}
-                onChange={(e) => setStatus(e.target.value)}
+                onChange={(e) => setStatus(e.target.value as OrderStatus)}
                 fullWidth
             >
-                <MenuItem value="">All</MenuItem>
-                <MenuItem value="pending">In pending</MenuItem>
-                <MenuItem value="confirmed">Confirmed</MenuItem>
-                <MenuItem value="rejected">Rejected</MenuItem>
-                <MenuItem value="completed">Completed</MenuItem>
+                {Object.entries(ORDER_STATUSES).map(([key, value]) => (
+                    <MenuItem key={key} value={value}>
+                        {value.charAt(0).toUpperCase() + value.slice(1).replace('_', ' ')}
+                    </MenuItem>
+                ))}
             </TextField>
 
             <TextField

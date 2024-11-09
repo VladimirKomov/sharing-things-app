@@ -1,16 +1,18 @@
 import {RequestConfig} from "../../common/models/request.model.ts";
+import {ORDER_STATUSES, OrderStatus} from "../../common/models/order.model.ts";
 
 const ordersRoot = 'orders/';
 
 interface OrderFilter {
-    status: string;
+    status: OrderStatus;
     startDate: string;
     endDate: string;
 }
 
 export const getOrders = (filter: OrderFilter): RequestConfig => {
+    // create filter
     const urlParams = new URLSearchParams();
-    if (filter.status) urlParams.append('status', filter.status);
+    if (filter.status && filter.status !== ORDER_STATUSES.ALL) urlParams.append('status', filter.status);
     if (filter.startDate) urlParams.append('start_date', filter.startDate);
     if (filter.endDate) urlParams.append('end_date', filter.endDate);
     return {

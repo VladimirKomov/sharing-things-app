@@ -29,9 +29,7 @@ class UserOrderViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         queryset = Order.objects.filter(user=self.request.user)
-        print("Фильтрованный queryset:", queryset.query)
         filtered_queryset = self.filter_queryset(queryset)
-        print("Фильтрованный queryset после применения DjangoFilterBackend:", filtered_queryset.query)
         return filtered_queryset
 
     def perform_create(self, serializer):

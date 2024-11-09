@@ -18,8 +18,6 @@ const OrdersList: React.FC = () => {
         endDate: '',
     });
 
-    console.log(filter);
-
     useEffect(() => {
        // Clear the list of orders and load new data when the filter changes
         dispatch(clearOrders());
@@ -34,19 +32,14 @@ const OrdersList: React.FC = () => {
 
     return (
         <Box sx={{ padding: '20px' }}>
-            <Typography variant="h4" gutterBottom sx={{ textAlign: 'center' }}>
+            <Typography variant="h5" gutterBottom sx={{ textAlign: 'center' }}>
                 Orders:
             </Typography>
             <OrderFilter onFilter={(status, startDate, endDate) => setFilter({ status, startDate, endDate })} />
             {loading && <CircularProgress />}
             {error && <Typography color="error">{error}</Typography>}
             {page.orders.length === 0 && !loading && !error && (
-                <Typography variant="body1">No orders found.</Typography>
-            )}
-            {loading && <CircularProgress />}
-            {error && <Typography color="error">{error}</Typography>}
-            {page.orders.length === 0 && !loading && !error && (
-                <Typography variant="body1">No orders found.</Typography>
+                <Typography variant="body1" sx={{ textAlign: 'center' }}>No orders found.</Typography>
             )}
             <InfiniteScroll
                 dataLength={page.orders.length}
