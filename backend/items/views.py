@@ -1,3 +1,4 @@
+import django_filters
 from rest_framework import viewsets, status
 from rest_framework.permissions import IsAdminUser, IsAuthenticatedOrReadOnly, AllowAny
 
@@ -6,6 +7,13 @@ from items.serializers import CategorySerializer, ItemSerializer
 from items.models import Category, Item
 from items.paginations import ItemsPagination
 
+class ItemDateFilter(django_filters.FilterSet):
+    start_date = django_filters.DateFilter(field_name='orders__start_date', lookup_expr='gte')
+    end_date = django_filters.DateFilter(field_name='orders__end_date', lookup_expr='lte')
+
+    class Meta:
+        model = Item
+        fields = ['start_date', 'end_date']
 
 class CategoryViewSet(viewsets.ModelViewSet):
     queryset = Category.objects.all()

@@ -34,6 +34,7 @@ import {FixedSizeList as VirtualizedList} from 'react-window';
 import AddIcon from '@mui/icons-material/Add';
 import IconButton from "@mui/material/IconButton";
 import SidebarAddOrEditOrder from "../../orders/conponents/SidebarAddOrEditOrder.tsx";
+import CombinedFilter from "../../main/components/CombinedFilter.tsx";
 
 interface ItemsListProps {
     ownerOnly?: boolean;
@@ -56,6 +57,14 @@ const ItemsList: React.FC<ItemsListProps> = ({ownerOnly = false}) => {
     // Order item sidebar
     const [isOrderSidebarOpen, setIsOrderSidebarOpen] = useState(false);
 
+    //Filtering items
+    const [filter, setFilter] = useState<{ category: string | null; status: string; startDate: string; endDate: string }>({
+        category: null,
+        status: '',
+        startDate: '',
+        endDate: ''
+    });
+
     // Load categories
     useEffect(() => {
         if (categories.length === 0 && !loading) {
@@ -72,7 +81,7 @@ const ItemsList: React.FC<ItemsListProps> = ({ownerOnly = false}) => {
             dispatch(clearPage());
             dispatch(fetchItems({page: 1, limit: 10, category: selectedCategory?.slug || null}));
         }
-    }, [dispatch, ownerOnly, selectedCategory]);
+    }, [dispatch, ownerOnly, selectedCategory, filter]);
 
     // Clear selected category when component unmounts
     useEffect(() => {
@@ -121,8 +130,18 @@ const ItemsList: React.FC<ItemsListProps> = ({ownerOnly = false}) => {
         setSelectedItemId(null);
     };
 
+    // Filter items
+    const handleFilterChange = (category: string | null, status: string, startDate: string, endDate: string) => {
+        setFilter({ category, status, startDate, endDate });
+    };
+
     return (
         <div className={styles.itemsListContainer}>
+            <CombinedFilter
+                onFilter={handleFilterChange}
+                showCategoryFilter={true}
+                showDateFilter={true}
+            />
 
             <div className={styles.itemsListHeader}>
                 {/*<Typography variant="h5" gutterBottom sx={{ textAlign: 'center' }}>*/}
