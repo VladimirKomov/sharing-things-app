@@ -17,7 +17,7 @@ export const getOrders = (filter: OrderFilter): RequestConfig => {
     if (filter.endDate) urlParams.append('end_date', filter.endDate);
     return {
         method: 'GET',
-        url: `${ordersRoot}user?${urlParams.toString()}`,
+        url: `${ordersRoot}user-orders/?${urlParams.toString()}`,
     };
 };
 
@@ -29,7 +29,7 @@ export const getOwnerOrders = (filter: OrderFilter): RequestConfig => {
     if (filter.endDate) urlParams.append('end_date', filter.endDate);
     return {
         method: 'GET',
-        url: `${ordersRoot}owner/?${urlParams.toString()}`,
+        url: `${ordersRoot}owner-orders/?${urlParams.toString()}`,
     };
 };
 
@@ -61,7 +61,7 @@ interface PostOrderData {
 export const postOrder = (credentials: PostOrderData): RequestConfig => {
     return {
         method: 'POST',
-        url: `${ordersRoot}`,
+        url: `${ordersRoot}create/`,
         data: credentials.data,
     };
 };

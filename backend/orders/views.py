@@ -1,12 +1,13 @@
 import django_filters
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import viewsets, status
+from rest_framework import viewsets, status, generics
 from rest_framework.filters import OrderingFilter
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
-from common.mapper import map_to_api_response_as_resp
+from common.mapper import map_to_api_response_as_resp, map_api_error_as_resp
 from dashboard.permissions import IsOwner
+from items.models import Item
 from orders.models import Order
 from orders.paginations import OrdersPagination
 from orders.serializers import OrderSerializer
@@ -131,4 +132,39 @@ class OrderViewSet(viewsets.ModelViewSet):
 
         return False
 
+
+class CreateOrderView(generics.CreateAPIView):
+    serializer_class = OrderSerializer
+    permission_classes = [IsAuthenticated]
+
+    def create(self, request, *args, **kwargs):
+        user = request.user
+        item_id = request.data.get('itemId')
+
+        # Checking the existence of a thing
+        try:
+            item = Item.objects.get(id=item_id)
+        except Item.DoesNotExist:
+            return Response(
+                {"detail": "Item not found."},
+                status=status.HTTP_404_NOT_FOUND
+            )
+
+        # Checking that the user does not create an order for his item
+        if item.user == user:
+            return Response(
+                {"detail": "You cannot create an order for your own item."},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        # Creating an order
+        data = request.data.copy()
+        data['user'] = user.id
+        data['item'] = item.id
+
+        serializer = self.get_serializer(data=data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+
+        return map_to_api_response_as_resp(serializer.data, code=status.HTTP_201_CREATED)
 
