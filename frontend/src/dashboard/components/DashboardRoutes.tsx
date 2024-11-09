@@ -11,7 +11,7 @@ const DashboardRoutes: React.FC = () => {
             <Route path="/" element={<Dashboard/>}>
                 <Route path="settings" element={<ProfileSettings/>}/>
                 <Route path="items" element={<ItemsSetting/>}/>
-                <Route path="orders" element={<OrdersList />} />
+                <Route path="orders" element={<OrdersList ownerOnly={true} />} />
             </Route>
         </Routes>
     );

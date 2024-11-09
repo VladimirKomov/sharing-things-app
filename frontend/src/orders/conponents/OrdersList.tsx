@@ -1,14 +1,18 @@
 import React, {useEffect, useState} from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState, AppDispatch } from '../../common/store';
-import {clearOrders, fetchOrders} from '../redux/ordersSlice';
+import {clearOrders, fetchOrders, fetchOwnerOrders} from '../redux/ordersSlice';
 import OrderComponent from './OrderComponent';
 import OrderFilter from './OrderFilter';
 import { Typography, Box, CircularProgress } from '@mui/material';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { FixedSizeList as VirtualizedList } from 'react-window';
 
-const OrdersList: React.FC = () => {
+interface OrderListProps {
+    ownerOnly?: boolean;
+}
+
+const OrdersList: React.FC<OrderListProps> = ({ownerOnly = false}) => {
     const dispatch = useDispatch<AppDispatch>();
     const { page, loading, error } = useSelector((state: RootState) => state.orders);
     //filtering orders
@@ -21,7 +25,11 @@ const OrdersList: React.FC = () => {
     useEffect(() => {
        // Clear the list of orders and load new data when the filter changes
         dispatch(clearOrders());
-        dispatch(fetchOrders(filter));
+        if (ownerOnly) {
+            dispatch(fetchOwnerOrders(filter));
+        }   else {
+            dispatch(fetchOrders(filter));
+        }
     }, [dispatch, filter]);
 
     const fetchMoreOrders = () => {
@@ -56,7 +64,7 @@ const OrdersList: React.FC = () => {
                 >
                     {({ index, style }) => (
                         <div style={style} key={page.orders[index].id}>
-                            <OrderComponent orderId={page.orders[index].id} />
+                            <OrderComponent orderId={page.orders[index].id} ownerOnly />
                         </div>
                     )}
                 </VirtualizedList>

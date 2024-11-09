@@ -39,3 +39,20 @@ class UserOrderViewSet(viewsets.ModelViewSet):
         context = super().get_serializer_context()
         context['request'] = self.request
         return context
+
+
+class OwnerOrderViewSet(viewsets.ModelViewSet):
+    serializer_class = OrderSerializer
+    permission_classes = [IsAuthenticated]
+    pagination_class = OrdersPagination
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = OrderFilter
+    ordering_fields = ['start_date', 'end_date', 'status']
+
+    def get_queryset(self):
+        # filter by owner
+        return Order.objects.filter(item__user=self.request.user)
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+

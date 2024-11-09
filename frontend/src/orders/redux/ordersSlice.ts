@@ -1,6 +1,6 @@
 import {createSlice} from '@reduxjs/toolkit';
 import createCommonThunk from "../../common/models/thunk.model.ts";
-import {getOrderById, getOrders, postOrder, putOrder} from "../api/ordersApi.ts";
+import {getOrderById, getOrders, getOwnerOrders, postOrder, putOrder} from "../api/ordersApi.ts";
 import {Order} from "../../common/models/order.model.ts";
 import {RootState} from "../../common/store.ts";
 
@@ -34,8 +34,8 @@ const initialState: OrderState = {
     error: null,
 };
 
-// Асинхронный thunk для получения заказов
 export const fetchOrders = createCommonThunk('orders/fetchOrders', getOrders, {requiresAuth: true});
+export const fetchOwnerOrders = createCommonThunk('orders/fetchOwnerOrders', getOwnerOrders, {requiresAuth: true});
 export const fetchOrderById = createCommonThunk('orders/fetchOrderById', getOrderById, {requiresAuth: true});
 export const createOrder = createCommonThunk('orders/createOrder', postOrder, {requiresAuth: true});
 export const updateOrder = createCommonThunk('orders/updateOrder', putOrder, {requiresAuth: true});
@@ -49,6 +49,7 @@ const ordersSlice = createSlice({
         }
     },
     extraReducers: (builder) => {
+        // fetchOrders reducer
         builder
             .addCase(fetchOrders.pending, (state) => {
                 state.loading = true;
@@ -62,6 +63,23 @@ const ordersSlice = createSlice({
                 state.error = null;
             })
             .addCase(fetchOrders.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.error.message || 'Failed to load orders';
+            });
+        // fetchOwnerOrders reducer
+        builder
+            .addCase(fetchOwnerOrders.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(fetchOwnerOrders.fulfilled, (state, action) => {
+                state.loading = false;
+                const page: PaginationState = action.payload.data;
+                page.orders = [...state.page.orders, ...page.orders];
+                state.page = page;
+                state.error = null;
+            })
+            .addCase(fetchOwnerOrders.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.error.message || 'Failed to load orders';
             });

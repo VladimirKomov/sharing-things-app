@@ -1,13 +1,13 @@
-import React, { useState } from 'react';
-import { TextField, MenuItem, Button, Box } from '@mui/material';
-import { ORDER_STATUSES, OrderStatus } from '../../common/models/order.model.ts';
+import React, {useState} from 'react';
+import {Box, Button, MenuItem, TextField} from '@mui/material';
+import {ORDER_STATUSES, OrderStatus} from '../../common/models/order.model.ts';
 
 interface OrderFilterProps {
     onFilter: (status: OrderStatus, startDate: string, endDate: string) => void;
 }
 
-const OrderFilter: React.FC<OrderFilterProps> = ({ onFilter }) => {
-    const [status, setStatus] = useState<OrderStatus>(ORDER_STATUSES.ALL);
+const OrderFilter: React.FC<OrderFilterProps> = ({onFilter}) => {
+    const [status, setStatus] = useState<OrderStatus>(ORDER_STATUSES.ALL.key);
     const [startDate, setStartDate] = useState<string>('');
     const [endDate, setEndDate] = useState<string>('');
 
@@ -16,10 +16,10 @@ const OrderFilter: React.FC<OrderFilterProps> = ({ onFilter }) => {
     };
 
     const handleReset = () => {
-        setStatus(ORDER_STATUSES.ALL);
+        setStatus(ORDER_STATUSES.ALL.key);
         setStartDate('');
         setEndDate('');
-        onFilter(ORDER_STATUSES.ALL, '', '');
+        onFilter(ORDER_STATUSES.ALL.key, '', '');
     };
 
     return (
@@ -29,7 +29,7 @@ const OrderFilter: React.FC<OrderFilterProps> = ({ onFilter }) => {
             justifyContent="center"
             alignItems="center"
             gap={2}
-            sx={{ margin: '20px auto', width: '300px' }}
+            sx={{margin: '20px auto', width: '300px'}}
         >
             <TextField
                 label="Order Status"
@@ -38,9 +38,9 @@ const OrderFilter: React.FC<OrderFilterProps> = ({ onFilter }) => {
                 onChange={(e) => setStatus(e.target.value as OrderStatus)}
                 fullWidth
             >
-                {Object.entries(ORDER_STATUSES).map(([key, value]) => (
-                    <MenuItem key={key} value={value}>
-                        {value.charAt(0).toUpperCase() + value.slice(1).replace('_', ' ')}
+                {Object.values(ORDER_STATUSES).map((statusObj) => (
+                    <MenuItem key={statusObj.key} value={statusObj.key}>
+                        {statusObj.displayName}
                     </MenuItem>
                 ))}
             </TextField>
