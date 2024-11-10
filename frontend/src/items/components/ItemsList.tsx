@@ -158,7 +158,7 @@ const ItemsList: React.FC<ItemsListProps> = ({ownerOnly = false}) => {
 
 
             {/* Display error message if any */}
-            {error.message && <p className={styles.errorText}>Error: {error.message}</p>}
+            {error && <p className={styles.errorText}>Error: {error}</p>}
 
             {/* Infinite scroll component */}
             <InfiniteScroll

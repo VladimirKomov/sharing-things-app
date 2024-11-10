@@ -96,7 +96,7 @@ const RegistrationForm: React.FC = () => {
                     {passwordMismatch && <p className={styles.error}>Passwords do not match</p>}
                     {/* Error message */}
                     {errorApi && <p className={styles.error}>{errorForm}</p>}
-                    {errorApi && <p className={styles.error}>{errorApi.message}</p>}
+                    {errorApi && <p className={styles.error}>{errorApi}</p>}
                     <button className={styles.button} type="submit" disabled={loading}>
                         {loading ? 'Loading...' : 'Register'}
                     </button>

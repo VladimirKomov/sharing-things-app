@@ -12,9 +12,7 @@ export interface Token {
 interface AuthSlice {
     token: Token | null;
     loading: boolean;
-    error: {
-        message: string | null,
-    };
+    error: string | null;
 }
 
 // get the token from cookies
@@ -33,9 +31,7 @@ const getToken = (): Token | null => {
 const initialState: AuthSlice = {
     token: getToken(),
     loading: false,
-    error: {
-        message: null,
-    },
+    error: null,
 }
 
 export const login = createCommonThunk('auth/login', loginAPI);
@@ -68,29 +64,29 @@ const authSlice = createSlice({
             Cookies.set('access_token', token.access, {expires: 7, secure: true, sameSite: 'Strict'});
             Cookies.set('refresh_token', token.refresh, {expires: 7, secure: true, sameSite: 'Strict'});
             state.loading = false;
-            state.error.message = null;
+            state.error = null;
         });
         builder.addCase(login.pending, (state) => {
             state.loading = true;
-            state.error.message = null;
+            state.error = null;
         });
         builder.addCase(login.rejected, (state, action: PayloadAction<any>) => {
             state.loading = false;
-            state.error.message = action.payload.message;
+            state.error = action.payload;
         });
 
         // registration
         builder.addCase(register.fulfilled, (state) => {
             state.loading = false;
-            state.error.message = null;
+            state.error = null;
         });
         builder.addCase(register.pending, (state) => {
             state.loading = true;
-            state.error.message = null;
+            state.error = null;
         });
         builder.addCase(register.rejected, (state, action: PayloadAction<any>) => {
             state.loading = false;
-            state.error.message = action.payload.message;
+            state.error = action.payload.message;
         });
 
         // logout
@@ -99,11 +95,11 @@ const authSlice = createSlice({
             Cookies.remove('access_token');
             Cookies.remove('refresh_token');
             state.loading = false;
-            state.error.message = null;
+            state.error = null;
         });
         builder.addCase(logout.pending, (state) => {
             state.loading = true;
-            state.error.message = null;
+            state.error = null;
         });
         builder.addCase(logout.rejected, (state) => {
             state.loading = false;

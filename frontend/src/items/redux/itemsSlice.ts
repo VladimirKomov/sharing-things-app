@@ -17,9 +17,7 @@ interface ItemsState {
     page: PaginationState;
     selectedItem: Item | null;
     loading: boolean;
-    error: {
-        message: string | null;
-    };
+    error: string | null;
 }
 
 const initialState: ItemsState = {
@@ -33,9 +31,7 @@ const initialState: ItemsState = {
     },
     selectedItem: null,
     loading: false,
-    error: {
-        message: null,
-    },
+    error: null,
 };
 
 // Asynchronous actions (thunks)
@@ -54,32 +50,32 @@ const itemsSlice = createSlice({
         builder
             .addCase(fetchItems.pending, (state) => {
                 state.loading = true;
-                state.error.message = null;
+                state.error = null;
             })
             .addCase(fetchItems.fulfilled, (state, action) => {
                 state.loading = false;
                 const page: PaginationState = action.payload.data;
                 page.items = [...state.page.items, ...page.items];
                 state.page = page;
-                state.error.message = null;
+                state.error = null;
             })
             .addCase(fetchItems.rejected, (state, action) => {
                 state.loading = false;
-                state.error.message = action.error.message || 'An error occurred during fetch items.';
+                state.error = action.payload;
             });
         builder
             .addCase(fetchItemById.pending, (state) => {
                 state.loading = true;
-                state.error.message = null;
+                state.error = null;
             })
             .addCase(fetchItemById.fulfilled, (state, action) => {
                 state.loading = false;
                 state.selectedItem = action.payload.data;
-                state.error.message = null;
+                state.error = null;
             })
             .addCase(fetchItemById.rejected, (state, action) => {
                 state.loading = false;
-                state.error.message = action.error.message || 'Failed to fetch item details';
+                state.error = action.payload;
             });
     },
 });

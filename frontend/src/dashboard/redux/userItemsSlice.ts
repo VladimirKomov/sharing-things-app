@@ -18,9 +18,7 @@ interface ItemsState {
     page: PaginationState;
     selectedItem: Item | null;
     loading: boolean;
-    error: {
-        message: string | null;
-    };
+    error: string | null;
 }
 
 const initialState: ItemsState = {
@@ -34,9 +32,7 @@ const initialState: ItemsState = {
     },
     selectedItem: null,
     loading: false,
-    error: {
-        message: null,
-    },
+    error: null,
 };
 
 // Protected routes
@@ -59,24 +55,24 @@ const userItemsSlice = createSlice({
         builder
             .addCase(fetchUserItems.pending, (state) => {
                 state.loading = true;
-                state.error.message = null;
+                state.error = null;
             })
             .addCase(fetchUserItems.fulfilled, (state, action) => {
                 state.loading = false;
                 const page: PaginationState = action.payload.data;
                 page.items = [...state.page.items, ...page.items];
                 state.page = page;
-                state.error.message = null;
+                state.error = null;
             })
             .addCase(fetchUserItems.rejected, (state, action) => {
                 state.loading = false;
-                state.error.message = action.error.message || 'Failed to fetch user items';
+                state.error = action.payload;
             });
         // get user item by id
         builder
             .addCase(fetchUserItemById.pending, (state) => {
                 state.loading = true;
-                state.error.message = null;
+                state.error = null;
             })
             .addCase(fetchUserItemById.fulfilled, (state, action) => {
                 state.loading = false;
@@ -84,26 +80,26 @@ const userItemsSlice = createSlice({
             })
             .addCase(fetchUserItemById.rejected, (state, action) => {
                 state.loading = false;
-                state.error.message = action.error.message || 'Failed to fetch item details';
+                state.error = action.payload;
             });
         //add new item
         builder
             .addCase(createUserItem.pending, (state) => {
                 state.loading = true;
-                state.error.message = null;
+                state.error = null;
             })
             .addCase(createUserItem.fulfilled, (state) => {
                 state.loading = false;
             })
             .addCase(createUserItem.rejected, (state, action) => {
                 state.loading = false;
-                state.error.message = action.error.message || 'Failed to update user items';
+                state.error = action.payload;
             });
         // update user item by id
         builder
             .addCase(updateUserItem.pending, (state) => {
                 state.loading = true;
-                state.error.message = null;
+                state.error = null;
             })
             .addCase(updateUserItem.fulfilled, (state, action) => {
                 const updatedItem = action.payload.data;
@@ -115,23 +111,23 @@ const userItemsSlice = createSlice({
             })
             .addCase(updateUserItem.rejected, (state, action) => {
                 state.loading = false;
-                state.error.message = action.error.message || 'Failed to update user items';
+                state.error = action.payload;
             });
         // delete user item by id
         builder
             .addCase(removeUserItem.pending, (state) => {
                 state.loading = true;
-                state.error.message = null;
+                state.error = null;
             })
             .addCase(removeUserItem.fulfilled, (state, action) => {
                 const id = action.payload.data.id;
                 state.page.items = state.page.items.filter(item => item.id !== id);
                 state.loading = false;
-                state.error.message = null;
+                state.error = null;
             })
             .addCase(removeUserItem.rejected, (state, action) => {
                 state.loading = false;
-                state.error.message = action.error.message || 'Failed to remove the user item';
+                state.error = action.payload;
             });
     },
 });

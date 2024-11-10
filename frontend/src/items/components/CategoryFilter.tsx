@@ -19,7 +19,7 @@ const CategoryFilter: React.FC = () => {
     const categories: Category[] = useSelector(selectCategories);
     const selectedCategory: Category | null = useSelector(selectSelectedCategory);
     const loading: boolean = useSelector(selectLoading);
-    const error: { message: string | null } = useSelector(selectError);
+    const error = useSelector(selectError);
 
 
     // Load categories
@@ -42,9 +42,9 @@ const CategoryFilter: React.FC = () => {
             {loading ? (
                 // Display loading state
                 <p className={styles.loading}>Loading...</p>
-            ) : error.message ? (
+            ) : error ? (
                 // Display error message
-                <p className={styles.error}>Error loading categories: {error.message}</p>
+                <p className={styles.error}>Error loading categories: {error}</p>
             ) : (
                 <div className={styles.categoriesContainer}>
                     {/* Button to select all categories */}
