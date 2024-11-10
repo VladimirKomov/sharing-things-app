@@ -33,7 +33,7 @@ import SidebarAddOrEditItem from '../../dashboard/components/SidebarAddOrEditIte
 import {FixedSizeList as VirtualizedList} from 'react-window';
 import AddIcon from '@mui/icons-material/Add';
 import IconButton from "@mui/material/IconButton";
-import SidebarAddOrEditOrder from "../../orders/conponents/SidebarAddOrEditOrder.tsx";
+import SidebarAddOrder from "../../orders/conponents/SidebarAddOrder.tsx";
 import CombinedFilter from "../../common/components/CombinedFilter.tsx";
 
 interface ItemsListProps {
@@ -209,7 +209,7 @@ const ItemsList: React.FC<ItemsListProps> = ({ownerOnly = false}) => {
             )}
             {/* Sidebar for order item */}
             {!ownerOnly && selectedItemId && (
-                <SidebarAddOrEditOrder
+                <SidebarAddOrder
                     isOpen={isOrderSidebarOpen}
                     onClose={handleCloseOrderSidebar}
                     itemId={selectedItemId}

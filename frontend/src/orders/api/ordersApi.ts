@@ -47,6 +47,21 @@ export const putOrderStatus = (credentials: PutOrderData): RequestConfig => {
     };
 };
 
+interface ItemAvailability {
+    itemId: string;
+    startDate: string;
+    endDate: string;
+}
+
+export const getItemAvailability = (credentials: ItemAvailability): RequestConfig => {
+    const {itemId, startDate, endDate} = credentials;
+    return {
+        method: 'GET',
+        url: `${ordersRoot}check-item-availability/`,
+        params: {itemId, startDate, endDate},
+    };
+}
+
 // export const getOrderById = (id: string): RequestConfig => {
 //     return {
 //         method: 'GET',

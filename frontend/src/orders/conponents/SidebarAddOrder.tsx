@@ -2,7 +2,13 @@ import React, {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {AppDispatch} from '../../common/store';
 import {Button, CircularProgress, Drawer, TextField} from '@mui/material';
-import {createOrder, selectOrderError, selectOrderLoading} from '../redux/ordersSlice';
+import {
+    checkItemAvailability,
+    createOrder,
+    selectIsItemAvailable,
+    selectOrderError,
+    selectOrderLoading
+} from '../redux/ordersSlice';
 import {selectItemById} from "../../items/redux/itemsSlice";
 
 interface SidebarOrderProps {
@@ -14,6 +20,7 @@ interface SidebarOrderProps {
 const SidebarAddOrder: React.FC<SidebarOrderProps> = ({isOpen, onClose, itemId}) => {
     const dispatch = useDispatch<AppDispatch>();
     const item = useSelector(selectItemById(itemId));
+    const isItemAvailable = useSelector(selectIsItemAvailable);
     const loading = useSelector(selectOrderLoading);
     const error = useSelector(selectOrderError);
 
@@ -64,6 +71,44 @@ const SidebarAddOrder: React.FC<SidebarOrderProps> = ({isOpen, onClose, itemId})
                 return;
             }
 
+            // Check if the item is available between the selected dates
+            // const handleCheckAvailability = async () => {
+            //     try {
+            //         const resp = await dispatch(checkItemAvailability({
+            //             itemId,
+            //             startDate: formData.startDate,
+            //             endDate: formData.endDate
+            //         })).unwrap();
+            //
+            //         if (resp.available) {
+            //             alert('The item is available for the selected dates!');
+            //         } else {
+            //             alert('The item is not available for the selected dates.');
+            //         }
+            //     } catch (error) {
+            //         console.error('Error checking item availability:', error);
+            //         alert('Failed to check item availability. Please try again.');
+            //     }
+            // };
+
+            // handleCheckAvailability();
+
+            // Check if the item is available between the selected dates
+            dispatch(checkItemAvailability({
+                itemId,
+                startDate: formData.startDate,
+                endDate: formData.endDate
+            }));
+
+            console.log(isItemAvailable);
+
+            if (!isItemAvailable) {
+                setDateError('The item is not available for the selected dates.');
+                setDaysCount(null);
+                setTotalAmount(0);
+                return;
+            }
+
             setDateError(null); // Reset error if everything is correct
 
             const differenceInTime = end.getTime() - start.getTime();
@@ -81,7 +126,7 @@ const SidebarAddOrder: React.FC<SidebarOrderProps> = ({isOpen, onClose, itemId})
             setTotalAmount(0);
             setDateError(null);
         }
-    }, [formData.startDate, formData.endDate, item]);
+    }, [formData.startDate, formData.endDate, item, isItemAvailable]);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const {name, value} = e.target;

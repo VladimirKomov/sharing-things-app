@@ -1,11 +1,12 @@
 import django_filters
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets, status, generics
+from rest_framework.decorators import api_view
 from rest_framework.filters import OrderingFilter
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
-from common.mapper import map_to_api_response_as_resp, map_api_error_as_resp
+from common.mapper import map_to_api_response_as_resp
 from dashboard.permissions import IsOwner
 from items.models import Item
 from orders.models import Order
@@ -168,3 +169,30 @@ class CreateOrderView(generics.CreateAPIView):
 
         return map_to_api_response_as_resp(serializer.data, code=status.HTTP_201_CREATED)
 
+
+# The function checks the availability of the item for the specified period
+@api_view(['GET'])
+def check_item_availability(request):
+    item_id = request.query_params.get('itemId')
+    start_date = request.query_params.get('startDate')
+    end_date = request.query_params.get('endDate')
+
+    # Checking the validity of the parameters
+    if not item_id or not start_date or not end_date:
+        return map_to_api_response_as_resp({'available': False, 'message': 'Invalid parameters'}, status=400)
+
+    # Checking the existence of the item
+    overlapping_orders = Order.objects.filter(
+        item_id=item_id,
+        # We take into account only active orders
+        status__in=['pending', 'confirmed', 'issued'],
+        # Incomplete orders only
+        is_completed=False,
+        start_date__lte=end_date,
+        end_date__gte=start_date
+    )
+
+    if overlapping_orders.exists():
+        return map_to_api_response_as_resp({'available': False})
+
+    return map_to_api_response_as_resp({'available': True})
