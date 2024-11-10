@@ -3,7 +3,6 @@ import {useDispatch, useSelector} from 'react-redux';
 import {AppDispatch} from '../../common/store';
 import {Button, CircularProgress, Drawer, TextField} from '@mui/material';
 import {createOrder, fetchItemWithBookedDates, selectOrderError, selectOrderLoading} from '../redux/ordersSlice';
-import {selectItemById} from "../../items/redux/itemsSlice";
 import {BaseResponse} from "../../common/models/response.model.ts";
 import {Item} from "../../common/models/items.model.ts";
 
@@ -36,7 +35,6 @@ const SidebarAddOrder: React.FC<SidebarOrderProps> = ({isOpen, onClose, itemId})
     const [dateError, setDateError] = useState<string | null>(null);
 
     useEffect(() => {
-
         // Fetch booked dates for the item
         const handleFetchBookedDates = async () => {
             try {
@@ -58,16 +56,6 @@ const SidebarAddOrder: React.FC<SidebarOrderProps> = ({isOpen, onClose, itemId})
         }
 
     }, [itemId]);
-
-    // Check if the date should be disabled in the calendar
-    const shouldDisableDate = (date: Date) => {
-        return disabledDates.some(
-            (disabledDate) =>
-                date.getFullYear() === disabledDate.getFullYear() &&
-                date.getMonth() === disabledDate.getMonth() &&
-                date.getDate() === disabledDate.getDate()
-        );
-    };
 
     useEffect(() => {
         if (formData.startDate && formData.endDate) {
@@ -138,6 +126,26 @@ const SidebarAddOrder: React.FC<SidebarOrderProps> = ({isOpen, onClose, itemId})
             ...prevData,
             [name]: value,
         }));
+    };
+
+    // Check if the date should be disabled in the calendar
+    const shouldDisableDate = (date: Date) => {
+        return disabledDates.some(
+            (disabledDate) =>
+                date.getFullYear() === disabledDate.getFullYear() &&
+                date.getMonth() === disabledDate.getMonth() &&
+                date.getDate() === disabledDate.getDate()
+        );
+    };
+
+    const handleDateChange = (name: string, newValue: Date | null) => {
+        if (newValue) {
+            const formattedDate = newValue.toISOString().split('T')[0];
+            setFormData((prevData) => ({
+                ...prevData,
+                [name]: formattedDate,
+            }));
+        }
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
