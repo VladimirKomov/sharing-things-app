@@ -1,13 +1,13 @@
 import React, {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
-import {AppDispatch} from '../../common/store';
+import {AppDispatch} from '../store.ts';
 import {
     fetchCategories,
     selectCategories,
     selectSelectedCategory,
     setSelectedCategory
-} from '../../items/redux/categorySlice';
-import {ORDER_STATUSES, OrderStatusKey} from '../../common/models/order.model';
+} from '../../items/redux/categorySlice.ts';
+import {ORDER_STATUSES, OrderStatusKey} from '../models/order.model.ts';
 import {Box, Button, MenuItem, TextField} from '@mui/material';
 
 

@@ -34,7 +34,7 @@ import {FixedSizeList as VirtualizedList} from 'react-window';
 import AddIcon from '@mui/icons-material/Add';
 import IconButton from "@mui/material/IconButton";
 import SidebarAddOrEditOrder from "../../orders/conponents/SidebarAddOrEditOrder.tsx";
-import CombinedFilter from "../../main/components/CombinedFilter.tsx";
+import CombinedFilter from "../../common/components/CombinedFilter.tsx";
 
 interface ItemsListProps {
     ownerOnly?: boolean;

@@ -1,6 +1,6 @@
-@import '../../../styles/variables.css';
+@import '../styles/variables.css';
 
-.container {
+.containerApp {
     max-width: var(--max-width);
     margin: 0 auto;
     padding: var(--spacing-large);

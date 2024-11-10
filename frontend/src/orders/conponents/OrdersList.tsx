@@ -6,7 +6,7 @@ import OrderComponent from './OrderComponent';
 import {Box, CircularProgress, Typography} from '@mui/material';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import {FixedSizeList as VirtualizedList} from 'react-window';
-import CombinedFilter from "../../main/components/CombinedFilter.tsx";
+import CombinedFilter from "../../common/components/CombinedFilter.tsx";
 
 interface OrderListProps {
     ownerOnly?: boolean;
@@ -46,7 +46,7 @@ const OrdersList: React.FC<OrderListProps> = ({ownerOnly = false}) => {
     };
 
     return (
-        <Box sx={{padding: '0px'}}>
+        <Box sx={{padding: '0px', minWidth: '800px'}}>
             <CombinedFilter
                 onFilter={(category, status, startDate, endDate) => setFilter({category, status, startDate, endDate})}
                 showCategoryFilter={false}
