@@ -88,8 +88,10 @@ const userItemsSlice = createSlice({
                 state.loading = true;
                 state.error = null;
             })
-            .addCase(createUserItem.fulfilled, (state) => {
+            .addCase(createUserItem.fulfilled, (state, action) => {
                 state.loading = false;
+                const newItem: Item  = action.payload.data;
+                state.page.items = [...state.page.items, ...[newItem]];
             })
             .addCase(createUserItem.rejected, (state, action) => {
                 state.loading = false;

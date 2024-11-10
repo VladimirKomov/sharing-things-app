@@ -133,8 +133,8 @@ const SidebarAddOrEditItem: React.FC<SidebarEditProps> = ({ isOpen, onClose, ite
                 <h2>{itemId ? 'Edit Item' : 'Add New Item'}</h2>
                 {loading ? (
                     <CircularProgress />
-                ) : error.message ? (
-                    <div style={{ color: 'red', marginBottom: '1em' }}>{error.message}</div>
+                ) : error ? (
+                    <div style={{ color: 'red', marginBottom: '1em' }}>{error}</div>
                 ) : (
                     <form onSubmit={handleSubmit}>
                         <TextField

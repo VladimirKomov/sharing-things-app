@@ -1,15 +1,14 @@
 from django.contrib.auth import authenticate
 from rest_framework import status
+from rest_framework.exceptions import ValidationError
 from rest_framework.permissions import AllowAny
 from rest_framework.views import APIView
 from rest_framework_simplejwt.exceptions import InvalidToken, TokenError
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.views import TokenRefreshView, TokenVerifyView
-from rest_framework.exceptions import ValidationError
 
-from common.logger import logger
 from common.mapper import map_to_api_response_as_resp, map_api_error_as_resp, map_request_to_request
-from users.mapper import map_request_to_user_registration
+from dashboard.models import UserSettings
 from users.serializers import RegistrationSerializer, LoginSerializer
 
 
@@ -18,21 +17,34 @@ class UserRegistrationView(APIView):
     permission_classes = [AllowAny]
 
     def post(self, request):
-        request_api = map_request_to_request(request)
         # user into serializer
-        serializer = RegistrationSerializer(
-            data=map_request_to_user_registration(request_api)
-        )
-        if serializer.is_valid():
-            serializer.save()
+        data = request.data
+        user_serializer = RegistrationSerializer(data=data)
+
+        if user_serializer.is_valid():
+            # Save user
+            user = user_serializer.save()
+
+            # create UserSettings
+            UserSettings.objects.create(
+                user=user,
+                first_name=data.get('first_name', ''),
+                last_name=data.get('last_name', ''),
+                phone_number=data.get('phone_number', ''),
+                address=data.get('address', ''),
+                latitude=data.get('latitude'),
+                longitude=data.get('longitude')
+            )
+
             # if OK
-            return (map_to_api_response_as_resp(
-                serializer.data,
+            return map_to_api_response_as_resp(
+                user_serializer.data,
                 message="User created successfully",
-                code=status.HTTP_201_CREATED))
+                code=status.HTTP_201_CREATED
+            )
 
         # if errors
-        return map_api_error_as_resp('Validation error', status.HTTP_400_BAD_REQUEST, serializer.errors)
+        return map_api_error_as_resp('Validation error', status.HTTP_400_BAD_REQUEST, user_serializer.errors)
 
 
 class LoginView(APIView):
