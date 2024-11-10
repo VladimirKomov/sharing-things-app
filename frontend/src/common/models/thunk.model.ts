@@ -69,7 +69,7 @@ export const createCommonThunk = (
                 if (error.message) {
                     message = ` ${error.message as string}`;
                 }
-                if (error.details) {
+                if (error.details && error.details.length < 100) {
                     message = ` ${error.details as string}`;
                 }
                 if (!message.trim()) {

@@ -76,10 +76,22 @@ const ItemsList: React.FC<ItemsListProps> = ({ownerOnly = false}) => {
     useEffect(() => {
         if (ownerOnly) {
             dispatch(clearUserItemsPage());
-            dispatch(fetchUserItems({page: 1, limit: 10, category: selectedCategory?.slug || null}));
+            dispatch(fetchUserItems({
+                page: 1,
+                limit: 10,
+                category: selectedCategory?.slug || null,
+                start_date: filter.startDate || null,
+                end_date: filter.endDate || null
+            }));
         } else {
             dispatch(clearPage());
-            dispatch(fetchItems({page: 1, limit: 10, category: selectedCategory?.slug || null}));
+            dispatch(fetchItems({
+                page: 1,
+                limit: 10,
+                category: selectedCategory?.slug || null,
+                start_date: filter.startDate || null,
+                end_date: filter.endDate || null
+            }));
         }
     }, [dispatch, ownerOnly, selectedCategory, filter]);
 

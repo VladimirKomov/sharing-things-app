@@ -1,19 +1,15 @@
+from datetime import datetime
+
 import django_filters
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets, status
 from rest_framework.permissions import IsAdminUser, IsAuthenticatedOrReadOnly, AllowAny
 
 from common.mapper import map_to_api_response_as_resp
-from items.serializers import CategorySerializer, ItemSerializer
 from items.models import Category, Item
 from items.paginations import ItemsPagination
+from items.serializers import CategorySerializer, ItemSerializer
 
-class ItemDateFilter(django_filters.FilterSet):
-    start_date = django_filters.DateFilter(field_name='orders__start_date', lookup_expr='gte')
-    end_date = django_filters.DateFilter(field_name='orders__end_date', lookup_expr='lte')
-
-    class Meta:
-        model = Item
-        fields = ['start_date', 'end_date']
 
 class CategoryViewSet(viewsets.ModelViewSet):
     queryset = Category.objects.all()
@@ -51,12 +47,24 @@ class CategoryViewSet(viewsets.ModelViewSet):
         )
 
 
+class ItemDateFilter(django_filters.FilterSet):
+    start_date = django_filters.DateFilter(field_name='orders__start_date', lookup_expr='gte')
+    end_date = django_filters.DateFilter(field_name='orders__end_date', lookup_expr='lte')
+
+    class Meta:
+        model = Item
+        fields = ['start_date', 'end_date']
+
+
 class ItemViewSet(viewsets.ModelViewSet):
     queryset = Item.objects.all().order_by('id')  # sort by id
     serializer_class = ItemSerializer
     pagination_class = ItemsPagination
     # access is open
     permission_classes = [AllowAny]
+    # filter by date
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = ItemDateFilter
 
     def get_queryset(self):
         queryset = self.queryset
@@ -66,13 +74,54 @@ class ItemViewSet(viewsets.ModelViewSet):
         if category_slug:
             queryset = queryset.filter(category__slug=category_slug)
 
+        # if get param "start_date" and "end_date"
+        start_date = self.request.query_params.get('start_date')
+        end_date = self.request.query_params.get('end_date')
+        if start_date and end_date:
+            try:
+                # check date format
+                start_date = datetime.strptime(start_date, '%Y-%m-%d').date()
+                end_date = datetime.strptime(end_date, '%Y-%m-%d').date()
+
+                if start_date > end_date:
+                    raise ValueError("Start date must be before or equal to end date.")
+            except ValueError as e:
+                # if date format is invalid
+                raise ValueError(f"Invalid date format or logic: {e}")
+            print(f"start_date: {start_date}, end_date: {end_date}")
+            # get all booked items
+            booked_items = queryset.filter(
+                orders__start_date__lte=end_date,
+                orders__end_date__gte=start_date
+            ).exclude(
+                orders__is_completed=True,
+                orders__status__in=['canceled', 'rejected']
+            ).distinct()
+
+            # exclude booked items
+            queryset = queryset.exclude(id__in=booked_items.values('id'))
+
         return queryset
 
     def retrieve(self, request, *args, **kwargs):
-        instance = self.get_object()  # Получаем элемент по id
+        instance = self.get_object()  # get by Id
         serializer = self.get_serializer(instance)
         return map_to_api_response_as_resp(
             serializer.data,
             "Item retrieved successfully",
             status.HTTP_200_OK
         )
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=True)
+        return map_to_api_response_as_resp(
+            serializer.data,
+            "Items retrieved successfully",
+            status=status.HTTP_200_OK)

@@ -4,6 +4,7 @@ export interface Item {
     description: string;
     categoryName: string;
     ownerName: string;
+    ownerAddress: string;
     pricePerDay: number;
     imagesUrl: [
         {

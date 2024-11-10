@@ -55,7 +55,7 @@ const SidebarAddOrEditItem: React.FC<SidebarEditProps> = ({ isOpen, onClose, ite
                 name: '',
                 description: '',
                 categoryId: '',
-                pricePerDay: ''
+                pricePerDay: '0'
             });
             setCurrentImages([]);
             setNewImages([]);
@@ -159,7 +159,7 @@ const SidebarAddOrEditItem: React.FC<SidebarEditProps> = ({ isOpen, onClose, ite
                             rows={3}
                         />
                         <TextField
-                            label="Price per Day"
+                            label="Price per Day in thanks ('0' for free)"
                             variant="outlined"
                             fullWidth
                             margin="normal"
