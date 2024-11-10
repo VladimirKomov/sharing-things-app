@@ -1,10 +1,10 @@
 import {RequestConfig} from "../../common/models/request.model.ts";
-import {ORDER_STATUSES, OrderStatusKey, OrderStatusDesp} from "../../common/models/order.model.ts";
+import {ORDER_STATUSES, OrderStatusKey} from "../../common/models/order.model.ts";
 
 const ordersRoot = 'orders/';
 
 interface OrderFilter {
-    status: OrderStatusDesp;
+    status: OrderStatusKey;
     startDate: string;
     endDate: string;
 }
@@ -12,7 +12,7 @@ interface OrderFilter {
 export const getOrders = (filter: OrderFilter): RequestConfig => {
     // create filter
     const urlParams = new URLSearchParams();
-    if (filter.status && filter.status !== ORDER_STATUSES.ALL.displayName) urlParams.append('status', filter.status);
+    if (filter.status && filter.status !== ORDER_STATUSES.ALL.key) urlParams.append('status', filter.status);
     if (filter.startDate) urlParams.append('start_date', filter.startDate);
     if (filter.endDate) urlParams.append('end_date', filter.endDate);
     return {
@@ -24,7 +24,7 @@ export const getOrders = (filter: OrderFilter): RequestConfig => {
 export const getOwnerOrders = (filter: OrderFilter): RequestConfig => {
     // create filter
     const urlParams = new URLSearchParams();
-    if (filter.status && filter.status !== ORDER_STATUSES.ALL.displayName) urlParams.append('status', filter.status);
+    if (filter.status && filter.status !== ORDER_STATUSES.ALL.key) urlParams.append('status', filter.status);
     if (filter.startDate) urlParams.append('start_date', filter.startDate);
     if (filter.endDate) urlParams.append('end_date', filter.endDate);
     return {
@@ -43,7 +43,7 @@ export const putOrderStatus = (credentials: PutOrderData): RequestConfig => {
     return {
         method: 'PUT',
         url: `${ordersRoot}update/${id}/`,
-        data: { status },
+        data: {status},
     };
 };
 

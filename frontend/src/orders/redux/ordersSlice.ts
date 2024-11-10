@@ -64,7 +64,8 @@ const ordersSlice = createSlice({
             })
             .addCase(fetchOrders.rejected, (state, action) => {
                 state.loading = false;
-                state.error = action.error.message || 'Failed to load orders';
+                console.log(action);
+                state.error = action.payload;
             });
         // fetchOwnerOrders reducer
         builder
@@ -81,7 +82,7 @@ const ordersSlice = createSlice({
             })
             .addCase(fetchOwnerOrders.rejected, (state, action) => {
                 state.loading = false;
-                state.error = action.error.message || 'Failed to load orders';
+                state.error = action.payload;
             });
         // updateOrderStatus reducer
         builder
@@ -101,7 +102,7 @@ const ordersSlice = createSlice({
             })
             .addCase(updateOrderStatus.rejected, (state, action) => {
                 state.loading = false;
-                state.error = action.error.message || 'Failed to update order status';
+                state.error = action.payload;
             });
     },
 });

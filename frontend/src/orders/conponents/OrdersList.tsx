@@ -57,7 +57,7 @@ const OrdersList: React.FC<OrderListProps> = ({ownerOnly = false}) => {
                 Orders:
             </Typography>
             {loading && <CircularProgress/>}
-            {error && <Typography color="error">{error}</Typography>}
+            {error && <Typography color="error" sx={{textAlign: 'center'}}>{error}</Typography>}
             {page.orders.length === 0 && !loading && !error && (
                 <Typography variant="body1" sx={{textAlign: 'center'}}>No orders found.</Typography>
             )}

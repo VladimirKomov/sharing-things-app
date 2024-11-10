@@ -64,7 +64,20 @@ export const createCommonThunk = (
             try {
                 return await executeRequest(config);
             } catch (error: any) {
-                return rejectWithValue(error.message || "Unexpected error occurred");
+
+                let message: string = '';
+                if (error.message) {
+                    message = ` ${error.message as string}`;
+                }
+                if (error.details) {
+                    message = ` ${error.details as string}`;
+                }
+                if (!message.trim()) {
+                    message = "Unexpected error occurred";
+                }
+                message = message.trim();
+
+                return rejectWithValue(message);
             }
         },
     );
