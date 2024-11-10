@@ -22,8 +22,6 @@ export const createCommonThunk = (
             const config = requestConfig(credentials);
 
             const isFormData = credentials.data instanceof FormData;
-            console.log('isFormData', isFormData);
-            console.log('credentials', credentials);
 
             config.headers = {
                 ...(options?.requiresAuth && token ? { "Authorization": `Bearer ${token.access}` } : {}),

@@ -62,6 +62,20 @@ export const getItemAvailability = (credentials: ItemAvailability): RequestConfi
     };
 }
 
+interface BookedDates {
+    itemId: string;
+}
+
+export const getItemWithBookedDates = (credentials: BookedDates): RequestConfig => {
+    const {itemId} = credentials;
+    return {
+        method: 'GET',
+        url: `${ordersRoot}fetch-item-with-booked-dates/`,
+        params: {itemId},
+    };
+
+}
+
 // export const getOrderById = (id: string): RequestConfig => {
 //     return {
 //         method: 'GET',

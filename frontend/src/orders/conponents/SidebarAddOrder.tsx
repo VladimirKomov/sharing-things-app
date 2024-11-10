@@ -2,14 +2,10 @@ import React, {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {AppDispatch} from '../../common/store';
 import {Button, CircularProgress, Drawer, TextField} from '@mui/material';
-import {
-    checkItemAvailability,
-    createOrder,
-    selectIsItemAvailable,
-    selectOrderError,
-    selectOrderLoading
-} from '../redux/ordersSlice';
+import {createOrder, fetchItemWithBookedDates, selectOrderError, selectOrderLoading} from '../redux/ordersSlice';
 import {selectItemById} from "../../items/redux/itemsSlice";
+import {BaseResponse} from "../../common/models/response.model.ts";
+import {Item} from "../../common/models/items.model.ts";
 
 interface SidebarOrderProps {
     isOpen: boolean;
@@ -19,8 +15,9 @@ interface SidebarOrderProps {
 
 const SidebarAddOrder: React.FC<SidebarOrderProps> = ({isOpen, onClose, itemId}) => {
     const dispatch = useDispatch<AppDispatch>();
-    const item = useSelector(selectItemById(itemId));
-    const isItemAvailable = useSelector(selectIsItemAvailable);
+    // const item = useSelector(selectItemById(itemId));
+    const [item, setItem] = useState<Item | null>(null);
+    // const isItemAvailable = useSelector(selectIsItemAvailable);
     const loading = useSelector(selectOrderLoading);
     const error = useSelector(selectOrderError);
 
@@ -30,18 +27,47 @@ const SidebarAddOrder: React.FC<SidebarOrderProps> = ({isOpen, onClose, itemId})
         endDate: '',
         totalAmount: 0,
     });
+    // disabled for selecting dates in the calendar
+    const [disabledDates, setDisabledDates] = useState<Date[]>([]);
+    // number of days between the selected dates (including the start and end dates)
+    // and the total amount based on the number of days and the price per day
     const [daysCount, setDaysCount] = useState<number | null>(null);
     const [totalAmount, setTotalAmount] = useState<number>(0);
     const [dateError, setDateError] = useState<string | null>(null);
 
     useEffect(() => {
+
+        // Fetch booked dates for the item
+        const handleFetchBookedDates = async () => {
+            try {
+                const response: BaseResponse<any> = await dispatch(fetchItemWithBookedDates({itemId: itemId})).unwrap();
+                setItem(response.data.item);
+                const dates = response.data.bookedDates.map((dateString: string) => new Date(dateString));
+                setDisabledDates(dates);
+            } catch (error) {
+                console.error('Error fetching booked dates:', error);
+            }
+        }
+        handleFetchBookedDates();
+
         if (item) {
             setFormData((prevData) => ({
                 ...prevData,
-                itemId: itemId,
+                itemId: item.id,
             }));
         }
-    }, [item, itemId]);
+
+    }, [itemId]);
+
+    // Check if the date should be disabled in the calendar
+    const shouldDisableDate = (date: Date) => {
+        return disabledDates.some(
+            (disabledDate) =>
+                date.getFullYear() === disabledDate.getFullYear() &&
+                date.getMonth() === disabledDate.getMonth() &&
+                date.getDate() === disabledDate.getDate()
+        );
+    };
 
     useEffect(() => {
         if (formData.startDate && formData.endDate) {
@@ -71,43 +97,21 @@ const SidebarAddOrder: React.FC<SidebarOrderProps> = ({isOpen, onClose, itemId})
                 return;
             }
 
+
             // Check if the item is available between the selected dates
-            // const handleCheckAvailability = async () => {
-            //     try {
-            //         const resp = await dispatch(checkItemAvailability({
-            //             itemId,
-            //             startDate: formData.startDate,
-            //             endDate: formData.endDate
-            //         })).unwrap();
+            // dispatch(checkItemAvailability({
+            //     itemId,
+            //     startDate: formData.startDate,
+            //     endDate: formData.endDate
+            // }));
             //
-            //         if (resp.available) {
-            //             alert('The item is available for the selected dates!');
-            //         } else {
-            //             alert('The item is not available for the selected dates.');
-            //         }
-            //     } catch (error) {
-            //         console.error('Error checking item availability:', error);
-            //         alert('Failed to check item availability. Please try again.');
-            //     }
-            // };
-
-            // handleCheckAvailability();
-
-            // Check if the item is available between the selected dates
-            dispatch(checkItemAvailability({
-                itemId,
-                startDate: formData.startDate,
-                endDate: formData.endDate
-            }));
-
-            console.log(isItemAvailable);
-
-            if (!isItemAvailable) {
-                setDateError('The item is not available for the selected dates.');
-                setDaysCount(null);
-                setTotalAmount(0);
-                return;
-            }
+            // // Check if the item is available between the selected dates
+            // if (!isItemAvailable) {
+            //     setDateError('The item is not available for the selected dates.');
+            //     setDaysCount(null);
+            //     setTotalAmount(0);
+            //     return;
+            // }
 
             setDateError(null); // Reset error if everything is correct
 
@@ -126,7 +130,7 @@ const SidebarAddOrder: React.FC<SidebarOrderProps> = ({isOpen, onClose, itemId})
             setTotalAmount(0);
             setDateError(null);
         }
-    }, [formData.startDate, formData.endDate, item, isItemAvailable]);
+    }, [formData.startDate, formData.endDate, item]);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const {name, value} = e.target;

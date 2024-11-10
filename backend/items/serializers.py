@@ -18,14 +18,17 @@ class ItemImageSerializer(serializers.ModelSerializer):
 
     def get_url(self, obj):
         request = self.context.get('request')
-        return request.build_absolute_uri(obj.image.url)
+        # mabye the request is missing because the serializer is used in a different context
+        if request:
+            return request.build_absolute_uri(obj.image.url)
+        return obj.image.url
 
 
 class ItemSerializer(serializers.ModelSerializer):
     images_url = ItemImageSerializer(source='images', many=True, read_only=True)
     category_name = serializers.CharField(source='category.name', read_only=True)
     username = serializers.CharField(source='user.username', read_only=True)
-    owner_address = serializers.CharField(source='user.settings.address', read_only=True)
+    owner_address = serializers.SerializerMethodField()
     category = serializers.PrimaryKeyRelatedField(
         queryset=Category.objects.all(),
         write_only=True
@@ -38,6 +41,12 @@ class ItemSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             'category': {'write_only': True}
         }
+
+    def get_owner_address(self, obj):
+        # Checking if the user has related data in UserSettings
+        if obj.user and hasattr(obj.user, 'settings') and obj.user.settings:
+            return obj.user.settings.address
+        return None
 
     def to_representation(self, instance):
         data = super().to_representation(instance)
