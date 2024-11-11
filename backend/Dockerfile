@@ -5,7 +5,7 @@ FROM python:3.12-slim
 WORKDIR /app
 
 # Copy the current directory contents into the container at /app
-COPY backend/requirements.txt .
+COPY requirements.txt .
 
 # Set the working directory in the container
 RUN pip install --no-cache-dir -r requirements.txt
@@ -22,5 +22,5 @@ COPY . .
 EXPOSE 8000
 
 # Run app.py when the container launches
-CMD ["sh", "-c", "python backend/manage.py migrate && python backend/manage.py runserver 0.0.0.0:8000"]
+CMD ["sh", "-c", "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"]
 
