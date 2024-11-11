@@ -66,14 +66,17 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
 ]
 
-# ALLOWED_HOSTS = [
-# ]
-#
-# CORS_ALLOWED_ORIGINS = [
-#     'https://frontend-vmye.onrender.com',
-#     'http://localhost',
-#     'http://localhost:5174',
-# ]
+ALLOWED_HOSTS = [
+    'backend-axmi.onrender.com',
+    'localhost',
+    '127.0.0.1'
+]
+
+CORS_ALLOWED_ORIGINS = [
+    'https://frontend-vmye.onrender.com',
+    'http://localhost',
+    'http://localhost:5174',
+]
 
 CORS_ALLOW_ALL_ORIGINS = True
 
