@@ -34,12 +34,30 @@ const initialState: OrderState = {
     error: null,
 };
 
-export const fetchOrders = createCommonThunk('orders/fetchOrders', getOrders, {requiresAuth: true});
-export const fetchOwnerOrders = createCommonThunk('orders/fetchOwnerOrders', getOwnerOrders, {requiresAuth: true});
+export const fetchOrders = createCommonThunk(
+    'orders/fetchOrders',
+    getOrders,
+    {requiresAuth: true}
+);
+export const fetchOwnerOrders = createCommonThunk(
+    'orders/fetchOwnerOrders',
+    getOwnerOrders,
+    {requiresAuth: true}
+);
 // export const fetchOrderById = createCommonThunk('orders/fetchOrderById', getOrderById, {requiresAuth: true});
-export const createOrder = createCommonThunk('orders/createOrder', postOrder, {requiresAuth: true});
-export const updateOrderStatus = createCommonThunk('orders/updateOrderStatus', putOrderStatus, {requiresAuth: true});
-export const fetchItemWithBookedDates = createCommonThunk('orders/fetchBookedDates', getItemWithBookedDates, {requiresAuth: true});
+export const createOrder = createCommonThunk(
+    'orders/createOrder',
+    postOrder,
+    {requiresAuth: true}
+);
+export const updateOrderStatus = createCommonThunk(
+    'orders/updateOrderStatus',
+    putOrderStatus, {requiresAuth: true}
+);
+export const fetchItemWithBookedDates = createCommonThunk(
+    'orders/fetchItemWithBookedDates',
+    getItemWithBookedDates, {requiresAuth: true}
+);
 
 const ordersSlice = createSlice({
     name: 'orders',
@@ -85,6 +103,21 @@ const ordersSlice = createSlice({
                 state.loading = false;
                 state.error = action.payload;
             });
+        // сreateOrder reducer
+        builder
+            .addCase(createOrder.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(createOrder.fulfilled, (state, action) => {
+                state.loading = false;
+                state.error = null;
+                state.page.orders.unshift(action.payload.data);
+            })
+            .addCase(createOrder.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload;
+            });
         // updateOrderStatus reducer
         builder
             .addCase(updateOrderStatus.pending, (state) => {
@@ -102,6 +135,20 @@ const ordersSlice = createSlice({
                 state.error = null;
             })
             .addCase(updateOrderStatus.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload;
+            });
+        // fetchItemWithBookedDates reducer
+        builder
+            .addCase(fetchItemWithBookedDates.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(fetchItemWithBookedDates.fulfilled, (state) => {
+                state.loading = false;
+                state.error = null;
+            })
+            .addCase(fetchItemWithBookedDates.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload;
             });
