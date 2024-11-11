@@ -5,10 +5,10 @@ import {Button, CircularProgress, Drawer} from '@mui/material';
 import {createOrder, fetchItemWithBookedDates, selectOrderError, selectOrderLoading} from '../redux/ordersSlice';
 import {BaseResponse} from '../../common/models/response.model';
 import {Item} from '../../common/models/items.model';
-import ReactDatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import styles from "./SidebarAddOrder.module.css";
 import {PostOrderData} from "../api/ordersApi.ts";
+import ReactDatePicker from "react-datepicker";
 
 interface SidebarOrderProps {
     isOpen: boolean;

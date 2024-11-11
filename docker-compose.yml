@@ -1,0 +1,12 @@
+#version: '3.8'
+
+services:
+  frontend:
+    build:
+      context: ./frontend  # Путь к папке с вашим фронтендом
+    ports:
+      - "5173:5173"        # Проброс порта для доступа к серверу разработки Vite
+    volumes:
+      - ./frontend:/app    # Привязка папки для обновления кода без пересборки контейнера
+    environment:
+      - CHOKIDAR_USEPOLLING=true  # Поллинг для корректного отслеживания изменений в Docker
