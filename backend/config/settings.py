@@ -83,7 +83,6 @@ CSRF_TRUSTED_ORIGINS = [
     'https://backend-axmi.onrender.com'
 ]
 
-CORS_ALLOW_ALL_ORIGINS = True
 
 ROOT_URLCONF = 'config.urls'
 
@@ -254,3 +253,5 @@ STORAGES = {
 AWS_LOCATION = 'public'
 # The URL where the downloaded files will be available
 MEDIA_URL = f'https://{env("AWS_STORAGE_BUCKET_NAME")}.s3.amazonaws.com/{AWS_LOCATION}/'
+
+MIDDLEWARE.remove('django.middleware.csrf.CsrfViewMiddleware')
