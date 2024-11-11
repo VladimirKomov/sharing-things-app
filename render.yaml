@@ -25,25 +25,5 @@ services:
         value: config.settings
     envFilePath: ./backend/.env
     autoDeploy: true
-    dependencies:
-      - name: db
 
-  - type: database
-    name: db
-    plan: starter
-    properties:
-      databaseName: sharing_db
-      user: postgres
-      password: 321test123
-      port: 5432
-    envVars:
-      - key: POSTGRES_USER
-        value: postgres
-      - key: POSTGRES_PASSWORD
-        value: 321test123
-      - key: POSTGRES_DB
-        value: sharing_db
 
-volumes:
-  - name: db_data
-    mountPath: /var/lib/postgresql/data
