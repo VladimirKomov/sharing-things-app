@@ -33,8 +33,6 @@ SECRET_KEY = 'django-insecure-y)7gg7p!ncpzewn6m&r7x$6*6@e89d5(cey#832eq%bocp#kqv
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -66,6 +64,10 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
+]
+
+ALLOWED_HOSTS = [
+    'frontend-vmye.onrender.com',
 ]
 
 CORS_ALLOWED_ORIGINS = [
