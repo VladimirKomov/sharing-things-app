@@ -69,6 +69,7 @@ MIDDLEWARE = [
 ]
 
 CORS_ALLOWED_ORIGINS = [
+    'https://frontend-vmye.onrender.com',
     'http://localhost',
     'http://localhost:5174',
 ]
