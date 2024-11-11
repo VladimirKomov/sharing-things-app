@@ -6,7 +6,7 @@ services:
     branch: dev
     dockerfilePath: ./frontend/Dockerfile
     buildCommand: npm install && npm run build
-    startCommand: npm start
+    startCommand: serve -s build
     envVars:
       - key: CHOKIDAR_USEPOLLING
         value: true
@@ -19,11 +19,19 @@ services:
     branch: dev
     dockerfilePath: ./backend/Dockerfile
     buildCommand: pip install -r requirements.txt && python manage.py migrate
-    startCommand: gunicorn your_project_name.wsgi:application --bind 0.0.0.0:8000
+    startCommand: gunicorn config.wsgi:application --bind 0.0.0.0:8000
     envVars:
       - key: DJANGO_SETTINGS_MODULE
         value: config.settings
-    envFilePath: ./backend/.env
+      - key: DB_NAME
+        value: sharing_db
+      - key: DB_USER
+        value: postgres
+      - key: DB_HOST
+        value: db
+      - key: DB_PORT
+        value: 5432
     autoDeploy: true
+
 
 
