@@ -1,0 +1,33 @@
+@import '../../../styles/variables.css';
+
+.navigationPanel {
+    background-color: var(--primary-color);
+    padding: var(--spacing-medium);
+    margin-bottom: var(--spacing-medium);
+}
+
+.navList {
+    list-style: none;
+    display: flex;
+    gap: 20px;
+    margin: var(--spacing-small) var(--spacing-large);
+    font-size: var(--font-size-large);
+    padding: 0;
+    justify-content: flex-end;
+}
+
+.navItem a {
+    color: #fff;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s ease-in-out, background-color 0.3s ease-in-out;
+    padding: 8px 16px;
+    border-radius: 5px;
+}
+
+.navItem a:hover,
+.navItem a:focus {
+    color: var(--primary-color);
+    background-color: #fff;
+}
+

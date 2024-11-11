@@ -1,0 +1,76 @@
+@import '../../../styles/variables.css';
+
+.categoryFilter {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Центрирование элементов по горизонтали */
+    justify-content: center; /* Центрирование элементов по вертикали */
+    gap: var(--spacing-small);
+    /*margin-bottom: var(--spacing-large);*/
+    text-align: center; /* Центрирование текста внутри */
+    width: 100%; /* Чтобы контейнер занимал всю ширину */
+    max-width: var(--max-width);
+    margin-left: auto; /* Центрируем контейнер по горизонтали */
+    margin-right: auto; /* Центрируем контейнер по горизонтали */
+}
+
+.label {
+    font-size: var(--font-size-large);
+    font-weight: 500;
+    color: var(--primary-color);
+}
+
+.categoriesContainer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-small);
+    justify-content: center; /* Центрирование кнопок по горизонтали */
+    /*margin-top: var(--spacing-small);*/
+}
+
+.categoryButton {
+    background-color: #f0f0f0;
+    border: var(--border-width) solid var(--border-color);
+    border-radius: var(--border-radius);
+    padding: var(--spacing-small) var(--spacing-medium);
+    color: var(--primary-color);
+    cursor: pointer;
+    transition: background-color var(--transition-duration) var(--transition-timing), color var(--transition-duration) var(--transition-timing);
+    font-size: var(--font-size-base);
+}
+
+
+.selected {
+    background-color: var(--primary-color);
+    color: #fff;
+    border-color: var(--primary-color);
+}
+
+.select {
+    width: var(--input-width);
+    padding: var(--spacing-small);
+    height: var(--input-height);
+    border: var(--border-width) solid var(--border-color);
+    border-radius: var(--border-radius);
+    background-color: #fff;
+    font-size: var(--font-size-base);
+    box-shadow: var(--box-shadow-small);
+    transition: border-color var(--transition-duration) var(--transition-timing);
+}
+
+.select:focus {
+    border-color: var(--primary-color);
+    box-shadow: var(--box-shadow-large);
+    outline: none;
+}
+
+.loading,
+.error {
+    font-size: var(--font-size-small);
+    color: var(--secondary-color);
+    padding: var(--spacing-small);
+}
+
+.error {
+    color: var(--error-color);
+}

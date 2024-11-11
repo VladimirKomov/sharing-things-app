@@ -1,0 +1,66 @@
+@import '../../../styles/variables.css';
+
+
+.loadingText {
+    font-size: var(--font-size-small);
+    color: var(--secondary-color);
+}
+
+.errorText {
+    color: var(--error-color);
+    font-size: var(--font-size-small);
+    margin-bottom: var(--spacing-medium);
+}
+
+.itemContainer {
+    display: flex;
+    align-items: flex-start;
+    background-color: var(--background-color);
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow-small);
+    padding: var(--spacing-medium);
+    margin-bottom: var(--spacing-large);
+    transition: box-shadow var(--transition-duration) var(--transition-timing);
+    cursor: pointer;
+    width: 93%;
+}
+
+
+.itemContainer:hover {
+    transform: scale(1.05);
+    box-shadow: var(--box-shadow-large);
+}
+
+.imageContainer {
+    flex-shrink: 0; /* Избегает изменения размера изображения */
+    margin-right: var(--spacing-medium); /* Промежуток между изображением и текстом */
+}
+
+.image {
+    border-radius: var(--border-radius);
+    width: 300px;
+    height: 200px;
+    object-fit: cover;
+    box-shadow: var(--box-shadow-small);
+}
+
+.textContainer {
+    display: flex;
+    flex-direction: column; /* Выравниваем элементы по вертикали */
+    text-align: left;
+    justify-content: flex-start;
+    margin-left: var(--spacing-large); /* Промежуток между изображением и текстом */
+    width: 100%; /* Занимает оставшееся пространство */
+}
+
+.itemTitle {
+    color: var(--primary-color);
+    font-size: var(--font-size-large);
+    margin-bottom: 0;
+}
+
+.itemDescription, .itemOwner, .itemCategory {
+    color: var(--secondary-color);
+    font-size: var(--font-size-base);
+    margin: 0;
+}
