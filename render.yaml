@@ -21,12 +21,4 @@ services:
     envVars:
       - key: DJANGO_SETTINGS_MODULE
         value: config.settings
-      - key: DB_NAME
-        value: sharing_db
-      - key: DB_USER
-        value: postgres
-      - key: DB_HOST
-        value: db
-      - key: DB_PORT
-        value: 5432
     autoDeploy: true
