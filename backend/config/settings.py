@@ -74,6 +74,7 @@ ALLOWED_HOSTS = [
 
 CORS_ALLOWED_ORIGINS = [
     'https://frontend-vmye.onrender.com',
+    'https://backend-axmi.onrender.com',
     'http://localhost',
     'http://localhost:5174',
 ]
