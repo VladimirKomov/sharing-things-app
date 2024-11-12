@@ -11,6 +11,7 @@ import {
     OrderStatusKey,
     statusTransitions
 } from '../../common/models/order.model.ts';
+import RateItem from "../../ratings/components/RateItem.tsx";
 
 interface OrderComponentProps {
     orderId: number;
@@ -58,6 +59,12 @@ const OrderComponent: React.FC<OrderComponentProps> = ({orderId, ownerOnly = fal
                         ))}
                     </Box>
                 </Box>
+                {order.status === 'completed' && (
+                    <Box mt={3} display="flex" alignItems="center" gap={1}>
+                        <Typography variant="subtitle1">Rate this item:</Typography>
+                        <RateItem itemId={order.itemId} onRatingSubmitted={() => console.log('Rating submitted successfully')} />
+                    </Box>
+                )}
             </CardContent>
         </Card>
     );

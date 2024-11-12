@@ -1,10 +1,11 @@
 import {RequestConfig} from "../../common/models/request.model.ts";
 
+const rootPath = 'ratings/';
 
-export const getRatingById = (itemId: number): RequestConfig => {
+export const getItemRatingById = (itemId: number): RequestConfig => {
     return {
         method: 'GET',
-        url: `/api/ratings/get-rating/${itemId}/`,
+        url: `${rootPath}get-rating/${itemId}/`,
     };
 }
 
@@ -13,11 +14,11 @@ interface RatingData {
     rating: number;
 }
 
-export const postRating = (data: RatingData): RequestConfig => {
+export const postItemRating = (data: RatingData): RequestConfig => {
     const {itemId, rating} = data;
     return {
         method: 'POST',
-        url: `/api/ratings/rate-item/${itemId}/`,
+        url: `${rootPath}rate-item/${itemId}/`,
         data: {rating},
     };
 }

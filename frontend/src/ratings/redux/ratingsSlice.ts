@@ -1,5 +1,5 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
-import {getRatingById, postRating} from "../api/ratingsApi.ts";
+import {getItemRatingById, postItemRating} from "../api/ratingsApi.ts";
 import createCommonThunk from "../../common/models/thunk.model.ts";
 
 interface RatingState {
@@ -17,16 +17,16 @@ const initialState: RatingState = {
 };
 
 // Асинхронный thunk для получения текущего рейтинга
-export const fetchRating = createCommonThunk(
+export const fetchItemRating = createCommonThunk(
     'rating/fetchRating',
-    getRatingById
+    getItemRatingById
 );
 
 
 // Асинхронный thunk для отправки нового рейтинга
-export const submitRating = createCommonThunk(
+export const submitItemRating = createCommonThunk(
     'rating/submitRating',
-    postRating,
+    postItemRating,
     {requiresAuth: true}
 );
 
@@ -42,29 +42,31 @@ const ratingsSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder
-            .addCase(fetchRating.pending, (state) => {
+            .addCase(fetchItemRating.pending, (state) => {
                 state.loading = true;
                 state.error = null;
             })
-            .addCase(fetchRating.fulfilled, (state, action: PayloadAction<number | null>) => {
+            .addCase(fetchItemRating.fulfilled, (state, action: PayloadAction<number | null>) => {
                 state.loading = false;
                 state.rating = action.payload;
                 state.isRated = action.payload !== null;
             })
-            .addCase(fetchRating.rejected, (state, action) => {
+            .addCase(fetchItemRating.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload as string;
             })
-            .addCase(submitRating.pending, (state) => {
+        // Add the submitItemRating cases here
+        builder
+            .addCase(submitItemRating.pending, (state) => {
                 state.loading = true;
                 state.error = null;
             })
-            .addCase(submitRating.fulfilled, (state, action: PayloadAction<number>) => {
+            .addCase(submitItemRating.fulfilled, (state, action: PayloadAction<number>) => {
                 state.loading = false;
                 state.rating = action.payload;
                 state.isRated = true;
             })
-            .addCase(submitRating.rejected, (state, action) => {
+            .addCase(submitItemRating.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload as string;
             });
