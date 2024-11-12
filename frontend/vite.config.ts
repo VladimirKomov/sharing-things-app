@@ -11,7 +11,4 @@ export default defineConfig({
       usePolling: true, // for WSL2
     },
   },
-  define: {
-    'process.env.REACT_APP_API_URL': JSON.stringify(process.env.REACT_APP_API_URL)
-  },
 })

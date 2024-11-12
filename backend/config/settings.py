@@ -76,7 +76,7 @@ CORS_ALLOWED_ORIGINS = [
     'https://frontend-vmye.onrender.com',
     'https://backend-axmi.onrender.com',
     'http://localhost',
-    'http://localhost:5174',
+    'http://localhost:5173',
 ]
 
 CSRF_TRUSTED_ORIGINS = [
@@ -254,4 +254,4 @@ AWS_LOCATION = 'public'
 # The URL where the downloaded files will be available
 MEDIA_URL = f'https://{env("AWS_STORAGE_BUCKET_NAME")}.s3.amazonaws.com/{AWS_LOCATION}/'
 
-MIDDLEWARE.remove('django.middleware.csrf.CsrfViewMiddleware')
+# MIDDLEWARE.remove('django.middleware.csrf.CsrfViewMiddleware')
