@@ -51,3 +51,5 @@ class ItemImage(models.Model):
 
     class Meta:
         db_table = 'items_item_images'
+
+

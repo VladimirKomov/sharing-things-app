@@ -11,6 +11,7 @@ from items.models import Category, Item
 from items.paginations import ItemsPagination
 from items.serializers import CategorySerializer, ItemSerializer
 from orders.models import Order
+from ratings.models import get_item_average_rating
 
 
 class CategoryViewSet(viewsets.ModelViewSet):
@@ -108,23 +109,36 @@ class ItemViewSet(viewsets.ModelViewSet):
     def retrieve(self, request, *args, **kwargs):
         instance = self.get_object()  # get by Id
         serializer = self.get_serializer(instance)
+        # get average rating
+        item_data = serializer.data
+        item_data['averageRating'] = get_item_average_rating(instance.id)
+
         return map_to_api_response_as_resp(
-            serializer.data,
+            item_data,
             "Item retrieved successfully",
             status.HTTP_200_OK
         )
 
     def list(self, request, *args, **kwargs):
         queryset = self.get_queryset()
+        items_data = []
 
-        page = self.paginate_queryset(queryset)
+        # Собираем данные с добавлением среднего рейтинга
+        for item in queryset:
+            item_data = self.get_serializer(item).data
+            item_data['averageRating'] = get_item_average_rating(item.id)
+            items_data.append(item_data)
+
+        # Пагинация данных
+        page = self.paginate_queryset(items_data)
         if page is not None:
-            serializer = self.get_serializer(page, many=True)
-            return self.get_paginated_response(serializer.data)
+            return self.get_paginated_response(page)
 
-        serializer = self.get_serializer(queryset, many=True)
+        # Возврат без пагинации
         return map_to_api_response_as_resp(
-            serializer.data,
+            items_data,
             "Items retrieved successfully",
-            status=status.HTTP_200_OK)
+            code=status.HTTP_200_OK
+    )
+
 
