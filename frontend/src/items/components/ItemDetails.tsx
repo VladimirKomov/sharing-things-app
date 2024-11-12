@@ -11,7 +11,7 @@ import {
     DialogContent,
     DialogTitle,
     ImageList,
-    ImageListItem,
+    ImageListItem, Rating,
     Typography,
 } from '@mui/material';
 import styles from './ItemDetail.module.css';
@@ -86,7 +86,11 @@ const ItemDetails: React.FC = () => {
                         <Typography variant="subtitle1"><strong>Category:</strong> {item.categoryName}</Typography>
                         <Typography variant="subtitle1"><strong>Price per day:</strong> ${item.pricePerDay}</Typography>
                     </Box>
-                    <Typography variant="body1" sx={{marginBottom: 2}}>{item.description}</Typography>
+                    <Typography variant="body1" sx={{marginBottom: 1}}>{item.description}</Typography>
+                    <Box display="flex" alignItems="center">
+                        <Typography variant="subtitle1" sx={{ marginRight: 1 }}>Average Rating:</Typography>
+                        <Rating value={item.averageRating} readOnly precision={0.5} size="large" />
+                    </Box>
                     <ImageList cols={3} gap={8} className={styles.photosContainer}>
                         {item.imagesUrl.map((image, index) => (
                             <ImageListItem key={index} onClick={() => openImage(image.url)}>

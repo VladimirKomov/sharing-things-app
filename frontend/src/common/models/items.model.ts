@@ -7,6 +7,7 @@ export interface Item {
     ownerId: number;
     ownerAddress: string;
     pricePerDay: number;
+    averageRating: number;
     imagesUrl: [
         {
             url: string;
