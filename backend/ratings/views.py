@@ -3,35 +3,43 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 
 from common.mapper import map_api_error_as_resp, map_to_api_response_as_resp
-from items.models import Item
 from orders.models import Order
 from .models import ItemRating
 
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
-def rate_item(request, item_id):
+def rate_item(request, order_id):
     user = request.user
     rating_value = request.data.get('rating')
 
     try:
-        if not Order.objects.filter(item_id=item_id, user=user, is_completed=True, status='completed').exists():
+        # check if order exists
+        order = Order.objects.filter(id=order_id, user=user, is_completed=True, status='completed').first()
+        if not order:
             return map_api_error_as_resp(
-                'You can only rate items for completed orders.',
+                'You can only rate completed orders.',
                 code=status.HTTP_400_BAD_REQUEST
             )
 
-        item = Item.objects.get(id=item_id)
-        ItemRating.objects.create(item=item, user=user, rating=rating_value)
+        # check if rating already exists
+        if ItemRating.objects.filter(order=order, user=user).exists():
+            return map_api_error_as_resp(
+                'You have already rated this order.',
+                code=status.HTTP_400_BAD_REQUEST
+            )
+
+        # check rating value
+        ItemRating.objects.create(order=order, item=order.item, user=user, rating=rating_value)
 
         return map_to_api_response_as_resp(
             message='Rating submitted successfully.',
             code=status.HTTP_201_CREATED
         )
 
-    except Item.DoesNotExist:
+    except Order.DoesNotExist:
         return map_api_error_as_resp(
-            'Item not found.',
+            'Order not found.',
             code=status.HTTP_404_NOT_FOUND
         )
     except Exception as e:

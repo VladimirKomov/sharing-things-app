@@ -5,18 +5,22 @@ from django.core.cache import cache
 from items.models import Item
 from django.contrib.auth.models import User
 
+from orders.models import Order
+
 
 class ItemRating(models.Model):
+    order = models.OneToOneField(Order, on_delete=models.CASCADE, related_name='item_rating')
     item = models.ForeignKey(Item, on_delete=models.CASCADE, related_name='ratings')
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='item_ratings')
     rating = models.FloatField()
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         # Limit on one rating from one user
-        unique_together = ('item', 'user')
+        unique_together = ('order', 'user')
 
 class UserRating(models.Model):
+    order = models.OneToOneField(Order, on_delete=models.CASCADE, related_name='user_rating')
     rated_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='received_ratings')
     reviewer = models.ForeignKey(User, on_delete=models.CASCADE, related_name='given_ratings')
     rating = models.FloatField()
@@ -24,7 +28,7 @@ class UserRating(models.Model):
 
     class Meta:
         # Limit on one rating from one user
-        unique_together = ('rated_user', 'reviewer')
+        unique_together = ('order', 'reviewer')
 
 
 def get_item_average_rating(item_id):
