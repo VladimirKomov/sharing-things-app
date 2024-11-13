@@ -10,15 +10,24 @@ export const getItemRatingById = (itemId: number): RequestConfig => {
 }
 
 interface RatingData {
-    itemId: number;
+    orderId: number;
     rating: number;
 }
 
 export const postItemRating = (data: RatingData): RequestConfig => {
-    const {itemId, rating} = data;
+    const {orderId, rating} = data;
     return {
         method: 'POST',
-        url: `${rootPath}rate-item/${itemId}/`,
+        url: `${rootPath}rate-item/${orderId}/`,
+        data: {rating},
+    };
+}
+
+export const postOwnerRating = (data: RatingData): RequestConfig => {
+    const {orderId, rating} = data;
+    return {
+        method: 'POST',
+        url: `${rootPath}rate-owner/${orderId}/`,
         data: {rating},
     };
 }

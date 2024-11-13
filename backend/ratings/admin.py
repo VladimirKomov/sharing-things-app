@@ -1,3 +1,14 @@
 from django.contrib import admin
 
-# Register your models here.
+from ratings.models import ItemRating, OwnerRating
+
+
+@admin.register(ItemRating)
+class OrderAdmin(admin.ModelAdmin):
+    list_display = ('order', 'item', 'user', 'rating', 'created_at')
+
+
+@admin.register(OwnerRating)
+class OrderAdmin(admin.ModelAdmin):
+    list_display = ('order', 'owner', 'user', 'rating', 'created_at')
+

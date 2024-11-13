@@ -1,19 +1,20 @@
-import React, {useState} from 'react';
-import {Box, CircularProgress, Typography} from '@mui/material';
-import SendIcon from '@mui/icons-material/Send';
+import React, { useState } from 'react';
+import { Box, CircularProgress, Typography } from '@mui/material';
 import Rating from '@mui/material/Rating';
-import {AppDispatch} from "../../common/store";
-import {useDispatch} from "react-redux";
-import {submitItemRating} from "../redux/ratingsSlice";
-import IconButton from "@mui/material/IconButton";
+import IconButton from '@mui/material/IconButton';
+import SendIcon from '@mui/icons-material/Send';
+import { AppDispatch } from "../../common/store";
+import { useDispatch } from "react-redux";
 
-
-interface RateItemProps {
+interface RateProps {
     orderId: number;
+    ownerId?: number;
     onRatingSubmitted?: () => void;
+    submitRatingAction: (args: { orderId: number; ownerId?: number; rating: number }) => any;
+    label: string;
 }
 
-const RateItem: React.FC<RateItemProps> = ({orderId: orderId, onRatingSubmitted}) => {
+const Rate: React.FC<RateProps> = ({ orderId, ownerId, onRatingSubmitted, submitRatingAction, label }) => {
     const dispatch = useDispatch<AppDispatch>();
     const [rating, setRating] = useState<number | null>(0);
     const [error, setError] = useState<string | null>(null);
@@ -31,7 +32,7 @@ const RateItem: React.FC<RateItemProps> = ({orderId: orderId, onRatingSubmitted}
 
         setLoading(true);
         try {
-            await dispatch(submitItemRating({orderId, rating})).unwrap();
+            await dispatch(submitRatingAction({ orderId, ownerId, rating })).unwrap();
             setLoading(false);
             if (onRatingSubmitted) onRatingSubmitted();
         } catch (e) {
@@ -41,8 +42,8 @@ const RateItem: React.FC<RateItemProps> = ({orderId: orderId, onRatingSubmitted}
     };
 
     return (
-        <Box>
-            {/*<Typography variant="h6">Rate this item:</Typography>*/}
+        <Box display="flex" alignItems="center" gap={1}>
+            <Typography variant="subtitle1">{label}</Typography>
             <Rating
                 value={rating}
                 onChange={handleRatingChange}
@@ -51,14 +52,13 @@ const RateItem: React.FC<RateItemProps> = ({orderId: orderId, onRatingSubmitted}
             <IconButton
                 color="primary"
                 onClick={submitRating}
-                sx={{marginTop: 2}}
                 disabled={loading}
             >
-                {loading ? <CircularProgress size={24}/> : <SendIcon/>}
+                {loading ? <CircularProgress size={24} /> : <SendIcon />}
             </IconButton>
-            {error && <Typography color="error">{error}</Typography>}
+            {error && <Typography color="error" variant="body2">{error}</Typography>}
         </Box>
     );
 };
 
-export default RateItem;
+export default Rate;

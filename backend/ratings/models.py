@@ -19,16 +19,16 @@ class ItemRating(models.Model):
         # Limit on one rating from one user
         unique_together = ('order', 'user')
 
-class UserRating(models.Model):
-    order = models.OneToOneField(Order, on_delete=models.CASCADE, related_name='user_rating')
-    rated_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='received_ratings')
-    reviewer = models.ForeignKey(User, on_delete=models.CASCADE, related_name='given_ratings')
+
+class OwnerRating(models.Model):
+    order = models.OneToOneField(Order, on_delete=models.CASCADE, related_name='owner_rating')
+    owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='owner_ratings')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='owner_rating_user')
     rating = models.FloatField()
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        # Limit on one rating from one user
-        unique_together = ('order', 'reviewer')
+        unique_together = ('order', 'user')
 
 
 def get_item_average_rating(item_id):

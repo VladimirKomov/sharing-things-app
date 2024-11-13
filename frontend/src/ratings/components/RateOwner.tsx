@@ -1,19 +1,19 @@
 import React, {useState} from 'react';
 import {Box, CircularProgress, Typography} from '@mui/material';
-import SendIcon from '@mui/icons-material/Send';
 import Rating from '@mui/material/Rating';
 import {AppDispatch} from "../../common/store";
 import {useDispatch} from "react-redux";
-import {submitItemRating} from "../redux/ratingsSlice";
+import {submitOwnerRating} from "../redux/ratingsSlice";
 import IconButton from "@mui/material/IconButton";
+import SendIcon from "@mui/icons-material/Send";
 
-
-interface RateItemProps {
+interface RateOwnerProps {
     orderId: number;
+    ownerId: number;
     onRatingSubmitted?: () => void;
 }
 
-const RateItem: React.FC<RateItemProps> = ({orderId: orderId, onRatingSubmitted}) => {
+const RateOwner: React.FC<RateOwnerProps> = ({orderId, ownerId, onRatingSubmitted}) => {
     const dispatch = useDispatch<AppDispatch>();
     const [rating, setRating] = useState<number | null>(0);
     const [error, setError] = useState<string | null>(null);
@@ -31,7 +31,7 @@ const RateItem: React.FC<RateItemProps> = ({orderId: orderId, onRatingSubmitted}
 
         setLoading(true);
         try {
-            await dispatch(submitItemRating({orderId, rating})).unwrap();
+            await dispatch(submitOwnerRating({orderId, ownerId, rating})).unwrap();
             setLoading(false);
             if (onRatingSubmitted) onRatingSubmitted();
         } catch (e) {
@@ -41,8 +41,8 @@ const RateItem: React.FC<RateItemProps> = ({orderId: orderId, onRatingSubmitted}
     };
 
     return (
-        <Box>
-            {/*<Typography variant="h6">Rate this item:</Typography>*/}
+        <Box display="flex" alignItems="center" gap={1}>
+            <Typography variant="subtitle1">Rate this item:</Typography>
             <Rating
                 value={rating}
                 onChange={handleRatingChange}
@@ -51,7 +51,6 @@ const RateItem: React.FC<RateItemProps> = ({orderId: orderId, onRatingSubmitted}
             <IconButton
                 color="primary"
                 onClick={submitRating}
-                sx={{marginTop: 2}}
                 disabled={loading}
             >
                 {loading ? <CircularProgress size={24}/> : <SendIcon/>}
@@ -61,4 +60,4 @@ const RateItem: React.FC<RateItemProps> = ({orderId: orderId, onRatingSubmitted}
     );
 };
 
-export default RateItem;
+export default RateOwner;

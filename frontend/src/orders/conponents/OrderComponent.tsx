@@ -11,7 +11,8 @@ import {
     OrderStatusKey,
     statusTransitions
 } from '../../common/models/order.model.ts';
-import RateItem from "../../ratings/components/RateItem.tsx";
+import Rate from "../../ratings/components/Rate.tsx";
+import {submitItemRating, submitOwnerRating} from "../../ratings/redux/ratingsSlice.ts";
 
 interface OrderComponentProps {
     orderId: number;
@@ -30,12 +31,12 @@ const OrderComponent: React.FC<OrderComponentProps> = ({orderId, ownerOnly = fal
     };
 
     return (
-        <Card sx={{maxWidth: 400, margin: '20px auto', padding: '0 40px'}}>
+        <Card sx={{maxWidth: 450, margin: '20px auto', padding: '0 40px'}}>
             <CardContent>
                 <Typography variant="h5" component="div" sx={{textAlign: 'center'}}>
                     Order №{order.id}
                 </Typography>
-                <Box mt={2}>
+                <Box mt={1}>
                     <Typography variant="body1"><strong>Item: </strong> {order.itemName}</Typography>
                     <Typography variant="body1"><strong>Owner:</strong> {order.ownerName}</Typography>
                     <Typography variant="body1"><strong>Current
@@ -43,7 +44,7 @@ const OrderComponent: React.FC<OrderComponentProps> = ({orderId, ownerOnly = fal
                     <Typography variant="body1"><strong>Start Date:</strong> {order.startDate}</Typography>
                     <Typography variant="body1"><strong>End Date:</strong> {order.endDate}</Typography>
                     <Typography variant="body1"><strong>Total Amount:</strong> {order.totalAmount}</Typography>
-                    <Box mt={2} display="flex" justifyContent="center" gap={2}>
+                    <Box mt={1} display="flex" justifyContent="center" gap={2}>
                         {statusTransitions[order.status].map((status) => (
                             availableStatus(ownerOnly, status) && (
                                 <Button
@@ -60,9 +61,22 @@ const OrderComponent: React.FC<OrderComponentProps> = ({orderId, ownerOnly = fal
                     </Box>
                 </Box>
                 {order.status === 'completed' && (
-                    <Box mt={3} display="flex" alignItems="center" gap={1}>
-                        <Typography variant="subtitle1">Rate this item:</Typography>
-                        <RateItem itemId={order.itemId} onRatingSubmitted={() => console.log('Rating submitted successfully')} />
+                    <Box display="flex" flexDirection="column">
+                        <Box display="flex" alignItems="center" gap={1}>
+                            <Rate
+                                orderId={order.id}
+                                submitRatingAction={submitItemRating}
+                                label="Rate this item:"
+                                onRatingSubmitted={() => console.log('Item rating submitted successfully')}
+                            />
+                        </Box>
+                        <Rate
+                            orderId={order.id}
+                            ownerId={order.ownerId}
+                            submitRatingAction={submitOwnerRating}
+                            label="Rate the owner:"
+                            onRatingSubmitted={() => console.log('Owner rating submitted successfully')}
+                        />
                     </Box>
                 )}
             </CardContent>
