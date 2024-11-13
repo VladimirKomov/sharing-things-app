@@ -21,4 +21,6 @@ services:
     envVars:
       - key: DJANGO_SETTINGS_MODULE
         value: config.settings
+      - key: REDIS_HOST
+        value: redis://red-csqb0jrqf0us73ee8pc0:6379
     autoDeploy: true

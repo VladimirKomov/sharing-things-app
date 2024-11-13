@@ -120,13 +120,11 @@ DATABASES = {
     }
 }
 
-# Cache settings for Redis
-REDIS_HOST = os.getenv('REDIS_HOST', '127.0.0.1')
-
+# Settings for Redis
 CACHES = {
     'default': {
         'BACKEND': 'django_redis.cache.RedisCache',
-        'LOCATION': f'redis://{REDIS_HOST}:6379/1',
+        'LOCATION': os.getenv('REDIS_URL', 'redis://127.0.0.1:6379/1'),
         'OPTIONS': {
             'CLIENT_CLASS': 'django_redis.client.DefaultClient',
         }
