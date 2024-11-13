@@ -38,6 +38,8 @@ export interface Order {
     startDate: string;
     endDate: string;
     totalAmount: number;
+    ratingItem: number | null;
+    ratingOwner: number | null;
 }
 
 

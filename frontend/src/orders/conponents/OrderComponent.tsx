@@ -66,16 +66,18 @@ const OrderComponent: React.FC<OrderComponentProps> = ({orderId, ownerOnly = fal
                             <Rate
                                 orderId={order.id}
                                 submitRatingAction={submitItemRating}
-                                label="Rate this item:"
+                                label=" item:"
                                 onRatingSubmitted={() => console.log('Item rating submitted successfully')}
+                                currentRating={order.ratingItem}
                             />
                         </Box>
                         <Rate
                             orderId={order.id}
                             ownerId={order.ownerId}
                             submitRatingAction={submitOwnerRating}
-                            label="Rate the owner:"
+                            label=" owner:"
                             onRatingSubmitted={() => console.log('Owner rating submitted successfully')}
+                            currentRating={order.ratingOwner}
                         />
                     </Box>
                 )}

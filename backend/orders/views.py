@@ -15,7 +15,8 @@ from items.serializers import ItemSerializer
 from orders.models import Order
 from orders.paginations import OrdersPagination
 from orders.serializers import OrderSerializer
-from ratings.models import get_item_average_rating
+from ratings.models import get_item_average_rating, ItemRating, OwnerRating
+from rest_framework import serializers
 
 
 class OrderFilter(django_filters.FilterSet):
@@ -25,6 +26,34 @@ class OrderFilter(django_filters.FilterSet):
     class Meta:
         model = Order
         fields = ['status', 'start_date', 'end_date']
+
+
+class OrderSerializer(serializers.ModelSerializer):
+    item_rating = serializers.SerializerMethodField()
+    owner_rating = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Order
+        fields = ['id', 'item', 'start_date', 'end_date', 'status', 'item_rating', 'owner_rating']
+
+    def get_item_rating(self, obj):
+        # get item rating
+        rating = ItemRating.objects.filter(order=obj).first()
+        return rating.rating if rating else None
+
+    def get_owner_rating(self, obj):
+        # get owner rating
+        rating = OwnerRating.objects.filter(order=obj).first()
+        return rating.rating if rating else None
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+
+        # rename fields
+        representation['ratingItem'] = representation.pop('item_rating')
+        representation['ratingOwner'] = representation.pop('owner_rating')
+
+        return representation
 
 
 class UserOrderViewSet(viewsets.ModelViewSet):

@@ -67,15 +67,16 @@ def rate_owner(request, order_id):
                                          code=status.HTTP_400_BAD_REQUEST)
 
         # Создание рейтинга
-        OwnerRating.objects.create(order=order, owner=order.owner, user=user, rating=rating_value)
+        OwnerRating.objects.create(order=order, owner=order.item.user, user=user, rating=rating_value)
 
         return map_to_api_response_as_resp(message='Owner rating submitted successfully.', code=status.HTTP_201_CREATED)
 
     except Order.DoesNotExist:
-        return map_api_error_as_resp( 'Order not found.',
-                                      code=status.HTTP_404_NOT_FOUND)
+        return map_api_error_as_resp('Order not found.',
+                                     code=status.HTTP_404_NOT_FOUND)
     except Exception as e:
-        return map_api_error_as_resp("An error occurred",
-                                           code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                                           metadata={'details': str(e)})
-
+        return map_api_error_as_resp(
+            "An error occurred",
+            code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            details={"error": str(e)}
+        )
