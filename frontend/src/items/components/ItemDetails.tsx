@@ -104,6 +104,21 @@ const ItemDetails: React.FC = () => {
                         ))}
                     </ImageList>
 
+                    {/*<Box mt={1}>*/}
+                    {/*    <Typography variant="h6">Booked Dates:</Typography>*/}
+                    {/*    {item.bookedDates.length > 0 ? (*/}
+                    {/*        <Box>*/}
+                    {/*            {item.bookedDates.map((date, index) => (*/}
+                    {/*                <Typography key={index} variant="body2">*/}
+                    {/*                    {new Date(date).toLocaleDateString()}*/}
+                    {/*                </Typography>*/}
+                    {/*            ))}*/}
+                    {/*        </Box>*/}
+                    {/*    ) : (*/}
+                    {/*        <Typography variant="body2">No booked dates available.</Typography>*/}
+                    {/*    )}*/}
+                    {/*</Box>*/}
+
                     {/* Button to open the order sidebar */}
                     <Button
                         variant="contained"

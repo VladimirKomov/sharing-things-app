@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { AppDispatch } from '../../common/store.ts';
+import React, {useEffect, useState} from 'react';
+import {useDispatch, useSelector} from 'react-redux';
+import {AppDispatch} from '../../common/store.ts';
 import {
     Button,
     CircularProgress,
@@ -20,10 +20,10 @@ import {
     selectUserSelectedItem,
     updateUserItem
 } from "../redux/userItemsSlice.ts";
-import { fetchCategories, selectCategories } from "../../items/redux/categorySlice.ts";
+import {fetchCategories, selectCategories} from "../../items/redux/categorySlice.ts";
 import ImageUploader from './ImageUploader'; // Import image uploader component
-import { Item } from "../../common/models/items.model.ts";
-import { Category } from "../../common/models/category.model.ts";
+import {Item} from "../../common/models/items.model.ts";
+import {Category} from "../../common/models/category.model.ts";
 
 interface SidebarEditProps {
     isOpen: boolean;
@@ -31,7 +31,7 @@ interface SidebarEditProps {
     itemId?: number | null;
 }
 
-const SidebarAddOrEditItem: React.FC<SidebarEditProps> = ({ isOpen, onClose, itemId }) => {
+const SidebarAddOrEditItem: React.FC<SidebarEditProps> = ({isOpen, onClose, itemId}) => {
     const dispatch = useDispatch<AppDispatch>();
     const item: Item | null = useSelector(selectUserSelectedItem);
     const categories: Category[] = useSelector(selectCategories);
@@ -81,7 +81,7 @@ const SidebarAddOrEditItem: React.FC<SidebarEditProps> = ({ isOpen, onClose, ite
     }, [item, categories, itemId]);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        const { name, value } = e.target;
+        const {name, value} = e.target;
         setFormData((prevData) => ({
             ...prevData,
             [name]: value,
@@ -120,21 +120,35 @@ const SidebarAddOrEditItem: React.FC<SidebarEditProps> = ({ isOpen, onClose, ite
         });
 
         if (itemId) {
-            await dispatch(updateUserItem({ id: itemId, data: formDataWithFiles })).unwrap();
+            await dispatch(updateUserItem({id: itemId, data: formDataWithFiles})).unwrap();
         } else {
             await dispatch(createUserItem({data: formDataWithFiles})).unwrap();
         }
-        onClose();
+        handClose()
     };
 
+    const handClose = () => {
+        setFormData({
+            name: '',
+            description: '',
+            categoryId: '',
+            pricePerDay: '0'
+        });
+        onClose();
+    }
+
     return (
-        <Drawer anchor="right" open={isOpen} onClose={onClose}>
-            <div style={{ width: 600, padding: '20px' }}>
+        <Drawer
+            anchor="right"
+            open={isOpen}
+            onClose={handClose}
+        >
+            <div style={{width: 600, padding: '20px'}}>
                 <h2>{itemId ? 'Edit Item' : 'Add New Item'}</h2>
                 {loading ? (
-                    <CircularProgress />
+                    <CircularProgress/>
                 ) : error ? (
-                    <div style={{ color: 'red', marginBottom: '1em' }}>{error}</div>
+                    <div style={{color: 'red', marginBottom: '1em'}}>{error}</div>
                 ) : (
                     <form onSubmit={handleSubmit}>
                         <TextField
@@ -196,7 +210,7 @@ const SidebarAddOrEditItem: React.FC<SidebarEditProps> = ({ isOpen, onClose, ite
                             variant="contained"
                             color="primary"
                             fullWidth
-                            style={{ marginTop: '1em' }}
+                            style={{marginTop: '1em'}}
                             disabled={loading}
                         >
                             {itemId ? 'Save' : 'Add Item'}
@@ -206,7 +220,7 @@ const SidebarAddOrEditItem: React.FC<SidebarEditProps> = ({ isOpen, onClose, ite
                             color="secondary"
                             fullWidth
                             onClick={onClose}
-                            style={{ marginTop: '1em' }}
+                            style={{marginTop: '1em'}}
                         >
                             Cancel
                         </Button>
