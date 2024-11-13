@@ -1,0 +1,24 @@
+services:
+  - type: web
+    name: frontend
+    env: docker
+    repo: https://github.com/VladimirKomov/sharing-things-app.git
+    branch: dev
+    dockerfilePath: ./frontend/Dockerfile
+    buildCommand: npm install && npm run build
+    envVars:
+      - key: CHOKIDAR_USEPOLLING
+        value: true
+    autoDeploy: true
+
+  - type: web
+    name: backend
+    env: docker
+    repo: https://github.com/VladimirKomov/sharing-things-app.git
+    branch: dev
+    dockerfilePath: ./backend/Dockerfile
+    buildCommand: pip install -r requirements.txt && python manage.py migrate
+    envVars:
+      - key: DJANGO_SETTINGS_MODULE
+        value: config.settings
+    autoDeploy: true

@@ -4,8 +4,11 @@ import react from '@vitejs/plugin-react'
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
-  //permanent port
   server: {
-    port: 5173,
+    port: 5173, // port for development
+    host: true, // allow external access
+    watch: {
+      usePolling: true, // for WSL2
+    },
   },
 })

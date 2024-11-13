@@ -28,6 +28,7 @@ class ItemSerializer(serializers.ModelSerializer):
     images_url = ItemImageSerializer(source='images', many=True, read_only=True)
     category_name = serializers.CharField(source='category.name', read_only=True)
     username = serializers.CharField(source='user.username', read_only=True)
+    user_id = serializers.IntegerField(source='user.id', read_only=True)
     owner_address = serializers.SerializerMethodField()
     category = serializers.PrimaryKeyRelatedField(
         queryset=Category.objects.all(),
@@ -37,7 +38,7 @@ class ItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = Item
         fields = ['id', 'name', 'description', 'category', 'price_per_day',
-                  'owner_address', 'category_name', 'username', 'images_url']
+                  'owner_address', 'category_name', 'username', 'user_id','images_url']
         extra_kwargs = {
             'category': {'write_only': True}
         }
@@ -53,6 +54,7 @@ class ItemSerializer(serializers.ModelSerializer):
         # change name's`fields
         data['categoryName'] = data.pop('category_name')
         data['ownerName'] = data.pop('username')
+        data['ownerId'] = data.pop('user_id')
         data['ownerAddress'] = data.pop('owner_address')
         data['imagesUrl'] = data.pop('images_url')
         data['pricePerDay'] = data.pop('price_per_day')

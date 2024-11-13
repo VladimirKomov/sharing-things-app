@@ -8,6 +8,7 @@ import {AppDispatch, RootState} from "../../common/store.ts";
 import {removeUserItem, selectUserItems} from "../../dashboard/redux/userItemsSlice.ts";
 import {selectAllItems} from "../redux/itemsSlice.ts";
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
+import {Box, Rating, Typography} from "@mui/material";
 
 interface ItemProps {
     itemId: number;
@@ -72,6 +73,10 @@ const ItemComponent: React.FC<ItemProps> = ({itemId, ownerOnly = false, onEdit, 
                 <p className={styles.itemCategory}><span>Category:</span> {item.categoryName}</p>
                 <p className={styles.itemOwner}><span>Owner: </span> {item.ownerName}</p>
                 <p className={styles.itemOwner}><span>Address: </span> {item.ownerAddress}</p>
+                <Box display="flex" alignItems="center">
+                    <Typography variant="subtitle1" sx={{ marginRight: 1 }}>Average Rating:</Typography>
+                    <Rating value={item.averageRating} readOnly precision={0.5} size="large" />
+                </Box>
             </div>
             {ownerOnly && (
                 <div className={styles.buttonContainer}>

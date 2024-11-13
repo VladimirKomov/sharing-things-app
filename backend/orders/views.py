@@ -15,6 +15,8 @@ from items.serializers import ItemSerializer
 from orders.models import Order
 from orders.paginations import OrdersPagination
 from orders.serializers import OrderSerializer
+from ratings.models import get_item_average_rating, ItemRating, OwnerRating
+from rest_framework import serializers
 
 
 class OrderFilter(django_filters.FilterSet):
@@ -213,12 +215,19 @@ def fetch_item_with_booked_dates(request):
         # get item
         item = Item.objects.get(id=item_id)
         item_serializer = ItemSerializer(item, context={'request': request})
+
+        # get average rating for the item
+        average_rating = get_item_average_rating(item_id)
+        item_data = item_serializer.data
+        item_data['averageRating'] = average_rating
+
         # get orders itemId
         orders = Order.objects.filter(
             item_id=item_id,
             status__in=['pending', 'confirmed', 'issued'],
             is_completed=False
         ).values('start_date', 'end_date')
+
         # get booked dates
         booked_dates = []
         for order in orders:
@@ -229,8 +238,9 @@ def fetch_item_with_booked_dates(request):
                 booked_dates.append(current_date)
                 current_date += timedelta(days=1)
         # return response
+
         return map_to_api_response_as_resp({
-            'item': item_serializer.data,
+            'item': item_data,
             'bookedDates': booked_dates
         }, code=200)
 

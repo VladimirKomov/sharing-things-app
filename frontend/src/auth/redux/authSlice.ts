@@ -1,8 +1,9 @@
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
-import {checkTokenAPI, loginAPI, logoutAPI, registerAPI} from "../api/authAPI.ts";
+import {checkTokenAPI, loginAPI, logoutAPI, registerAPI} from "../api/authAPI";
 import Cookies from 'js-cookie';
-import {RootState} from "../../common/store.ts";
-import createCommonThunk from "../../common/models/thunk.model.ts";
+import {jwtDecode, JwtPayload} from "jwt-decode";
+import {RootState} from "../../common/store";
+import createCommonThunk from "../../common/models/thunk.model";
 
 export interface Token {
     access: string;
@@ -11,28 +12,68 @@ export interface Token {
 
 interface AuthSlice {
     token: Token | null;
+    currentUserId: number | null;
     loading: boolean;
     error: string | null;
 }
 
-// get the token from cookies
+// Check if the token is expired
+const isTokenExpired = (token: string): boolean => {
+    try {
+        const decoded = jwtDecode<JwtPayload>(token);
+        if (decoded.exp) {
+            const currentTime = Date.now() / 1000;
+            return decoded.exp < currentTime;
+        }
+        return false;
+    } catch (error) {
+        return true;
+    }
+};
+
+// Get the user ID from the token
+interface CustomJwtPayload extends JwtPayload {
+    user_id?: number;
+}
+
+const getUserIdFromToken = (token: string): number | null => {
+    try {
+        const decoded = jwtDecode<CustomJwtPayload>(token);
+        return decoded.user_id || null;
+    } catch (error) {
+        return null;
+    }
+};
+
+// Get the token from cookies
 const getToken = (): Token | null => {
     const refresh = Cookies.get('refresh_token');
     const access = Cookies.get('access_token');
+
     if (refresh && access) {
-        return {
-            access,
-            refresh,
-        };
+        if (!isTokenExpired(refresh)) {
+            return {
+                access,
+                refresh,
+            };
+        } else {
+            console.warn('Access token is expired');
+            Cookies.remove('access_token');
+            Cookies.remove('refresh_token');
+        }
     }
     return null;
-}
+};
+
+// Get the token from cookies
+const token = getToken();
 
 const initialState: AuthSlice = {
-    token: getToken(),
+    token: token,
+    currentUserId: token ? getUserIdFromToken(token.refresh) : null,
     loading: false,
     error: null,
-}
+};
 
 export const login = createCommonThunk('auth/login', loginAPI);
 export const register = createCommonThunk('auth/register', registerAPI);
@@ -116,5 +157,6 @@ export const selectToken = (state: RootState) => state.auth.token;
 export const selectTokenAccess = (state: RootState) => state.auth.token?.access;
 export const selectError = (state: RootState) => state.auth.error;
 export const selectLoading = (state: RootState) => state.auth.loading;
+export const selectCurrentUserId = (state: RootState) => state.auth.currentUserId;
 
 export default authSlice.reducer;

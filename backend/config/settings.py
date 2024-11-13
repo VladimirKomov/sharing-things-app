@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 import logging
+import os
 from datetime import timedelta
 from pathlib import Path
 
@@ -33,8 +34,6 @@ SECRET_KEY = 'django-insecure-y)7gg7p!ncpzewn6m&r7x$6*6@e89d5(cey#832eq%bocp#kqv
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -54,6 +53,7 @@ INSTALLED_APPS = [
     'items',
     'dashboard',
     'orders',
+    'ratings',
 ]
 
 MIDDLEWARE = [
@@ -68,10 +68,23 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
 ]
 
-CORS_ALLOWED_ORIGINS = [
-    'http://localhost:5173',
-    'http://localhost:5174',
+ALLOWED_HOSTS = [
+    'backend-axmi.onrender.com',
+    'localhost',
+    '127.0.0.1'
 ]
+
+CORS_ALLOWED_ORIGINS = [
+    'https://frontend-vmye.onrender.com',
+    'https://backend-axmi.onrender.com',
+    'http://localhost',
+    'http://localhost:5173',
+]
+
+CSRF_TRUSTED_ORIGINS = [
+    'https://backend-axmi.onrender.com'
+]
+
 
 ROOT_URLCONF = 'config.urls'
 
@@ -106,6 +119,18 @@ DATABASES = {
         'PORT': env('DB_PORT'),
     }
 }
+
+# Settings for Redis
+CACHES = {
+    'default': {
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': os.getenv('REDIS_URL', 'redis://127.0.0.1:6379/1'),
+        'OPTIONS': {
+            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+        }
+    }
+}
+
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
@@ -242,3 +267,5 @@ STORAGES = {
 AWS_LOCATION = 'public'
 # The URL where the downloaded files will be available
 MEDIA_URL = f'https://{env("AWS_STORAGE_BUCKET_NAME")}.s3.amazonaws.com/{AWS_LOCATION}/'
+
+# MIDDLEWARE.remove('django.middleware.csrf.CsrfViewMiddleware')

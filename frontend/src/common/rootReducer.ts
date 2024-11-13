@@ -4,6 +4,7 @@ import itemsReducer from "../items/redux/itemsSlice";
 import userSettingsReducer from "../dashboard/redux/userSettingsSlice";
 import userItemsReducer from "../dashboard/redux/userItemsSlice";
 import ordersReducer from "../orders/redux/ordersSlice";
+import retingsReducer from "../ratings/redux/ratingsSlice";
 import {combineReducers, PayloadAction} from "@reduxjs/toolkit";
 
 const appReducer = combineReducers({
@@ -13,6 +14,7 @@ const appReducer = combineReducers({
     userItems: userItemsReducer,
     userSettings: userSettingsReducer,
     orders: ordersReducer,
+    ratings: retingsReducer,
 });
 
 export type RootState = ReturnType<typeof appReducer>;

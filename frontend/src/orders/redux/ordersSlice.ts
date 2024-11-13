@@ -77,7 +77,7 @@ const ordersSlice = createSlice({
             .addCase(fetchOrders.fulfilled, (state, action) => {
                 state.loading = false;
                 const page: PaginationState = action.payload.data;
-                page.orders = [...state.page.orders, ...page.orders];
+                // page.orders = [...state.page.orders, ...page.orders];
                 state.page = page;
                 state.error = null;
             })
