@@ -109,27 +109,27 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': env('DB_NAME'),
-#         'USER': env('DB_USER'),
-#         'PASSWORD': env('DB_PASSWORD'),
-#         'HOST': env('DB_HOST'),
-#         'PORT': env('DB_PORT'),
-#     }
-# }
-
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',  # Указывает на использование PostgreSQL
-        'NAME': 'sharing_db',  # Имя базы данных
-        'USER': 'sharing_db_user',  # Имя пользователя базы данных
-        'PASSWORD': 'kO4DbKXXLESQOp17yem9zbTAo8ij4egR',  # Пароль пользователя
-        'HOST': 'dpg-csp4v068ii6s73c8j09g-a.oregon-postgres.render.com',  # Полный хост базы данных
-        'PORT': '5432',  # Порт для подключения
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': env('DB_NAME'),
+        'USER': env('DB_USER'),
+        'PASSWORD': env('DB_PASSWORD'),
+        'HOST': env('DB_HOST'),
+        'PORT': env('DB_PORT'),
     }
 }
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',  # Указывает на использование PostgreSQL
+#         'NAME': 'sharing_db',  # Имя базы данных
+#         'USER': 'sharing_db_user',  # Имя пользователя базы данных
+#         'PASSWORD': 'kO4DbKXXLESQOp17yem9zbTAo8ij4egR',  # Пароль пользователя
+#         'HOST': 'dpg-csp4v068ii6s73c8j09g-a.oregon-postgres.render.com',  # Полный хост базы данных
+#         'PORT': '5432',  # Порт для подключения
+#     }
+# }
 
 # Settings for Redis
 CACHES = {
