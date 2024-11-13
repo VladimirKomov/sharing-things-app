@@ -134,6 +134,8 @@ const SidebarAddOrEditItem: React.FC<SidebarEditProps> = ({isOpen, onClose, item
             categoryId: '',
             pricePerDay: '0'
         });
+        setCurrentImages([]);
+        setNewImages([]);
         onClose();
     }
 
