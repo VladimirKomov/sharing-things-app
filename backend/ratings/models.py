@@ -39,8 +39,15 @@ def get_item_average_rating(item_id):
             average_rating = ItemRating.objects.filter(item_id=item_id).aggregate(Avg('rating'))['rating__avg']
             average_rating = average_rating if average_rating else 0.0
             cache.set(cache_key, average_rating, timeout=3600)  # 1 hour
+        print('average_rating:', average_rating)
         return average_rating
     except Exception as e:
-        print(f"Error connecting to Redis: {e}")
         return 0.0
+
+
+def update_item_rating_cache(item_id):
+    cache_key = f'item_{item_id}_average_rating'
+    average_rating = ItemRating.objects.filter(item_id=item_id).aggregate(Avg('rating'))['rating__avg']
+    average_rating = average_rating if average_rating else 0.0
+    cache.set(cache_key, average_rating, timeout=3600)  # 1 hour
 

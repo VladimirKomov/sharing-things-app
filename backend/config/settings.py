@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 import logging
+import os
 from datetime import timedelta
 from pathlib import Path
 
@@ -119,10 +120,13 @@ DATABASES = {
     }
 }
 
+# Cache settings for Redis
+REDIS_HOST = os.getenv('REDIS_HOST', '127.0.0.1')
+
 CACHES = {
     'default': {
         'BACKEND': 'django_redis.cache.RedisCache',
-        'LOCATION': 'redis://127.0.0.1:6379/1',
+        'LOCATION': f'redis://{REDIS_HOST}:6379/1',
         'OPTIONS': {
             'CLIENT_CLASS': 'django_redis.client.DefaultClient',
         }

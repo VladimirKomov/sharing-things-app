@@ -60,7 +60,7 @@ const OrderComponent: React.FC<OrderComponentProps> = ({orderId, ownerOnly = fal
                         ))}
                     </Box>
                 </Box>
-                {order.status === 'completed' && (
+                {order.status === 'completed' && !ownerOnly && (
                     <Box display="flex" flexDirection="column">
                         <Box display="flex" alignItems="center" gap={1}>
                             <Rate

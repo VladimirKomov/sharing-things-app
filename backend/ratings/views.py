@@ -4,7 +4,7 @@ from rest_framework.permissions import IsAuthenticated
 
 from common.mapper import map_api_error_as_resp, map_to_api_response_as_resp
 from orders.models import Order
-from .models import ItemRating, OwnerRating
+from .models import ItemRating, OwnerRating, update_item_rating_cache
 
 
 @api_view(['POST'])
@@ -29,8 +29,11 @@ def rate_item(request, order_id):
                 code=status.HTTP_400_BAD_REQUEST
             )
 
-        # check rating value
+        # create rating
         ItemRating.objects.create(order=order, item=order.item, user=user, rating=rating_value)
+
+        # update the cache for the average rating
+        update_item_rating_cache(order.item.id)
 
         return map_to_api_response_as_resp(
             message='Rating submitted successfully.',
