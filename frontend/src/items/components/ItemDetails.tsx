@@ -5,30 +5,31 @@ import {AppDispatch} from "../../common/store";
 import {fetchItemById, selectError, selectLoading, selectSelectedItem} from "../redux/itemsSlice";
 import {
     Box,
-    Button,
     Container,
     Dialog,
     DialogContent,
     DialogTitle,
     ImageList,
-    ImageListItem, Rating,
+    ImageListItem,
+    Rating,
     Typography,
 } from '@mui/material';
 import styles from './ItemDetail.module.css';
 import SidebarAddOrder from "../../orders/conponents/SidebarAddOrder";
-import {selectCurrentUserId} from "../../auth/redux/authSlice.ts";
 import IconButton from "@mui/material/IconButton";
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import {Item} from "../../common/models/items.model.ts";
+import {selectCurrentUser} from "../../auth/redux/authSlice.ts";
+import {CurrentUser} from "../../common/models/auth.model.ts";
 
 
 const ItemDetails: React.FC = () => {
     const dispatch = useDispatch<AppDispatch>();
     const {itemId} = useParams<{ itemId: string }>();
-    const currentUserId = useSelector(selectCurrentUserId);
+    const currentUser: CurrentUser | null = useSelector(selectCurrentUser);
     const item: Item | null = useSelector(selectSelectedItem);
-    const loading = useSelector(selectLoading);
-    const error = useSelector(selectError);
+    const loading: boolean = useSelector(selectLoading);
+    const error: string | null = useSelector(selectError);
     const [selectedImage, setSelectedImage] = useState<string | null>(null);
     const [isOrderSidebarOpen, setIsOrderSidebarOpen] = useState(false);
 
@@ -70,7 +71,7 @@ const ItemDetails: React.FC = () => {
                         <Typography variant="h4" gutterBottom>
                             {item.name}
                         </Typography>
-                        {currentUserId && currentUserId !== item.ownerId && (
+                        {currentUser && currentUser.id !== item.ownerId && (
                             <IconButton
                                 color="secondary"
                                 onClick={handleOpenOrderSidebar}
@@ -88,8 +89,8 @@ const ItemDetails: React.FC = () => {
                     </Box>
                     <Typography variant="body1" sx={{marginBottom: 1}}>{item.description}</Typography>
                     <Box display="flex" alignItems="center">
-                        <Typography variant="subtitle1" sx={{ marginRight: 1 }}>Average Rating:</Typography>
-                        <Rating value={item.averageRating} readOnly precision={0.5} size="large" />
+                        <Typography variant="subtitle1" sx={{marginRight: 1}}>Average Rating:</Typography>
+                        <Rating value={item.averageRating} readOnly precision={0.5} size="large"/>
                     </Box>
                     <ImageList cols={3} gap={8} className={styles.photosContainer}>
                         {item.imagesUrl.map((image, index) => (
@@ -118,16 +119,6 @@ const ItemDetails: React.FC = () => {
                     {/*        <Typography variant="body2">No booked dates available.</Typography>*/}
                     {/*    )}*/}
                     {/*</Box>*/}
-
-                    {/* Button to open the order sidebar */}
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        onClick={handleOpenOrderSidebar}
-                        sx={{marginTop: 2}}
-                    >
-                        Order Item
-                    </Button>
 
                     {/* Modal window for image */}
                     <Dialog open={!!selectedImage} onClose={closeImage} maxWidth="md">

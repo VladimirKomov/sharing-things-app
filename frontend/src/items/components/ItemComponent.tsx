@@ -9,6 +9,8 @@ import {removeUserItem, selectUserItems} from "../../dashboard/redux/userItemsSl
 import {selectAllItems} from "../redux/itemsSlice.ts";
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import {Box, Rating, Typography} from "@mui/material";
+import {selectCurrentUser} from "../../auth/redux/authSlice.ts";
+import {CurrentUser} from "../../common/models/auth.model.ts";
 
 interface ItemProps {
     itemId: number;
@@ -19,7 +21,7 @@ interface ItemProps {
 
 const ItemComponent: React.FC<ItemProps> = ({itemId, ownerOnly = false, onEdit, onOrder}) => {
     const dispatch = useDispatch<AppDispatch>();
-
+    const currentUser: CurrentUser | null = useSelector(selectCurrentUser);
     // Select item based on ownerOnly flag
     let item = useSelector((state: RootState) =>
         ownerOnly
@@ -88,7 +90,8 @@ const ItemComponent: React.FC<ItemProps> = ({itemId, ownerOnly = false, onEdit, 
                     </IconButton>
                 </div>
             )}
-            {!ownerOnly && (
+            {/*If the user is not the owner of the item, display the AddShoppingCartIcon*/}
+            {!ownerOnly && currentUser && currentUser.id !== item.ownerId && (
                 <div className={styles.buttonContainer}>
                     {/* Button with AddShoppingCartIcon */}
                     <IconButton onClick={handleOrder} color="secondary"

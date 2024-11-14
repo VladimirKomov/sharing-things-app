@@ -61,10 +61,18 @@ class LoginView(APIView):
 
             if user is not None:
                 refresh = RefreshToken.for_user(user)
+                user_id = user.id
+                username = user.username
                 return map_to_api_response_as_resp(
                     {
-                        'access': str(refresh.access_token),
-                        'refresh': str(refresh),
+                        'token': {
+                            'access': str(refresh.access_token),
+                            'refresh': str(refresh),
+                        },
+                        'user': {
+                            'id': user_id,
+                            'username': username,
+                        },
                     },
                     message="Login successful",
                     code=status.HTTP_200_OK)
