@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {Suspense, useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import {
@@ -29,12 +29,18 @@ import {
     selectUserItemsHasNextPage,
     selectUserItemsLoading,
 } from '../../dashboard/redux/userItemsSlice.ts';
-import SidebarAddOrEditItem from '../../dashboard/components/SidebarAddOrEditItem.tsx';
 import {FixedSizeList as VirtualizedList} from 'react-window';
 import AddIcon from '@mui/icons-material/Add';
 import IconButton from "@mui/material/IconButton";
-import SidebarAddOrder from "../../orders/conponents/SidebarAddOrder.tsx";
-import CombinedFilter from "../../common/components/CombinedFilter.tsx";
+import CombinedFilter from "../../common/components/CombinedFilter";
+import {CircularProgress} from "@mui/material";
+// lazy loading for sidebar components
+const SidebarAddOrEditItem = React.lazy(
+    () => import('../../dashboard/components/SidebarAddOrEditItem')
+);
+const SidebarAddOrder = React.lazy(
+    () => import('../../orders/conponents/SidebarAddOrder')
+);
 
 interface ItemsListProps {
     ownerOnly?: boolean;
@@ -58,7 +64,12 @@ const ItemsList: React.FC<ItemsListProps> = ({ownerOnly = false}) => {
     const [isOrderSidebarOpen, setIsOrderSidebarOpen] = useState(false);
 
     //Filtering items
-    const [filter, setFilter] = useState<{ category: string | null; status: string; startDate: string; endDate: string }>({
+    const [filter, setFilter] = useState<{
+        category: string | null;
+        status: string;
+        startDate: string;
+        endDate: string
+    }>({
         category: null,
         status: '',
         startDate: '',
@@ -144,7 +155,7 @@ const ItemsList: React.FC<ItemsListProps> = ({ownerOnly = false}) => {
 
     // Filter items
     const handleFilterChange = (category: string | null, status: string, startDate: string, endDate: string) => {
-        setFilter({ category, status, startDate, endDate });
+        setFilter({category, status, startDate, endDate});
     };
 
     return (
@@ -177,8 +188,8 @@ const ItemsList: React.FC<ItemsListProps> = ({ownerOnly = false}) => {
                 dataLength={items.length}
                 next={loadMoreItems}
                 hasMore={hasNextPage}
-                loader={<h4 className={styles.loadingText}>Loading...</h4>}
-                endMessage={<p className={styles.loadingText}>No more items</p>}
+                loader={<div className={styles.loadingContainer}><CircularProgress color="primary"/></div>}
+                endMessage={<p className={styles.loadingContainer}>No more items</p>}
             >
                 <VirtualizedList
                     height={1000} // The height of the visible area of the list
@@ -200,21 +211,24 @@ const ItemsList: React.FC<ItemsListProps> = ({ownerOnly = false}) => {
             </InfiniteScroll>
 
             {/* Sidebar for editing item */}
-            {ownerOnly && (
-                <SidebarAddOrEditItem
-                    isOpen={isSidebarOpen}
-                    onClose={handleCloseSidebar}
-                    itemId={selectedItemId}
-                />
-            )}
-            {/* Sidebar for order item */}
-            {!ownerOnly && selectedItemId && (
-                <SidebarAddOrder
-                    isOpen={isOrderSidebarOpen}
-                    onClose={handleCloseOrderSidebar}
-                    itemId={selectedItemId}
-                />
-            )}
+            {/*Lazy loading for sidebar components*/}
+            <Suspense fallback={<CircularProgress color="primary"/>}>
+                {ownerOnly && (
+                    <SidebarAddOrEditItem
+                        isOpen={isSidebarOpen}
+                        onClose={handleCloseSidebar}
+                        itemId={selectedItemId}
+                    />
+                )}
+                {/* Sidebar for order item */}
+                {!ownerOnly && selectedItemId && (
+                    <SidebarAddOrder
+                        isOpen={isOrderSidebarOpen}
+                        onClose={handleCloseOrderSidebar}
+                        itemId={selectedItemId}
+                    />
+                )}
+            </Suspense>
 
         </div>
     );

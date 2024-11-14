@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {Suspense, useEffect, useState} from 'react';
 import {useParams} from 'react-router-dom';
 import {useDispatch, useSelector} from "react-redux";
 import {AppDispatch} from "../../common/store";
@@ -15,13 +15,15 @@ import {
     Typography,
 } from '@mui/material';
 import styles from './ItemDetail.module.css';
-import SidebarAddOrder from "../../orders/conponents/SidebarAddOrder";
 import IconButton from "@mui/material/IconButton";
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import {Item} from "../../common/models/items.model.ts";
-import {selectCurrentUser} from "../../auth/redux/authSlice.ts";
-import {CurrentUser} from "../../common/models/auth.model.ts";
-
+import {selectCurrentUser} from "../../auth/redux/authSlice";
+import {CurrentUser} from "../../common/models/auth.model";
+// Lazy loading of the SidebarAddOrder component
+const SidebarAddOrder = React.lazy(
+    () => import('../../orders/conponents/SidebarAddOrder')
+);
 
 const ItemDetails: React.FC = () => {
     const dispatch = useDispatch<AppDispatch>();
@@ -37,7 +39,7 @@ const ItemDetails: React.FC = () => {
         if (itemId) {
             dispatch(fetchItemById(itemId));
         }
-    }, [dispatch, itemId]);
+    }, [itemId]);
 
     const openImage = (url: string) => {
         setSelectedImage(url);
@@ -136,11 +138,16 @@ const ItemDetails: React.FC = () => {
 
                     {/* Sidebar for ordering item */}
                     {item.id && (
-                        <SidebarAddOrder
-                            isOpen={isOrderSidebarOpen}
-                            onClose={handleCloseOrderSidebar}
-                            itemId={item.id}
-                        />
+                        // Suspense component is used to wrap the lazy loaded component
+                        <Suspense fallback={<Typography align="center">Loading sidebar...</Typography>}>
+                            {isOrderSidebarOpen && (
+                                <SidebarAddOrder
+                                    isOpen={isOrderSidebarOpen}
+                                    onClose={handleCloseOrderSidebar}
+                                    itemId={item.id}
+                                />
+                            )}
+                        </Suspense>
                     )}
                 </>
             )}
