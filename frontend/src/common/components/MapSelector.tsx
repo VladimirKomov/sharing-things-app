@@ -12,9 +12,6 @@ const MapSelector: React.FC<MapSelectorProps> = ({onLocationSelect, initialLat, 
     const [latitude, setLatitude] = useState<number | undefined>(initialLat);
     const [longitude, setLongitude] = useState<number | undefined>(initialLng);
 
-    const googleMapsApiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
-    console.log('Google Maps API Key:', googleMapsApiKey);
-
     const handleMapClick = (event: any) => {
         if (event.detail && event.detail.latLng) {
             const lat = event.detail.latLng.lat;
