@@ -17,6 +17,7 @@ import {
 import styles from './ItemDetail.module.css';
 import IconButton from "@mui/material/IconButton";
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
+import CloseIcon from '@mui/icons-material/Close';
 import {Item} from "../../common/models/items.model.ts";
 import {selectCurrentUser} from "../../auth/redux/authSlice";
 import {CurrentUser} from "../../common/models/auth.model";
@@ -108,10 +109,24 @@ const ItemDetails: React.FC = () => {
                             </ImageListItem>
                         ))}
                     </ImageList>
-                        <CalendarWithDisabledDates bookedDates={item.bookedDates}/>
+                    <CalendarWithDisabledDates bookedDates={item.bookedDates}/>
                     {/* Modal window for image */}
                     <Dialog open={!!selectedImage} onClose={closeImage} maxWidth="md">
-                        <DialogTitle>Image View</DialogTitle>
+                        <DialogTitle>
+                            Image
+                            <IconButton
+                                aria-label="close"
+                                onClick={closeImage}
+                                sx={{
+                                    position: 'absolute',
+                                    right: 8,
+                                    top: 8,
+                                    color: (theme) => theme.palette.grey[500],
+                                }}
+                            >
+                                <CloseIcon/>
+                            </IconButton>
+                        </DialogTitle>
                         <DialogContent>
                             {selectedImage && (
                                 <img
