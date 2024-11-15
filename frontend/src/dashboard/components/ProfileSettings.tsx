@@ -8,14 +8,15 @@ import {
     updateUserSettings,
     UserSettings
 } from "../redux/userSettingsSlice";
-import styles from './ProfileSettings.module.css';
+import {Box, Button, CircularProgress, TextField, Typography} from '@mui/material';
+import MapSelector from "../../common/components/MapSelector";
 
 const ProfileSettings = () => {
     const dispatch = useDispatch<AppDispatch>();
     const data = useSelector(selectUserSettings) as UserSettings | null;
     const loading = useSelector(selectUserSettingsLoading);
 
-
+    // User data form
     const [formData, setFormData] = useState<UserSettings>({
         firstName: '',
         lastName: '',
@@ -25,16 +26,19 @@ const ProfileSettings = () => {
         longitude: null,
     });
 
+    // Fetching user settings
     useEffect(() => {
         dispatch(fetchUserSettings());
     }, [dispatch]);
 
+    // Filling the form with fetched data
     useEffect(() => {
         if (data) {
             setFormData(data);
         }
     }, [data]);
 
+    // Handling form input changes
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
         const {name, value} = e.target;
         setFormData((prevData) => ({
@@ -43,61 +47,91 @@ const ProfileSettings = () => {
         }));
     };
 
+    // Handling location selection
+    const handleLocationSelect = (lat: number, lng: number, address?: string) => {
+        setFormData((prevData) => ({
+            ...prevData,
+            latitude: lat,
+            longitude: lng,
+            address: address || prevData.address,
+        }));
+    };
+
+    // Handling form submission
     const handleSubmit = (e: FormEvent) => {
         e.preventDefault();
         dispatch(updateUserSettings(formData));
     };
 
     return (
-        <div className={styles.container}>
-            <h2 className={styles.title}>Profile settings</h2>
-            {loading && <p>Loading...</p>}
-            {data && (
-                <form className={styles.form} onSubmit={handleSubmit}>
-                    <label className={styles.label}>
-                        First name:
-                        <input
-                            className={styles.input}
-                            type="text"
+        <Box sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            gap: 2,
+            width: '600px',
+            margin: '0 auto',
+        }}>
+            <Typography variant="h4" component="h2" gutterBottom sx={{textAlign: 'center'}}>
+                Profile Settings
+            </Typography>
+            {loading ? (
+                <CircularProgress/>
+            ) : (
+                data && (
+                    <Box
+                        component="form"
+                        onSubmit={handleSubmit}
+                        sx={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            gap: 2,
+                            mt: 2,
+                            alignItems: 'center',
+                            width: '100%',
+                        }}
+                    >
+                        <TextField
+                            label="First Name"
+                            variant="outlined"
                             name="firstName"
                             value={formData.firstName || ''}
                             onChange={handleChange}
+                            fullWidth
                         />
-                    </label>
-                    <label className={styles.label}>
-                        Last name:
-                        <input
-                            className={styles.input}
-                            type="text"
+                        <TextField
+                            label="Last Name"
+                            variant="outlined"
                             name="lastName"
                             value={formData.lastName || ''}
                             onChange={handleChange}
+                            fullWidth
                         />
-                    </label>
-                    <label className={styles.label}>
-                        Phone number:
-                        <input
-                            className={styles.input}
-                            type="text"
+                        <TextField
+                            label="Phone Number"
+                            variant="outlined"
                             name="phoneNumber"
                             value={formData.phoneNumber || ''}
                             onChange={handleChange}
+                            fullWidth
                         />
-                    </label>
-                    <label className={styles.label}>
-                        Address:
-                        <input
-                            className={styles.input}
-                            type="text"
+                        {/* Use Map selector for address and location */}
+                        <MapSelector onLocationSelect={handleLocationSelect}/>
+                        <TextField
+                            label="Address"
+                            variant="outlined"
                             name="address"
                             value={formData.address || ''}
                             onChange={handleChange}
+                            fullWidth
                         />
-                    </label>
-                    <button className={styles.button} type="submit">Save changes</button>
-                </form>
+                        <Button variant="contained" color="primary" type="submit" sx={{alignSelf: 'center'}}>
+                            Save changes
+                        </Button>
+                    </Box>
+                )
             )}
-        </div>
+        </Box>
     );
 };
 

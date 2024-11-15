@@ -42,6 +42,7 @@
     /* Размеры контейнеров */
     --max-width: 1200px;
     --max-form-width: 400px;
+    --larg-form-width: 600px;
     --min-height: 100vh;
 
     /* Размеры полей ввода и кнопок */
