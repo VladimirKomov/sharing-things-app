@@ -1,6 +1,6 @@
 import {createSlice} from '@reduxjs/toolkit';
 import createCommonThunk from "../../common/models/thunk.model.ts";
-import {getItemWithBookedDates, getOrders, getOwnerOrders, postOrder, putOrderStatus} from "../api/ordersApi.ts";
+import {getOrders, getOwnerOrders, postOrder, putOrderStatus} from "../api/ordersApi.ts";
 import {Order} from "../../common/models/order.model.ts";
 import {RootState} from "../../common/store.ts";
 
@@ -54,10 +54,7 @@ export const updateOrderStatus = createCommonThunk(
     'orders/updateOrderStatus',
     putOrderStatus, {requiresAuth: true}
 );
-export const fetchItemWithBookedDates = createCommonThunk(
-    'orders/fetchItemWithBookedDates',
-    getItemWithBookedDates, {requiresAuth: true}
-);
+
 
 const ordersSlice = createSlice({
     name: 'orders',
@@ -95,7 +92,7 @@ const ordersSlice = createSlice({
             .addCase(fetchOwnerOrders.fulfilled, (state, action) => {
                 state.loading = false;
                 const page: PaginationState = action.payload.data;
-                page.orders = [...state.page.orders, ...page.orders];
+                // page.orders = [...state.page.orders, ...page.orders];
                 state.page = page;
                 state.error = null;
             })
@@ -135,20 +132,6 @@ const ordersSlice = createSlice({
                 state.error = null;
             })
             .addCase(updateOrderStatus.rejected, (state, action) => {
-                state.loading = false;
-                state.error = action.payload;
-            });
-        // fetchItemWithBookedDates reducer
-        builder
-            .addCase(fetchItemWithBookedDates.pending, (state) => {
-                state.loading = true;
-                state.error = null;
-            })
-            .addCase(fetchItemWithBookedDates.fulfilled, (state) => {
-                state.loading = false;
-                state.error = null;
-            })
-            .addCase(fetchItemWithBookedDates.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload;
             });

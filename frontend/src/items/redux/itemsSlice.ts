@@ -69,8 +69,15 @@ const itemsSlice = createSlice({
                 state.error = null;
             })
             .addCase(fetchItemById.fulfilled, (state, action) => {
+                const fetchedItem = action.payload.data;
+
+                // Check if the fetched item is different from the selected item
+                if (!state.selectedItem || JSON.stringify(state.selectedItem) !== JSON.stringify(fetchedItem)) {
+                    // Update the selected item
+                    state.selectedItem = fetchedItem;
+                }
+
                 state.loading = false;
-                state.selectedItem = action.payload.data;
                 state.error = null;
             })
             .addCase(fetchItemById.rejected, (state, action) => {
@@ -82,7 +89,7 @@ const itemsSlice = createSlice({
 
 export default itemsSlice.reducer;
 
-export const { clearPage } = itemsSlice.actions;
+export const {clearPage} = itemsSlice.actions;
 
 // Selectors
 export const selectSelectedItem = (state: RootState) => state.items.selectedItem;
@@ -90,7 +97,6 @@ export const selectSelectedItem = (state: RootState) => state.items.selectedItem
 // Selectors for pagination
 export const selectAllItems = (state: RootState) => state.items.page.items;
 export const selectAllItemsHasNextPage = (state: RootState) => state.items.page.hasNextPage;
-export const selectItemById = (itemId?: number) => (state: RootState) => state.items.page.items.find(item => item.id === itemId);
 
 export const selectAllItemsHasPreviousPage = (state: RootState) => state.items.page.hasPreviousPage;
 export const selectAllItemsCurrentPage = (state: RootState) => state.items.page.currentPage;

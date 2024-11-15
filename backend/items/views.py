@@ -3,15 +3,13 @@ from datetime import datetime
 import django_filters
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets, status
-from rest_framework.decorators import api_view
 from rest_framework.permissions import IsAdminUser, IsAuthenticatedOrReadOnly, AllowAny
 
 from common.mapper import map_to_api_response_as_resp
+from common.utils import get_booked_dates_for_item, get_item_average_rating
 from items.models import Category, Item
 from items.paginations import ItemsPagination
 from items.serializers import CategorySerializer, ItemSerializer
-from orders.models import Order
-from ratings.models import get_item_average_rating
 
 
 class CategoryViewSet(viewsets.ModelViewSet):
@@ -107,11 +105,16 @@ class ItemViewSet(viewsets.ModelViewSet):
         return queryset
 
     def retrieve(self, request, *args, **kwargs):
-        instance = self.get_object()  # get by Id
+        # get by id
+        instance = self.get_object()
         serializer = self.get_serializer(instance)
+
         # get average rating
         item_data = serializer.data
         item_data['averageRating'] = get_item_average_rating(instance.id)
+
+        # Get booked dates for the item
+        item_data['bookedDates'] = get_booked_dates_for_item(instance.id)
 
         return map_to_api_response_as_resp(
             item_data,
@@ -123,22 +126,20 @@ class ItemViewSet(viewsets.ModelViewSet):
         queryset = self.get_queryset()
         items_data = []
 
-        # Собираем данные с добавлением среднего рейтинга
+        # get average rating for each item
         for item in queryset:
             item_data = self.get_serializer(item).data
             item_data['averageRating'] = get_item_average_rating(item.id)
             items_data.append(item_data)
 
-        # Пагинация данных
+        # Pagination
         page = self.paginate_queryset(items_data)
         if page is not None:
             return self.get_paginated_response(page)
 
-        # Возврат без пагинации
+        # Without pagination
         return map_to_api_response_as_resp(
             items_data,
             "Items retrieved successfully",
             code=status.HTTP_200_OK
-    )
-
-
+        )

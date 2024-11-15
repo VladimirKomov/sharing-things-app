@@ -20,6 +20,7 @@ import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import {Item} from "../../common/models/items.model.ts";
 import {selectCurrentUser} from "../../auth/redux/authSlice";
 import {CurrentUser} from "../../common/models/auth.model";
+import CalendarWithDisabledDates from "../../common/components/CalendarWithDisabledDates.tsx";
 // Lazy loading of the SidebarAddOrder component
 const SidebarAddOrder = React.lazy(
     () => import('../../orders/conponents/SidebarAddOrder')
@@ -87,14 +88,15 @@ const ItemDetails: React.FC = () => {
                         <Typography variant="subtitle1"><strong>Owner:</strong> {item.ownerName}</Typography>
                         <Typography variant="subtitle1"><strong>Address:</strong> {item.ownerAddress}</Typography>
                         <Typography variant="subtitle1"><strong>Category:</strong> {item.categoryName}</Typography>
-                        <Typography variant="subtitle1"><strong>Price per day:</strong> ${item.pricePerDay}</Typography>
+                        <Typography variant="subtitle1"><strong>Price per
+                            day:</strong> {item.pricePerDay} thanks</Typography>
                     </Box>
                     <Typography variant="body1" sx={{marginBottom: 1}}>{item.description}</Typography>
                     <Box display="flex" alignItems="center">
                         <Typography variant="subtitle1" sx={{marginRight: 1}}>Average Rating:</Typography>
                         <Rating value={item.averageRating} readOnly precision={0.5} size="large"/>
                     </Box>
-                    <ImageList cols={3} gap={8} className={styles.photosContainer}>
+                    <ImageList cols={3} gap={6} className={styles.photosContainer}>
                         {item.imagesUrl.map((image, index) => (
                             <ImageListItem key={index} onClick={() => openImage(image.url)}>
                                 <img
@@ -106,22 +108,7 @@ const ItemDetails: React.FC = () => {
                             </ImageListItem>
                         ))}
                     </ImageList>
-
-                    {/*<Box mt={1}>*/}
-                    {/*    <Typography variant="h6">Booked Dates:</Typography>*/}
-                    {/*    {item.bookedDates.length > 0 ? (*/}
-                    {/*        <Box>*/}
-                    {/*            {item.bookedDates.map((date, index) => (*/}
-                    {/*                <Typography key={index} variant="body2">*/}
-                    {/*                    {new Date(date).toLocaleDateString()}*/}
-                    {/*                </Typography>*/}
-                    {/*            ))}*/}
-                    {/*        </Box>*/}
-                    {/*    ) : (*/}
-                    {/*        <Typography variant="body2">No booked dates available.</Typography>*/}
-                    {/*    )}*/}
-                    {/*</Box>*/}
-
+                        <CalendarWithDisabledDates bookedDates={item.bookedDates}/>
                     {/* Modal window for image */}
                     <Dialog open={!!selectedImage} onClose={closeImage} maxWidth="md">
                         <DialogTitle>Image View</DialogTitle>

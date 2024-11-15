@@ -2,13 +2,12 @@ import React, {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {AppDispatch} from '../../common/store';
 import {Button, CircularProgress, Drawer} from '@mui/material';
-import {createOrder, fetchItemWithBookedDates, selectOrderError, selectOrderLoading} from '../redux/ordersSlice';
-import {BaseResponse} from '../../common/models/response.model';
-import {Item} from '../../common/models/items.model';
+import {createOrder, selectOrderError, selectOrderLoading} from '../redux/ordersSlice';
 import 'react-datepicker/dist/react-datepicker.css';
 import styles from "./SidebarAddOrder.module.css";
 import {PostOrderData} from "../api/ordersApi.ts";
 import ReactDatePicker from "react-datepicker";
+import {fetchItemById, selectSelectedItem} from "../../items/redux/itemsSlice.ts";
 
 interface SidebarOrderProps {
     isOpen: boolean;
@@ -18,13 +17,13 @@ interface SidebarOrderProps {
 
 const SidebarAddOrder: React.FC<SidebarOrderProps> = ({isOpen, onClose, itemId}) => {
     const dispatch = useDispatch<AppDispatch>();
-    const [item, setItem] = useState<Item | null>(null);
+    const item = useSelector(selectSelectedItem);
     const loading = useSelector(selectOrderLoading);
     const error = useSelector(selectOrderError);
     // formData is an object that contains the data of the order to be created
     const [formData, setFormData] = useState<{
-        itemId: number;
-        startDate: Date | null;
+        startDate: Date | null;        itemId: number;
+
         endDate: Date | null;
         totalAmount: number;
     }>({
@@ -37,35 +36,26 @@ const SidebarAddOrder: React.FC<SidebarOrderProps> = ({isOpen, onClose, itemId})
     const [daysCount, setDaysCount] = useState<number | null>(null);
     const [totalAmount, setTotalAmount] = useState<number>(0);
     const [dateError, setDateError] = useState<string | null>(null);
-    // handleStartDateChange and handleEndDateChange are functions that update the start and end dates of the order
-    const handleStartDateChange = (date: Date | null) => {
-        setFormData({...formData, startDate: date});
-    };
 
-    const handleEndDateChange = (date: Date | null) => {
-        setFormData({...formData, endDate: date});
-    };
-    // Fetch the item and its booked dates
+    // Fetch the item data when the sidebar is opened
     useEffect(() => {
-        const handleFetchBookedDates = async () => {
-            try {
-                const response: BaseResponse<any> = await dispatch(fetchItemWithBookedDates({itemId})).unwrap();
-                setItem(response.data.item);
-                const dates = response.data.bookedDates.map((dateString: string) => new Date(dateString));
-                setDisabledDates(dates);
-            } catch (error) {
-                console.error('Error fetching booked dates:', error);
-            }
-        };
-        handleFetchBookedDates();
+        if (!item) {
+            dispatch(fetchItemById(itemId));
+        }
+    }, [isOpen, itemId, dispatch]);
 
+    // Update the disabled dates when the item data is fetched
+    useEffect(() => {
         if (item) {
+            const dates = (item.bookedDates || []).map(dateString => new Date(dateString));
+            setDisabledDates(dates);
             setFormData((prevData) => ({
                 ...prevData,
                 itemId: item.id,
             }));
         }
-    }, [itemId, dispatch]);
+    }, [item]);
+
     // check if the start date and end date are valid
     useEffect(() => {
         if (formData.startDate && formData.endDate) {
@@ -143,7 +133,20 @@ const SidebarAddOrder: React.FC<SidebarOrderProps> = ({isOpen, onClose, itemId})
         };
 
         await dispatch(createOrder(data)).unwrap();
+        handleCloseOrderSidebar();
+    };
+
+    const handleCloseOrderSidebar = () => {
         onClose();
+    }
+
+    // handleStartDateChange and handleEndDateChange are functions that update the start and end dates of the order
+    const handleStartDateChange = (date: Date | null) => {
+        setFormData({...formData, startDate: date});
+    };
+
+    const handleEndDateChange = (date: Date | null) => {
+        setFormData({...formData, endDate: date});
     };
 
     // Custom input for date picker
@@ -166,10 +169,7 @@ const SidebarAddOrder: React.FC<SidebarOrderProps> = ({isOpen, onClose, itemId})
         <Drawer
             anchor="right"
             open={isOpen}
-            onClose={() => {
-                // Reset the form data when the sidebar is closed
-                onClose();
-            }}
+            onClose={handleCloseOrderSidebar}
         >
             <div style={{width: 600, padding: '20px'}}>
                 {item && (
@@ -250,7 +250,7 @@ const SidebarAddOrder: React.FC<SidebarOrderProps> = ({isOpen, onClose, itemId})
                             variant="outlined"
                             color="secondary"
                             fullWidth
-                            onClick={onClose}
+                            onClick={handleCloseOrderSidebar}
                             style={{marginTop: '1em'}}
                         >
                             Cancel

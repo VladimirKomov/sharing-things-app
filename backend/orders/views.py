@@ -1,5 +1,3 @@
-from datetime import timedelta
-
 import django_filters
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets, status, generics
@@ -8,15 +6,12 @@ from rest_framework.filters import OrderingFilter
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
-from common.mapper import map_to_api_response_as_resp, map_api_error_as_resp
+from common.mapper import map_to_api_response_as_resp
 from dashboard.permissions import IsOwner
 from items.models import Item
-from items.serializers import ItemSerializer
 from orders.models import Order
 from orders.paginations import OrdersPagination
 from orders.serializers import OrderSerializer
-from ratings.models import get_item_average_rating, ItemRating, OwnerRating
-from rest_framework import serializers
 
 
 class OrderFilter(django_filters.FilterSet):
@@ -184,7 +179,7 @@ def check_item_availability(request):
 
     # Checking the validity of the parameters
     if not item_id or not start_date or not end_date:
-        return map_to_api_response_as_resp({'available': False, 'message': 'Invalid parameters'}, status=400)
+        return map_to_api_response_as_resp({'available': False, 'message': 'Invalid parameters'}, code=400)
 
     # Checking the existence of the item
     overlapping_orders = Order.objects.filter(
@@ -202,49 +197,48 @@ def check_item_availability(request):
 
     return map_to_api_response_as_resp({'available': True})
 
-
-@api_view(['GET'])
-def fetch_item_with_booked_dates(request):
-    item_id = request.query_params.get('itemId')
-
-    # check itemId
-    if not item_id:
-        return map_to_api_response_as_resp({'error': 'Item ID is required'}, code=400)
-
-    try:
-        # get item
-        item = Item.objects.get(id=item_id)
-        item_serializer = ItemSerializer(item, context={'request': request})
-
-        # get average rating for the item
-        average_rating = get_item_average_rating(item_id)
-        item_data = item_serializer.data
-        item_data['averageRating'] = average_rating
-
-        # get orders itemId
-        orders = Order.objects.filter(
-            item_id=item_id,
-            status__in=['pending', 'confirmed', 'issued'],
-            is_completed=False
-        ).values('start_date', 'end_date')
-
-        # get booked dates
-        booked_dates = []
-        for order in orders:
-            start_date = order['start_date']
-            end_date = order['end_date']
-            current_date = start_date
-            while current_date <= end_date:
-                booked_dates.append(current_date)
-                current_date += timedelta(days=1)
-        # return response
-
-        return map_to_api_response_as_resp({
-            'item': item_data,
-            'bookedDates': booked_dates
-        }, code=200)
-
-    except Item.DoesNotExist:
-        return map_api_error_as_resp('Item not found', code=404)
-    except Exception as e:
-        return map_api_error_as_resp('Something wrong', code=500, details={'error': str(e)})
+# @api_view(['GET'])
+# def fetch_item_with_booked_dates(request):
+#     item_id = request.query_params.get('itemId')
+#
+#     # check itemId
+#     if not item_id:
+#         return map_to_api_response_as_resp({'error': 'Item ID is required'}, code=400)
+#
+#     try:
+#         # get item
+#         item = Item.objects.get(id=item_id)
+#         item_serializer = ItemSerializer(item, context={'request': request})
+#
+#         # get average rating for the item
+#         average_rating = get_item_average_rating(item_id)
+#         item_data = item_serializer.data
+#         item_data['averageRating'] = average_rating
+#
+#         # get orders itemId
+#         orders = Order.objects.filter(
+#             item_id=item_id,
+#             status__in=['pending', 'confirmed', 'issued'],
+#             is_completed=False
+#         ).values('start_date', 'end_date')
+#
+#         # get booked dates
+#         booked_dates = []
+#         for order in orders:
+#             start_date = order['start_date']
+#             end_date = order['end_date']
+#             current_date = start_date
+#             while current_date <= end_date:
+#                 booked_dates.append(current_date)
+#                 current_date += timedelta(days=1)
+#         # return response
+#
+#         return map_to_api_response_as_resp({
+#             'item': item_data,
+#             'bookedDates': booked_dates
+#         }, code=200)
+#
+#     except Item.DoesNotExist:
+#         return map_api_error_as_resp('Item not found', code=404)
+#     except Exception as e:
+#         return map_api_error_as_resp('Something wrong', code=500, details={'error': str(e)})

@@ -3,8 +3,9 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 
 from common.mapper import map_api_error_as_resp, map_to_api_response_as_resp
+from common.utils import update_item_rating_cache
 from orders.models import Order
-from .models import ItemRating, OwnerRating, update_item_rating_cache
+from .models import ItemRating, OwnerRating
 
 
 @api_view(['POST'])
@@ -64,12 +65,12 @@ def rate_owner(request, order_id):
             return map_api_error_as_resp('You can only rate completed orders.',
                                          code=status.HTTP_400_BAD_REQUEST)
 
-        # Проверка существования рейтинга
+        # check if rating already exists
         if OwnerRating.objects.filter(order=order, user=user).exists():
             return map_api_error_as_resp('You have already rated this order.',
                                          code=status.HTTP_400_BAD_REQUEST)
 
-        # Создание рейтинга
+        # create rating
         OwnerRating.objects.create(order=order, owner=order.item.user, user=user, rating=rating_value)
 
         return map_to_api_response_as_resp(message='Owner rating submitted successfully.', code=status.HTTP_201_CREATED)
