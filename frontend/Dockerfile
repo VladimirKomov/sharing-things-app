@@ -1,6 +1,7 @@
 # Use node:18 as the base image for building the application
 FROM node:18 AS build
 
+
 # Set the working directory
 WORKDIR /app
 
