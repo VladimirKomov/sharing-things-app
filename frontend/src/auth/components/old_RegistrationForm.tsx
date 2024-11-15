@@ -111,6 +111,7 @@ const RegistrationForm: React.FC = () => {
                             onChange={(e) => setFirstName(e.target.value)}
                             required
                         />
+
                         <TextField
                             label="Last Name"
                             fullWidth
@@ -200,6 +201,7 @@ const RegistrationForm: React.FC = () => {
                                 {errorApi}
                             </Alert>
                         )}
+
                         <Button
                             type="submit"
                             fullWidth

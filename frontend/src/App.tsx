@@ -15,19 +15,19 @@ import styles from './App.module.css'
 
 const App: React.FC = () => {
     return (
-        <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
-            <NavigationPanel />
+        <Router future={{v7_startTransition: true, v7_relativeSplatPath: true}}>
+            <NavigationPanel/>
             <div className={styles.containerApp}>
                 <Routes>
-                    <Route path="/" element={<ItemsList />} />
-                    <Route path="/login" element={<Login />} />
-                    <Route path="/register" element={<RegistrationForm />} />
-                    <Route element={<ProtectedRoute />}>
-                        <Route path="/dashboard/*" element={<DashboardRoutes />} />
-                        <Route path="/orders" element={<OrdersManager />} />
+                    <Route path="/" element={<ItemsList/>}/>
+                    <Route path="/login" element={<Login/>}/>
+                    <Route path="/register" element={<RegistrationForm/>}/>
+                    <Route element={<ProtectedRoute/>}>
+                        <Route path="/dashboard/*" element={<DashboardRoutes/>}/>
+                        <Route path="/orders" element={<OrdersManager/>}/>
                     </Route>
-                    <Route path="/items/:itemId" element={<ItemDetails />} />
-                    <Route path="/items/categories/:slug" element={<ItemsList />} />
+                    <Route path="/items/:itemId" element={<ItemDetails/>}/>
+                    <Route path="/items/categories/:slug" element={<ItemsList/>}/>
                 </Routes>
             </div>
         </Router>
