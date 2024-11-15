@@ -1,6 +1,7 @@
 # Use node:18 as the base image for building the application
 FROM node:18 AS build
 
+ARG VITE_GOOGLE_MAPS_API_KEY
 
 # Set the working directory
 WORKDIR /app
@@ -14,8 +15,9 @@ RUN npm install
 # Copy all files to the working directory
 COPY . .
 
-# Run the build script (Vite будет использовать переменные среды из Render)
-RUN npm run build
+# Run the build script
+RUN VITE_GOOGLE_MAPS_API_KEY=${VITE_GOOGLE_MAPS_API_KEY} \
+  npm run build
 
 # Use nginx:alpine as the base image for serving the built application
 FROM nginx:alpine

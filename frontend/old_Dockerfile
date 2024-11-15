@@ -1,7 +1,7 @@
 # Use node:18 as the base image for building the application
 FROM node:18 AS build
 
-ARG API_URL
+ARG VITE_GOOGLE_MAPS_API_KEY
 
 # Set the working directory
 WORKDIR /app
@@ -18,7 +18,7 @@ COPY . .
 # Set environment variables and run the build script
 
 
-RUN REACT_APP_API_URL=${API_URL} \
+RUN VITE_GOOGLE_MAPS_API_KEY=${API_URL} \
   npm run build
 
 # Use nginx:alpine as the base image for serving the built application
