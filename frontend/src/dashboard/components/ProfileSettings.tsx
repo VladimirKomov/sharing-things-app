@@ -116,7 +116,11 @@ const ProfileSettings = () => {
                             fullWidth
                         />
                         {/* Use Map selector for address and location */}
-                        <MapSelector onLocationSelect={handleLocationSelect}/>
+                        <MapSelector
+                            onLocationSelect={handleLocationSelect}
+                            initialLat={formData.latitude || undefined}
+                            initialLng={formData.longitude || undefined}
+                        />
                         <TextField
                             label="Address"
                             variant="outlined"

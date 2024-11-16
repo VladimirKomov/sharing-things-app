@@ -1,6 +1,9 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {APIProvider, Map, Marker} from '@vis.gl/react-google-maps';
 import {MAPS_API_KEY} from '../../config.ts';
+
+// Default map center (Tel Aviv)
+const centerCity = {lat: 32.08, lng: 34.78};
 
 interface MapSelectorProps {
     onLocationSelect: (lat: number, lng: number, address?: string) => void;
@@ -8,9 +11,29 @@ interface MapSelectorProps {
     initialLng?: number;
 }
 
-const MapSelector: React.FC<MapSelectorProps> = ({onLocationSelect, initialLat, initialLng}) => {
+const MapSelector: React.FC<MapSelectorProps> = (
+    {onLocationSelect, initialLat, initialLng}
+) => {
     const [latitude, setLatitude] = useState<number | undefined>(initialLat);
     const [longitude, setLongitude] = useState<number | undefined>(initialLng);
+    const [centerMapByUser, setCenterMapByUser] = useState<{ lat: number, lng: number } | undefined>(
+        initialLat && initialLng ? { lat: initialLat, lng: initialLng } : undefined
+    );
+
+    useEffect(() => {
+        // Set initial location if provided
+        if (initialLat && initialLng) {
+            setLatitude(initialLat);
+            setLongitude(initialLng);
+            // Set the map center to the initial location
+            setCenterMapByUser({lat: initialLat, lng: initialLng});
+        } else {
+            // Set default location
+            setCenterMapByUser(centerCity);
+        }
+    }, [initialLat, initialLng]);
+
+    console.log('MapSelector rendering', latitude, longitude, centerMapByUser);
 
     const handleMapClick = (event: any) => {
         if (event.detail && event.detail.latLng) {
@@ -41,7 +64,7 @@ const MapSelector: React.FC<MapSelectorProps> = ({onLocationSelect, initialLat, 
         <APIProvider apiKey={MAPS_API_KEY}>
             <Map
                 style={{width: '100%', height: '300px', marginBottom: '5px'}}
-                defaultCenter={{lat: 32.08, lng: 34.78}}
+                defaultCenter={centerMapByUser || centerCity}
                 defaultZoom={14}
                 onClick={handleMapClick}
             >
