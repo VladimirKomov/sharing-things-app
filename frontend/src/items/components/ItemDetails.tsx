@@ -117,8 +117,11 @@ const ItemDetails: React.FC = () => {
                         <Box mt={4}>
                             <Typography variant="h6" gutterBottom>Route to Item:</Typography>
                             <RouteMap
-                                userCoordinates={currentUser?.lat && currentUser?.lng ? { lat: currentUser.lat, lng: currentUser.lng } : undefined}
-                                itemCoordinates={{ lat: item.owner.lat, lng: item.owner.lng }}
+                                userCoordinates={currentUser?.lat && currentUser?.lng ? {
+                                    lat: currentUser.lat,
+                                    lng: currentUser.lng
+                                } : undefined}
+                                itemCoordinates={{lat: item.owner.lat, lng: item.owner.lng}}
                             />
                         </Box>
                     )}

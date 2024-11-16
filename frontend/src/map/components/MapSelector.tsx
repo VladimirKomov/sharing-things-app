@@ -17,7 +17,7 @@ const MapSelector: React.FC<MapSelectorProps> = (
     const [latitude, setLatitude] = useState<number | undefined>(initialLat);
     const [longitude, setLongitude] = useState<number | undefined>(initialLng);
     const [centerMapByUser, setCenterMapByUser] = useState<{ lat: number, lng: number } | undefined>(
-        initialLat && initialLng ? { lat: initialLat, lng: initialLng } : undefined
+        initialLat && initialLng ? {lat: initialLat, lng: initialLng} : undefined
     );
 
     useEffect(() => {
