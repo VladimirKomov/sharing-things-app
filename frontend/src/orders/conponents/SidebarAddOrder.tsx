@@ -177,7 +177,7 @@ const SidebarAddOrder: React.FC<SidebarOrderProps> = ({isOpen, onClose, itemId})
                         <h2>Create Order for {item.name} #{itemId}</h2>
                         <p><strong>Description: </strong>{item.description}</p>
                         <p><strong>Category: </strong>{item.categoryName}</p>
-                        <p><strong>Owner: </strong>{item.ownerName}</p>
+                        <p><strong>Owner: </strong>{item.owner.name}</p>
                         <p><strong>Price per Day: </strong>{item.pricePerDay}</p>
                     </>
                 )}
