@@ -3,9 +3,6 @@ export interface Item {
     name: string;
     description: string;
     categoryName: string;
-    ownerName: string;
-    ownerId: number;
-    ownerAddress: string;
     owner: Owner;
     pricePerDay: number;
     averageRating: number;

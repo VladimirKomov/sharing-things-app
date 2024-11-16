@@ -73,8 +73,8 @@ const ItemComponent: React.FC<ItemProps> = ({itemId, ownerOnly = false, onEdit, 
                     {item.pricePerDay > 0 ? item.pricePerDay : ' Free'}
                 </p>
                 <p className={styles.itemCategory}><span>Category:</span> {item.categoryName}</p>
-                <p className={styles.itemOwner}><span>Owner: </span> {item.ownerName}</p>
-                <p className={styles.itemOwner}><span>Address: </span> {item.ownerAddress}</p>
+                <p className={styles.itemOwner}><span>Owner: </span> {item.owner.name}</p>
+                <p className={styles.itemOwner}><span>Address: </span> {item.owner.address}</p>
                 <Box display="flex" alignItems="center">
                     <Typography variant="subtitle1" sx={{ marginRight: 1 }}>Average Rating:</Typography>
                     <Rating value={item.averageRating} readOnly precision={0.5} size="large" />
@@ -91,7 +91,7 @@ const ItemComponent: React.FC<ItemProps> = ({itemId, ownerOnly = false, onEdit, 
                 </div>
             )}
             {/*If the user is not the owner of the item, display the AddShoppingCartIcon*/}
-            {!ownerOnly && currentUser && currentUser.id !== item.ownerId && (
+            {!ownerOnly && currentUser && currentUser.id !== item.owner.id && (
                 <div className={styles.buttonContainer}>
                     {/* Button with AddShoppingCartIcon */}
                     <IconButton onClick={handleOrder} color="secondary"
