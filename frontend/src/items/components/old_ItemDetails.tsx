@@ -22,7 +22,6 @@ import {Item} from "../../common/models/items.model.ts";
 import {selectCurrentUser} from "../../auth/redux/authSlice";
 import {CurrentUser} from "../../common/models/auth.model";
 import CalendarWithDisabledDates from "../../common/components/CalendarWithDisabledDates.tsx";
-import RouteMap from "../../map/components/RouteMapProps.tsx";
 // Lazy loading of the SidebarAddOrder component
 const SidebarAddOrder = React.lazy(
     () => import('../../orders/conponents/SidebarAddOrder')
@@ -111,18 +110,6 @@ const ItemDetails: React.FC = () => {
                         ))}
                     </ImageList>
                     <CalendarWithDisabledDates bookedDates={item.bookedDates}/>
-
-                    {/* Карта с маршрутом */}
-                    {currentUser && currentUser.lat && currentUser.lng && item.owner.lat && item.owner.lng && (
-                        <Box mt={4}>
-                            <Typography variant="h6" gutterBottom>Route to Item:</Typography>
-                            <RouteMap
-                                userCoordinates={{ lat: currentUser.lat, lng: currentUser.lng }}
-                                itemCoordinates={{ lat: item.owner.lat, lng: item.owner.lng }}
-                            />
-                        </Box>
-                    )}
-
                     {/* Modal window for image */}
                     <Dialog open={!!selectedImage} onClose={closeImage} maxWidth="md">
                         <DialogTitle>

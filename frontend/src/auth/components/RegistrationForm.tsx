@@ -4,7 +4,7 @@ import {AppDispatch, RootState} from "../../common/store";
 import {register} from "../redux/authSlice";
 import {useNavigate} from 'react-router-dom';
 import {Alert, Box, Button, CircularProgress, Container, TextField, Typography} from '@mui/material';
-import MapSelector from "../../common/components/MapSelector";
+import MapSelector from "../../map/components/MapSelector.tsx";
 
 const RegistrationForm: React.FC = () => {
     const [username, setUsername] = useState('');

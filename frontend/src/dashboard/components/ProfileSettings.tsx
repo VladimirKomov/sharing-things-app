@@ -9,7 +9,7 @@ import {
     UserSettings
 } from "../redux/userSettingsSlice";
 import {Box, Button, CircularProgress, TextField, Typography} from '@mui/material';
-import MapSelector from "../../common/components/MapSelector";
+import MapSelector from "../../map/components/MapSelector.tsx";
 
 const ProfileSettings = () => {
     const dispatch = useDispatch<AppDispatch>();
