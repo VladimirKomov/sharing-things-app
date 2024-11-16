@@ -4,15 +4,11 @@ import Cookies from 'js-cookie';
 import {jwtDecode, JwtPayload} from "jwt-decode";
 import {RootState} from "../../common/store";
 import createCommonThunk from "../../common/models/thunk.model";
+import {CurrentUser, Token} from "../../common/models/auth.model.ts";
 
-export interface Token {
-    access: string;
-    refresh: string;
-}
-
-interface AuthSlice {
+export interface AuthSlice {
     token: Token | null;
-    currentUserId: number | null;
+    currentUser: CurrentUser | null;
     loading: boolean;
     error: string | null;
 }
@@ -28,20 +24,6 @@ const isTokenExpired = (token: string): boolean => {
         return false;
     } catch (error) {
         return true;
-    }
-};
-
-// Get the user ID from the token
-interface CustomJwtPayload extends JwtPayload {
-    user_id?: number;
-}
-
-const getUserIdFromToken = (token: string): number | null => {
-    try {
-        const decoded = jwtDecode<CustomJwtPayload>(token);
-        return decoded.user_id || null;
-    } catch (error) {
-        return null;
     }
 };
 
@@ -65,12 +47,18 @@ const getToken = (): Token | null => {
     return null;
 };
 
-// Get the token from cookies
-const token = getToken();
+// Get the current user from cookies
+const getCurrentUser = (): CurrentUser | null => {
+    const user = Cookies.get('current_user');
+    if (user) {
+        return JSON.parse(user);
+    }
+    return null;
+};
 
 const initialState: AuthSlice = {
-    token: token,
-    currentUserId: token ? getUserIdFromToken(token.refresh) : null,
+    token: getToken(),
+    currentUser: getCurrentUser(),
     loading: false,
     error: null,
 };
@@ -80,6 +68,21 @@ export const register = createCommonThunk('auth/register', registerAPI);
 export const logout = createCommonThunk('auth/logout', logoutAPI);
 export const checkToken = createCommonThunk('auth/checkToken', checkTokenAPI, {requiresAuth: true});
 
+const saveCredentialsToCookies = (token: Token,
+                                  currentUser?: CurrentUser): void => {
+    Cookies.set('access_token', token.access, {expires: 7, secure: true, sameSite: 'Strict'});
+    Cookies.set('refresh_token', token.refresh, {expires: 7, secure: true, sameSite: 'Strict'});
+    if (currentUser) {
+        Cookies.set('current_user', JSON.stringify(currentUser), {expires: 7, secure: true, sameSite: 'Strict'});
+    }
+};
+
+const removeCredentialsFromCookies = (): void => {
+    Cookies.remove('access_token');
+    Cookies.remove('refresh_token');
+    Cookies.remove('current_user');
+};
+
 const authSlice = createSlice({
     name: 'auth',
     initialState,
@@ -87,23 +90,22 @@ const authSlice = createSlice({
         setToken: (state, action: PayloadAction<Token>) => {
             const newToken = action.payload;
             state.token = newToken;
-            Cookies.set('access_token', newToken.access, {expires: 7, secure: true, sameSite: 'Strict'});
-            Cookies.set('refresh_token', newToken.refresh, {expires: 7, secure: true, sameSite: 'Strict'});
+            saveCredentialsToCookies(newToken);
         },
         setLogout: (state) => {
             state.token = null;
-            Cookies.remove('access_token');
-            Cookies.remove('refresh_token');
+            removeCredentialsFromCookies();
         },
     },
     extraReducers: (builder) => {
         // login
         builder.addCase(login.fulfilled, (state, action) => {
-            const token: Token = action.payload.data;
+            const token: Token = action.payload.data.token;
+            const currentUser: CurrentUser = action.payload.data.user;
             state.token = token;
-            // Save the token to cookies
-            Cookies.set('access_token', token.access, {expires: 7, secure: true, sameSite: 'Strict'});
-            Cookies.set('refresh_token', token.refresh, {expires: 7, secure: true, sameSite: 'Strict'});
+            state.currentUser = currentUser;
+            // Save the token and user to cookies
+            saveCredentialsToCookies(token, currentUser);
             state.loading = false;
             state.error = null;
         });
@@ -133,8 +135,7 @@ const authSlice = createSlice({
         // logout
         builder.addCase(logout.fulfilled, (state) => {
             state.token = null;
-            Cookies.remove('access_token');
-            Cookies.remove('refresh_token');
+            removeCredentialsFromCookies();
             state.loading = false;
             state.error = null;
         });
@@ -145,8 +146,7 @@ const authSlice = createSlice({
         builder.addCase(logout.rejected, (state) => {
             state.loading = false;
             state.token = null;
-            Cookies.remove('access_token');
-            Cookies.remove('refresh_token');
+            removeCredentialsFromCookies();
         });
     }
 });
@@ -157,6 +157,6 @@ export const selectToken = (state: RootState) => state.auth.token;
 export const selectTokenAccess = (state: RootState) => state.auth.token?.access;
 export const selectError = (state: RootState) => state.auth.error;
 export const selectLoading = (state: RootState) => state.auth.loading;
-export const selectCurrentUserId = (state: RootState) => state.auth.currentUserId;
+export const selectCurrentUser = (state: RootState) => state.auth.currentUser;
 
 export default authSlice.reducer;

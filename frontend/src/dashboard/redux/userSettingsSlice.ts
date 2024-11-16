@@ -38,6 +38,7 @@ export const userSettingsSlice = createSlice({
     initialState,
     reducers: {},
     extraReducers: (builder) => {
+        //get user settings
         builder
             .addCase(fetchUserSettings.pending, (state) => {
                 state.loading = true;
@@ -51,13 +52,15 @@ export const userSettingsSlice = createSlice({
                 state.loading = false;
                 state.error.message = action.payload.message;
             })
+        //update user settings
+        builder
             .addCase(updateUserSettings.pending, (state) => {
                 state.loading = true;
                 state.error.message = null;
             })
             .addCase(updateUserSettings.fulfilled, (state, action) => {
+                state.settings = action.payload.data;
                 state.loading = false;
-                state.settings = action.payload;
             })
             .addCase(updateUserSettings.rejected, (state, action) => {
                 state.loading = false;

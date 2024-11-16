@@ -1,34 +1,40 @@
-import React, {useEffect, useState} from 'react';
+import React, {Suspense, useEffect, useState} from 'react';
 import {useParams} from 'react-router-dom';
 import {useDispatch, useSelector} from "react-redux";
 import {AppDispatch} from "../../common/store";
 import {fetchItemById, selectError, selectLoading, selectSelectedItem} from "../redux/itemsSlice";
 import {
     Box,
-    Button,
     Container,
     Dialog,
     DialogContent,
     DialogTitle,
     ImageList,
-    ImageListItem, Rating,
+    ImageListItem,
+    Rating,
     Typography,
 } from '@mui/material';
 import styles from './ItemDetail.module.css';
-import SidebarAddOrder from "../../orders/conponents/SidebarAddOrder";
-import {selectCurrentUserId} from "../../auth/redux/authSlice.ts";
 import IconButton from "@mui/material/IconButton";
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
+import CloseIcon from '@mui/icons-material/Close';
 import {Item} from "../../common/models/items.model.ts";
-
+import {selectCurrentUser} from "../../auth/redux/authSlice";
+import {CurrentUser} from "../../common/models/auth.model";
+import CalendarWithDisabledDates from "../../common/components/CalendarWithDisabledDates.tsx";
+import RouteMap from "../../map/components/RouteMap.tsx";
+// Lazy loading of the SidebarAddOrder component
+const SidebarAddOrder = React.lazy(
+    () => import('../../orders/conponents/SidebarAddOrder')
+);
 
 const ItemDetails: React.FC = () => {
     const dispatch = useDispatch<AppDispatch>();
     const {itemId} = useParams<{ itemId: string }>();
-    const currentUserId = useSelector(selectCurrentUserId);
+    const currentUser: CurrentUser | null = useSelector(selectCurrentUser);
     const item: Item | null = useSelector(selectSelectedItem);
-    const loading = useSelector(selectLoading);
-    const error = useSelector(selectError);
+    const loading: boolean = useSelector(selectLoading);
+    const error: string | null = useSelector(selectError);
     const [selectedImage, setSelectedImage] = useState<string | null>(null);
     const [isOrderSidebarOpen, setIsOrderSidebarOpen] = useState(false);
 
@@ -36,7 +42,7 @@ const ItemDetails: React.FC = () => {
         if (itemId) {
             dispatch(fetchItemById(itemId));
         }
-    }, [dispatch, itemId]);
+    }, [itemId]);
 
     const openImage = (url: string) => {
         setSelectedImage(url);
@@ -70,7 +76,7 @@ const ItemDetails: React.FC = () => {
                         <Typography variant="h4" gutterBottom>
                             {item.name}
                         </Typography>
-                        {currentUserId && currentUserId !== item.ownerId && (
+                        {currentUser && currentUser.id !== item.owner.id && (
                             <IconButton
                                 color="secondary"
                                 onClick={handleOpenOrderSidebar}
@@ -81,17 +87,18 @@ const ItemDetails: React.FC = () => {
                         )}
                     </Box>
                     <Box mb={2}>
-                        <Typography variant="subtitle1"><strong>Owner:</strong> {item.ownerName}</Typography>
-                        <Typography variant="subtitle1"><strong>Address:</strong> {item.ownerAddress}</Typography>
+                        <Typography variant="subtitle1"><strong>Owner:</strong> {item.owner.name}</Typography>
+                        <Typography variant="subtitle1"><strong>Address:</strong> {item.owner.address}</Typography>
                         <Typography variant="subtitle1"><strong>Category:</strong> {item.categoryName}</Typography>
-                        <Typography variant="subtitle1"><strong>Price per day:</strong> ${item.pricePerDay}</Typography>
+                        <Typography variant="subtitle1"><strong>Price per
+                            day:</strong> {item.pricePerDay} thanks</Typography>
                     </Box>
                     <Typography variant="body1" sx={{marginBottom: 1}}>{item.description}</Typography>
                     <Box display="flex" alignItems="center">
-                        <Typography variant="subtitle1" sx={{ marginRight: 1 }}>Average Rating:</Typography>
-                        <Rating value={item.averageRating} readOnly precision={0.5} size="large" />
+                        <Typography variant="subtitle1" sx={{marginRight: 1}}>Average Rating:</Typography>
+                        <Rating value={item.averageRating} readOnly precision={0.5} size="large"/>
                     </Box>
-                    <ImageList cols={3} gap={8} className={styles.photosContainer}>
+                    <ImageList cols={3} gap={6} className={styles.photosContainer}>
                         {item.imagesUrl.map((image, index) => (
                             <ImageListItem key={index} onClick={() => openImage(image.url)}>
                                 <img
@@ -103,35 +110,39 @@ const ItemDetails: React.FC = () => {
                             </ImageListItem>
                         ))}
                     </ImageList>
+                    <CalendarWithDisabledDates bookedDates={item.bookedDates}/>
 
-                    {/*<Box mt={1}>*/}
-                    {/*    <Typography variant="h6">Booked Dates:</Typography>*/}
-                    {/*    {item.bookedDates.length > 0 ? (*/}
-                    {/*        <Box>*/}
-                    {/*            {item.bookedDates.map((date, index) => (*/}
-                    {/*                <Typography key={index} variant="body2">*/}
-                    {/*                    {new Date(date).toLocaleDateString()}*/}
-                    {/*                </Typography>*/}
-                    {/*            ))}*/}
-                    {/*        </Box>*/}
-                    {/*    ) : (*/}
-                    {/*        <Typography variant="body2">No booked dates available.</Typography>*/}
-                    {/*    )}*/}
-                    {/*</Box>*/}
-
-                    {/* Button to open the order sidebar */}
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        onClick={handleOpenOrderSidebar}
-                        sx={{marginTop: 2}}
-                    >
-                        Order Item
-                    </Button>
+                    {/* Map and rout */}
+                    {item.owner.lat && item.owner.lng && (
+                        <Box mt={4}>
+                            <Typography variant="h6" gutterBottom>Route to Item:</Typography>
+                            <RouteMap
+                                userCoordinates={currentUser?.lat && currentUser?.lng ? {
+                                    lat: currentUser.lat,
+                                    lng: currentUser.lng
+                                } : undefined}
+                                itemCoordinates={{lat: item.owner.lat, lng: item.owner.lng}}
+                            />
+                        </Box>
+                    )}
 
                     {/* Modal window for image */}
                     <Dialog open={!!selectedImage} onClose={closeImage} maxWidth="md">
-                        <DialogTitle>Image View</DialogTitle>
+                        <DialogTitle>
+                            Image
+                            <IconButton
+                                aria-label="close"
+                                onClick={closeImage}
+                                sx={{
+                                    position: 'absolute',
+                                    right: 8,
+                                    top: 8,
+                                    color: (theme) => theme.palette.grey[500],
+                                }}
+                            >
+                                <CloseIcon/>
+                            </IconButton>
+                        </DialogTitle>
                         <DialogContent>
                             {selectedImage && (
                                 <img
@@ -145,11 +156,16 @@ const ItemDetails: React.FC = () => {
 
                     {/* Sidebar for ordering item */}
                     {item.id && (
-                        <SidebarAddOrder
-                            isOpen={isOrderSidebarOpen}
-                            onClose={handleCloseOrderSidebar}
-                            itemId={item.id}
-                        />
+                        // Suspense component is used to wrap the lazy loaded component
+                        <Suspense fallback={<Typography align="center">Loading sidebar...</Typography>}>
+                            {isOrderSidebarOpen && (
+                                <SidebarAddOrder
+                                    isOpen={isOrderSidebarOpen}
+                                    onClose={handleCloseOrderSidebar}
+                                    itemId={item.id}
+                                />
+                            )}
+                        </Suspense>
                     )}
                 </>
             )}

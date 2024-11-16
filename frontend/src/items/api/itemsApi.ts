@@ -17,7 +17,7 @@ export const getItems = (params?: Record<string, string>): RequestConfig => {
     };
 };
 
-export const getItemById = (id: string): RequestConfig => {
+export const getItemById = (id: number): RequestConfig => {
     return {
         method: 'GET',
         url: `${itemsRoot}items/${id}/`,

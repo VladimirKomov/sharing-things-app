@@ -1,9 +1,10 @@
 import React, {useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
-import {AppDispatch, RootState} from "../../common/store.ts";
-import {register} from "../redux/authSlice.ts";
+import {AppDispatch, RootState} from "../../common/store";
+import {register} from "../redux/authSlice";
 import {useNavigate} from 'react-router-dom';
 import {Alert, Box, Button, CircularProgress, Container, TextField, Typography} from '@mui/material';
+import MapSelector from "../../map/components/MapSelector.tsx";
 
 const RegistrationForm: React.FC = () => {
     const [username, setUsername] = useState('');
@@ -33,6 +34,15 @@ const RegistrationForm: React.FC = () => {
     const handlePassword2Change = (e: React.ChangeEvent<HTMLInputElement>) => {
         setPassword2(e.target.value);
         setPasswordMismatch(password !== e.target.value);
+    };
+
+    const handleLocationSelect = (lat: number, lng: number, address?: string) => {
+        setLatitude(lat);
+        setLongitude(lng);
+        if (address) {
+            setAddress(address);
+        }
+        console.log(lat, lng);
     };
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
@@ -72,7 +82,7 @@ const RegistrationForm: React.FC = () => {
             <Container
                 maxWidth={false}
                 sx={{
-                    width: '80%',
+                    width: '95%',
                     borderRadius: '8px',
                     boxShadow: '0 0 10px rgba(0, 0, 0, 0.5)',
                     padding: '10px',
@@ -91,6 +101,7 @@ const RegistrationForm: React.FC = () => {
                             value={username}
                             onChange={(e) => setUsername(e.target.value)}
                             required
+                            autoComplete="username"
                         />
 
                         <TextField
@@ -101,6 +112,7 @@ const RegistrationForm: React.FC = () => {
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                             required
+                            autoComplete="email"
                         />
 
                         <TextField
@@ -111,7 +123,6 @@ const RegistrationForm: React.FC = () => {
                             onChange={(e) => setFirstName(e.target.value)}
                             required
                         />
-
                         <TextField
                             label="Last Name"
                             fullWidth
@@ -130,6 +141,12 @@ const RegistrationForm: React.FC = () => {
                             required
                         />
 
+                        {/* click your place */}
+                        <Typography variant="h6" gutterBottom>
+                            Select your location on the map
+                        </Typography>
+                        <MapSelector onLocationSelect={handleLocationSelect}/>
+
                         <TextField
                             label="Address"
                             fullWidth
@@ -140,32 +157,6 @@ const RegistrationForm: React.FC = () => {
                         />
 
                         <TextField
-                            label="Latitude"
-                            type="number"
-                            fullWidth
-                            margin="normal"
-                            value={latitude || ''}
-                            onChange={(e) => setLatitude(parseFloat(e.target.value))}
-                            // hiding the field the functionality is not ready
-                            sx={{
-                                display: 'none'
-                            }}
-                        />
-
-                        <TextField
-                            label="Longitude"
-                            type="number"
-                            fullWidth
-                            margin="normal"
-                            value={longitude || ''}
-                            onChange={(e) => setLongitude(parseFloat(e.target.value))}
-                            // hiding the field the functionality is not ready
-                            sx={{
-                                display: 'none'
-                            }}
-                        />
-
-                        <TextField
                             label="Password"
                             type="password"
                             fullWidth
@@ -173,6 +164,7 @@ const RegistrationForm: React.FC = () => {
                             value={password}
                             onChange={handlePasswordChange}
                             required
+                            autoComplete="new-password"
                         />
 
                         <TextField
@@ -183,6 +175,7 @@ const RegistrationForm: React.FC = () => {
                             value={password2}
                             onChange={handlePassword2Change}
                             required
+                            autoComplete="new-password"
                         />
 
                         {/* Password mismatch message */}
@@ -201,7 +194,6 @@ const RegistrationForm: React.FC = () => {
                                 {errorApi}
                             </Alert>
                         )}
-
                         <Button
                             type="submit"
                             fullWidth

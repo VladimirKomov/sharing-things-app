@@ -11,11 +11,12 @@ import ItemDetails from "./items/components/ItemDetails.tsx";
 import OrdersManager from "./orders/conponents/OrdersManager.tsx";
 import ItemsList from "./items/components/ItemsList.tsx";
 import styles from './App.module.css'
+import {GoogleMapsProvider} from "./map/components/GoogleMapsContextProps.tsx";
 
 
 const App: React.FC = () => {
     return (
-        <Router>
+        <Router future={{v7_startTransition: true, v7_relativeSplatPath: true}}>
             <NavigationPanel/>
             <div className={styles.containerApp}>
                 <Routes>
@@ -26,7 +27,11 @@ const App: React.FC = () => {
                         <Route path="/dashboard/*" element={<DashboardRoutes/>}/>
                         <Route path="/orders" element={<OrdersManager/>}/>
                     </Route>
-                    <Route path="/items/:itemId" element={<ItemDetails/>}/>
+                    <Route path="/items/:itemId" element={
+                        <GoogleMapsProvider>
+                            <ItemDetails/>
+                        </GoogleMapsProvider>
+                    }/>
                     <Route path="/items/categories/:slug" element={<ItemsList/>}/>
                 </Routes>
             </div>

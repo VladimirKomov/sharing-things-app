@@ -4,6 +4,15 @@
     background-color: var(--primary-color);
     padding: var(--spacing-medium);
     margin-bottom: var(--spacing-medium);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 50px;
+}
+
+.welcomeBanner {
+    margin-left: 20px;
+    margin-right: 20px;
 }
 
 .navList {

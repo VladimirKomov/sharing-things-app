@@ -1,8 +1,7 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 
-from .views import OrderViewSet, UserOrderViewSet, OwnerOrderViewSet, CreateOrderView, check_item_availability, \
-    fetch_item_with_booked_dates
+from .views import OrderViewSet, UserOrderViewSet, OwnerOrderViewSet, CreateOrderView, check_item_availability
 
 router = DefaultRouter()
 router.register(r'user-orders', UserOrderViewSet, basename='user-order')
@@ -15,8 +14,6 @@ urlpatterns = [
     path('create/', CreateOrderView.as_view(), name='create-order'),
     # check item availability
     path('check-item-availability/', check_item_availability, name='check-item-availability'),
-    # fetch item with booked dates
-    path('fetch-item-with-booked-dates/', fetch_item_with_booked_dates, name='fetch-item-with-booked-dates'),
     # user-orders, owner-orders, update
     path('', include(router.urls)),
 ]

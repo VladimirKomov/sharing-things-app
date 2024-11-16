@@ -5,9 +5,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    /*min-height: 100vh;*/
     text-align: center;
-    /*gap: var(--spacing-large); !* Промежуток между заголовком и контейнером *!*/
     width: 100%;
 }
 
@@ -30,36 +28,41 @@
 
 .itemsContainer {
     display: flex;
-    flex-direction: column; /* Размещает элементы по вертикали */
-    gap: var(--spacing-medium); /* Промежуток между элементами */
-    width: 100%; /* Контейнер занимает всю ширину */
-    max-width: var(--max-width); /* Максимальная ширина для центрирования */
-    max-height: 80vh; /* Ограничиваем высоту для вертикальной прокрутки */
-    overflow-y: auto; /* Добавляем вертикальный скролл, если элементов слишком много */
-    padding: 0; /* Внутренние отступы сверху и снизу */
+    flex-direction: column;
+    gap: var(--spacing-medium);
+    width: 100%;
+    max-width: var(--max-width);
+    max-height: 80vh;
+    overflow-y: auto;
+    padding: 0;
 }
 
-/* Стили для вертикального скроллбара */
 .itemsContainer::-webkit-scrollbar {
-    width: 20px; /* Ширина вертикального скроллбара */
+    width: 20px;
 }
 
 .itemsContainer::-webkit-scrollbar-thumb {
-    background-color: var(--primary-color); /* Цвет полосы скролла */
+    background-color: var(--primary-color);
     border-radius: 4px;
 }
 
 .itemsContainer::-webkit-scrollbar-track {
-    background-color: var(--secondary-color-light); /* Цвет фона полосы скролла */
+    background-color: var(--secondary-color-light);
 }
 
-/* Адаптивные стили для небольших экранов */
+.loadingContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 20px 0;
+}
+
 @media (max-width: 768px) {
     .itemsListTitle {
-        font-size: var(--font-size-medium); /* Уменьшаем размер заголовка */
+        font-size: var(--font-size-medium);
     }
 
     .itemsContainer {
-        gap: var(--spacing-small); /* Уменьшаем промежуток между элементами */
+        gap: var(--spacing-small);
     }
 }

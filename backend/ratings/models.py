@@ -1,6 +1,4 @@
 from django.db import models
-from django.db.models import Avg
-from django.core.cache import cache
 
 from items.models import Item
 from django.contrib.auth.models import User
@@ -30,24 +28,4 @@ class OwnerRating(models.Model):
     class Meta:
         unique_together = ('order', 'user')
 
-
-def get_item_average_rating(item_id):
-    cache_key = f'item_{item_id}_average_rating'
-    try:
-        average_rating = cache.get(cache_key)
-        if average_rating is None:
-            average_rating = ItemRating.objects.filter(item_id=item_id).aggregate(Avg('rating'))['rating__avg']
-            average_rating = average_rating if average_rating else 0.0
-            cache.set(cache_key, average_rating, timeout=3600)  # 1 hour
-        print('average_rating:', average_rating)
-        return average_rating
-    except Exception as e:
-        return 0.0
-
-
-def update_item_rating_cache(item_id):
-    cache_key = f'item_{item_id}_average_rating'
-    average_rating = ItemRating.objects.filter(item_id=item_id).aggregate(Avg('rating'))['rating__avg']
-    average_rating = average_rating if average_rating else 0.0
-    cache.set(cache_key, average_rating, timeout=3600)  # 1 hour
 

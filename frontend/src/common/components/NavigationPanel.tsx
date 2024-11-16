@@ -1,9 +1,11 @@
 import React from 'react';
 import styles from './NavigationPanel.module.css';
 import {useDispatch, useSelector} from "react-redux";
-import {logout, selectToken, Token} from "../../auth/redux/authSlice.ts";
+import {logout, selectToken} from "../../auth/redux/authSlice.ts";
 import {Link, useNavigate} from "react-router-dom";
 import {AppDispatch} from "../store.ts";
+import {Token} from "../models/auth.model.ts";
+import WelcomeBanner from "./WelcomeBanner.tsx";
 
 
 const NavigationPanel: React.FC = () => {
@@ -18,6 +20,9 @@ const NavigationPanel: React.FC = () => {
 
     return (
         <nav className={styles.navigationPanel}>
+            <div className={styles.welcomeBanner}>
+                <WelcomeBanner/>
+            </div>
             <ul className={styles.navList}>
                 <li className={styles.navItem}>
                     <Link to="/" className={styles.navLink}>Main page</Link>
