@@ -3,7 +3,7 @@ import { GoogleMap, Marker, DirectionsRenderer } from '@react-google-maps/api';
 import { useGoogleMaps } from './GoogleMapsContextProps';
 
 interface RouteMapProps {
-    userCoordinates?: { lat: number; lng: number }; // Сделать параметр необязательным
+    userCoordinates?: { lat: number; lng: number };
     itemCoordinates: { lat: number; lng: number };
 }
 
@@ -12,40 +12,36 @@ const RouteMap: React.FC<RouteMapProps> = ({ userCoordinates, itemCoordinates })
     const { isLoaded } = useGoogleMaps();
     const [travelMode, setTravelMode] = useState<google.maps.TravelMode | null>(null);
     const [zoom, setZoom] = useState(14);
-    const [map, setMap] = useState<google.maps.Map | null>(null);
 
     useEffect(() => {
         if (isLoaded && typeof google !== 'undefined') {
             setTravelMode(google.maps.TravelMode.DRIVING);
             if (!userCoordinates) {
-                setZoom(12);
+                setZoom(14);
             }
         }
     }, [isLoaded, userCoordinates]);
 
     useEffect(() => {
-        if (isLoaded && typeof google !== 'undefined' && (userCoordinates || itemCoordinates) && travelMode) {
+        if (isLoaded && typeof google !== 'undefined' && userCoordinates && itemCoordinates && travelMode) {
             const directionsService = new google.maps.DirectionsService();
             directionsService.route(
                 {
-                    origin: userCoordinates || itemCoordinates,
-                    destination: itemCoordinates || userCoordinates,
+                    origin: userCoordinates,
+                    destination: itemCoordinates,
                     travelMode: travelMode,
                 },
                 (result, status) => {
                     if (status === google.maps.DirectionsStatus.OK) {
                         console.log('Directions:', result);
                         setDirections(result);
-                        if (map) {
-                            map.setZoom(12);
-                        }
                     } else {
                         console.error(`Error fetching directions: ${status}`);
                     }
                 }
             );
         }
-    }, [isLoaded, userCoordinates, itemCoordinates, travelMode, map]);
+    }, [isLoaded, userCoordinates, itemCoordinates, travelMode]);
 
     const handleTravelModeChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
         if (typeof google !== 'undefined') {
@@ -70,16 +66,16 @@ const RouteMap: React.FC<RouteMapProps> = ({ userCoordinates, itemCoordinates })
                 mapContainerStyle={{ width: '100%', height: '500px' }}
                 zoom={zoom}
                 center={userCoordinates || itemCoordinates}
-                onLoad={(mapInstance) => setMap(mapInstance)}
             >
-                {userCoordinates && <Marker position={userCoordinates} title="Your Location" />}
-                <Marker
-                    position={itemCoordinates}
-                    title="Item Location"
-                    animation={google.maps.Animation.BOUNCE}
-                />
+                <>
+                    {userCoordinates && directions ? (
+                        <DirectionsRenderer directions={directions} />
+                    ) : (
+                        <Marker position={itemCoordinates} title="Item Location" />
+                    )}
+                </>
 
-                {directions && <DirectionsRenderer directions={directions} />}
+
             </GoogleMap>
         </>
     );

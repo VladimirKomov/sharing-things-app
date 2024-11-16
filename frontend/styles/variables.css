@@ -1,8 +1,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
 
-/* Переменные */
+/* Variables */
 :root {
-    /* Цвета */
+    /* Colors */
     --primary-color: #017af2;
     --secondary-color: #3794f0;
     --secondary-color-light: #9dc6ef;
@@ -13,7 +13,7 @@
     --error-color: #ff0000;
     --success-color: #00796b;
 
-    /* Шрифты */
+    /* Fonts */
     --font-family-primary: 'Roboto', sans-serif;
     --font-size-base: 16px;
     --font-size-large: 20px;
@@ -21,36 +21,36 @@
     --font-size-small: 12px;
     --line-height: 1.5;
 
-    /* Отступы */
+    /* Spacing */
     --spacing-small: 8px;
     --spacing-medium: 16px;
     --spacing-large: 32px;
 
-    /* Границы */
+    /* Borders */
     --border-radius: 5px;
     --border-color: #ccc;
     --border-width: 1px;
 
-    /* Тени */
+    /* Shadows */
     --box-shadow-small: 0 1px 3px rgba(0, 0, 0, 0.1);
     --box-shadow-large: 0 4px 6px rgba(0, 0, 0, 0.2);
 
-    /* Переходы */
+    /* Transitions */
     --transition-duration: 0.3s;
     --transition-timing: ease-in-out;
 
-    /* Размеры контейнеров */
+    /* Container sizes */
     --max-width: 1200px;
     --max-form-width: 400px;
     --larg-form-width: 600px;
     --min-height: 100vh;
 
-    /* Размеры полей ввода и кнопок */
+    /* Input and button sizes */
     --input-height: 35px;
     --input-width: 200px;
 }
 
-/* Основные стили */
+/* Base styles */
 body {
     font-family: var(--font-family-primary);
     font-size: var(--font-size-base);
@@ -61,21 +61,21 @@ body {
     line-height: var(--line-height);
 }
 
-/* Заголовки */
+/* Headings */
 h1, h2, h3, h4, h5, h6 {
     color: var(--primary-color);
     margin-bottom: var(--spacing-medium);
     font-weight: 500;
 }
 
-/* Контейнер */
+/* Container */
 .container {
     max-width: var(--max-width);
     margin: 0 auto;
     padding: var(--spacing-medium);
 }
 
-/* Кнопки */
+/* Buttons */
 button {
     background-color: var(--primary-color);
     color: #fff;
@@ -91,7 +91,7 @@ button:hover {
     background-color: var(--secondary-color);
 }
 
-/* Поля ввода */
+/* Input fields */
 input, select, textarea {
     font-size: var(--font-size-base);
     padding: 0 var(--spacing-small);
@@ -108,19 +108,19 @@ input:focus, select:focus, textarea:focus {
     border-color: var(--primary-color);
 }
 
-/* Сообщения об ошибках */
+/* Error messages */
 .error-message {
     color: var(--error-color);
     font-size: var(--font-size-small);
 }
 
-/* Успешные сообщения */
+/* Success messages */
 .success-message {
     color: var(--success-color);
     font-size: var(--font-size-small);
 }
 
-/* Форма */
+/* Form */
 .form-container {
     max-width: var(--max-form-width);
     margin: 0 auto;
