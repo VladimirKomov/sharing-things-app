@@ -75,7 +75,7 @@ const ItemDetails: React.FC = () => {
                         <Typography variant="h4" gutterBottom>
                             {item.name}
                         </Typography>
-                        {currentUser && currentUser.id !== item.ownerId && (
+                        {currentUser && currentUser.id !== item.owner.id && (
                             <IconButton
                                 color="secondary"
                                 onClick={handleOpenOrderSidebar}
@@ -86,8 +86,8 @@ const ItemDetails: React.FC = () => {
                         )}
                     </Box>
                     <Box mb={2}>
-                        <Typography variant="subtitle1"><strong>Owner:</strong> {item.ownerName}</Typography>
-                        <Typography variant="subtitle1"><strong>Address:</strong> {item.ownerAddress}</Typography>
+                        <Typography variant="subtitle1"><strong>Owner:</strong> {item.owner.name}</Typography>
+                        <Typography variant="subtitle1"><strong>Address:</strong> {item.owner.address}</Typography>
                         <Typography variant="subtitle1"><strong>Category:</strong> {item.categoryName}</Typography>
                         <Typography variant="subtitle1"><strong>Price per
                             day:</strong> {item.pricePerDay} thanks</Typography>

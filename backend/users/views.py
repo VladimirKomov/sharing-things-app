@@ -63,6 +63,14 @@ class LoginView(APIView):
                 refresh = RefreshToken.for_user(user)
                 user_id = user.id
                 username = user.username
+
+                # get user settings if exists
+                latitude = None
+                longitude = None
+                if hasattr(user, 'settings') and user.settings:
+                    latitude = user.settings.latitude
+                    longitude = user.settings.longitude
+
                 return map_to_api_response_as_resp(
                     {
                         'token': {
@@ -72,6 +80,8 @@ class LoginView(APIView):
                         'user': {
                             'id': user_id,
                             'username': username,
+                            'lat': latitude,
+                            'lng': longitude
                         },
                     },
                     message="Login successful",

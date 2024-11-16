@@ -6,4 +6,6 @@ export interface Token {
 export interface CurrentUser {
     id: number;
     username: string;
+    lat: number;
+    lng: number;
 }

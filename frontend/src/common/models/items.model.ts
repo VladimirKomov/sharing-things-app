@@ -6,6 +6,7 @@ export interface Item {
     ownerName: string;
     ownerId: number;
     ownerAddress: string;
+    owner: Owner;
     pricePerDay: number;
     averageRating: number;
     bookedDates: [];
@@ -14,4 +15,12 @@ export interface Item {
             url: string;
         }
     ];
+}
+
+export interface Owner {
+    id: number;
+    name: string;
+    address: string;
+    lat: number;
+    lng: number;
 }
