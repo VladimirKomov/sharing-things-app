@@ -54,6 +54,8 @@ INSTALLED_APPS = [
     'dashboard',
     'orders',
     'ratings',
+    'channels',
+    'chat',
 ]
 
 MIDDLEWARE = [
@@ -106,6 +108,9 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'config.wsgi.application'
 
+# use webSocket
+ASGI_APPLICATION = 'config.asgi.application'
+
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
@@ -135,7 +140,7 @@ DATABASES = {
     }
 }
 
-# Settings for Redis
+# Settings redis for cashing
 CACHES = {
     'default': {
         'BACKEND': 'django_redis.cache.RedisCache',
@@ -144,6 +149,15 @@ CACHES = {
             'CLIENT_CLASS': 'django_redis.client.DefaultClient',
         }
     }
+}
+# settings redis for chat
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            'hosts': [os.getenv('REDIS_URL', 'redis://127.0.0.1:6379/1')],
+        },
+    },
 }
 
 
